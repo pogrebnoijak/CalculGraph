@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CalculGraph</string>
+    <string name="back">back</string>
+    <string name="game_mode">game_mode</string>
+    <string name="standard">standard</string>
+    <string name="max">max</string>
+    <string name="set">set</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="name">CalculGraph</string>
+    <string name="calculGraph">CalculGraph</string>
+    <string name="new_game">NEW GAME</string>
+    <string name="levels">LEVELS</string>
+    <string name="statistic">STATISTIC</string>
+    <string name="settings">SETTINGS</string>
+    <string name="exit">EXIT</string>
+</resources>

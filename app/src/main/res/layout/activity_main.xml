@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color1">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/calculGraph"
+            android:textAlignment="center"
+            android:textColor="@color/purple_700"
+            android:textStyle="italic"
+            android:textSize="50sp" />
+    </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/new_game"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/color2"
+                android:textSize="30sp"
+                android:text="@string/new_game" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/levels"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/color2"
+                android:textSize="30sp"
+                android:text="@string/levels" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/statistic"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/color2"
+                android:textSize="30sp"
+                android:text="@string/statistic" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/settings"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/color2"
+                android:textSize="30sp"
+                android:text="@string/settings" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/exit"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/color2"
+                android:textSize="30sp"
+                android:text="@string/exit" />
+        </FrameLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>
