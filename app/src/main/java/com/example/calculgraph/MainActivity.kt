@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import kotlin.system.exitProcess
 
 class MainActivity : AnyActivity() {
@@ -15,7 +16,7 @@ class MainActivity : AnyActivity() {
     }
 
     override fun setButtons() {
-        findViewById<View>(R.id.new_game).setOnClickListener {
+        findViewById<Button>(R.id.new_game).setOnClickListener {
             val dialog = Dialog(this@MainActivity)
             dialog.setContentView(R.layout.dialog_game_mode)
             dialog.show()
@@ -33,25 +34,25 @@ class MainActivity : AnyActivity() {
             }
         }
 
-        findViewById<View>(R.id.levels).setOnClickListener {
+        findViewById<Button>(R.id.levels).setOnClickListener {
             val intent = Intent(this, LevelsActivity :: class.java )
             startActivity(intent)
             finish()
         }
 
-        findViewById<View>(R.id.statistic).setOnClickListener {
+        findViewById<Button>(R.id.statistic).setOnClickListener {
             val intent = Intent(this, StatisticActivity :: class.java )
             startActivity(intent)
             finish()
         }
 
-        findViewById<View>(R.id.settings).setOnClickListener {
+        findViewById<Button>(R.id.settings).setOnClickListener {
             val intent = Intent(this, SettingsActivity :: class.java )
             startActivity(intent)
             finish()
         }
 
-        findViewById<View>(R.id.exit).setOnClickListener {
+        findViewById<Button>(R.id.exit).setOnClickListener {
             finish()
             exitProcess(0)
         }

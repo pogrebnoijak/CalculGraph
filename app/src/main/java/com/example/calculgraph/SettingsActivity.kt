@@ -2,8 +2,7 @@ package com.example.calculgraph
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-//import kotlinx.android.synthetic.main.activity_settings.*
+import android.widget.Button
 
 class SettingsActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +13,7 @@ class SettingsActivity : AnyActivity() {
     }
 
     override fun setButtons() {
-        findViewById<View>(R.id.back).setOnClickListener {
+        findViewById<Button>(R.id.menu).setOnClickListener {
             val intent = Intent(this, MainActivity :: class.java )
             startActivity(intent)
             finish()
