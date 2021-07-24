@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -42,52 +43,12 @@
 
     </RelativeLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/draw"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
-        android:orientation="horizontal">
+        android:layout_weight="0.7">
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_weight="0.375"
-            android:layout_height="match_parent"/>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:background="@color/background"
-            android:orientation="vertical">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_weight="0.425"
-                android:layout_height="0dp"/>
-
-            <TextView
-                android:id="@+id/currentNumber"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.15"
-                android:textSize="30sp"
-                android:textColor="@color/black"
-                android:textAlignment="center"
-                android:text="@string/placeholder"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_weight="0.425"
-                android:layout_height="0dp"/>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_weight="0.375"
-            android:layout_height="match_parent"/>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
