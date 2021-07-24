@@ -14,4 +14,6 @@
     <string name="statistic">STATISTIC</string>
     <string name="settings">SETTINGS</string>
     <string name="exit">EXIT</string>
+    <string name="menu">menu</string>
+    <string name="placeholder">.</string>
 </resources>
