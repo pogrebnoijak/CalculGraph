@@ -4,12 +4,13 @@ import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
 import com.example.calculgraph.Operation.*
+import com.example.calculgraph.constant.*
 
 class Field(var kolMoves: Int, kolNode: Int) {
     val graph = Graph(kolNode)
     var currentNode = Random.nextInt(0, graph.kolNode)
-    var currentNumber = Random.nextInt(0, 100)
-    val totalNumber = Random.nextInt(0, 100)
+    var currentNumber = Random.nextInt(0, CURRENT_NUMBER_MAX)
+    val totalNumber = Random.nextInt(0, CURRENT_TOTAL_MAX)
     private val history = Stack<Int>()
 
     fun move(to: Int) {

@@ -1,10 +1,23 @@
 package com.example.calculgraph
 
 import com.example.calculgraph.Operation.*
+import com.example.calculgraph.constant.*
 import kotlin.random.Random
 
 class Graph(val kolNode: Int, val kolBranch: Int = 6) {
-    inner class Inscription(val oper: Operation, val num: Int?)
+    inner class Inscription(val oper: Operation, val num: Int?) {
+        override fun toString(): String {
+            return when(oper) {
+                PLUS -> "+"
+                MINUS -> "-"
+                MULTIPLICATION -> "*"
+                DIVISION -> "/"
+                DEGREE -> "^"
+                ROOT -> "\u221a"
+                NONE -> ""
+            } + num.toString()
+        }
+    }
 
     val data: Array<Array<Inscription>> = generateGraph()
 
@@ -21,11 +34,11 @@ class Graph(val kolNode: Int, val kolBranch: Int = 6) {
         val kolInIndex = Array(kolNode) {0}
 
         fun doBounds(oper: Operation) = when(oper) {
-            PLUS, MINUS     -> Pair(0, 100)
-            MULTIPLICATION  -> Pair(0, 20)
-            DIVISION        -> Pair(1, 20)
-            DEGREE          -> Pair(0, 5)
-            ROOT            -> Pair(1, 5)
+            PLUS, MINUS     -> BOUNDS_PLUS_MINUS
+            MULTIPLICATION  -> BOUNDS_MULTIPLICATION
+            DIVISION        -> BOUNDS_DIVISION
+            DEGREE          -> BOUNDS_DEGREE
+            ROOT            -> BOUNDS_ROOT
             NONE            -> throw error("unreal")
         }
 

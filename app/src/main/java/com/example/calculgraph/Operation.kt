@@ -13,11 +13,11 @@ enum class Operation {
 }
 
 fun Operation.reverse() = when(this) {
-    PLUS -> MINUS
-    MINUS -> PLUS
-    MULTIPLICATION -> DIVISION
-    DIVISION -> MULTIPLICATION
-    DEGREE -> ROOT
-    ROOT -> DEGREE
-    NONE -> NONE
+    PLUS            -> MINUS
+    MINUS           -> PLUS
+    MULTIPLICATION  -> DIVISION
+    DIVISION        -> MULTIPLICATION
+    DEGREE          -> ROOT
+    ROOT            -> DEGREE
+    NONE            -> NONE
 }
