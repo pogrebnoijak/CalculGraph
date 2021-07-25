@@ -18,6 +18,11 @@ const val RAD_IN_K = 0.7F
 const val RAD_MINI_K = 0.1F
 const val RAD_INNER_K = 0.3F
 const val TEXT_SIZE_K = 0.08F
+const val TEXT_SIZE_K2 = 0.06F
+const val TEXT_SHIFT_ROOT_X = 0.04F
+const val TEXT_SHIFT_ROOT_Y = 0.02F
+const val TEXT_SHIFT_DEGREE_X = 0.03F
+const val TEXT_SHIFT_DEGREE_Y = 0.03F
 const val TEXT_SIZE_BIG_K = 0.1F
 const val CASUAL_MOVE = 10F
 

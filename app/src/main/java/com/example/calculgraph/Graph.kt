@@ -1,22 +1,13 @@
 package com.example.calculgraph
 
+import android.provider.DocumentsContract
 import com.example.calculgraph.Operation.*
 import com.example.calculgraph.constant.*
 import kotlin.random.Random
 
 class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, val kolBranch: Int = 6) {
     inner class Inscription(val oper: Operation, val num: Int?) {
-        override fun toString(): String {
-            return when(oper) {
-                PLUS -> "+"
-                MINUS -> "-"
-                MULTIPLICATION -> "*"
-                DIVISION -> "/"
-                DEGREE -> "^"
-                ROOT -> "\u221a"
-                NONE -> ""
-            } + num.toString()
-        }
+        override fun toString() = oper.opToString() + num.toString()
     }
 
     val data: Array<Array<Inscription>> = generateGraph(kolMoves, currentNode)
@@ -31,7 +22,8 @@ class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, val kolBranch: Int
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
         if (factorial(kolNode) < kolBranch) throw error("Too match branches!")
 
-        val probList = listOf(PLUS, PLUS, PLUS, MINUS, MINUS, MINUS, MULTIPLICATION, MULTIPLICATION, DIVISION, DIVISION, DEGREE, ROOT)
+        val probList =
+            listOf(PLUS, PLUS, PLUS, MINUS, MINUS, MINUS, MULTIPLICATION, MULTIPLICATION, DIVISION, DIVISION, DEGREE, ROOT)
         lateinit var _data: Array<Array<Inscription>>
         val kolInIndex = Array(kolNode) {0}
 

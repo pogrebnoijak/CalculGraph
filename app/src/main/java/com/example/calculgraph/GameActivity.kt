@@ -162,7 +162,6 @@ class GameActivity : AnyActivity() {
             canvas.run {
                 p.apply {
                     strokeWidth = AVERAGE_WIDTH
-                    textSize = centerW * TEXT_SIZE_K
                     textAlign = Paint.Align.CENTER
                 }
                 for (i in 0 until curField.graph.kolNode) {
@@ -173,11 +172,25 @@ class GameActivity : AnyActivity() {
                             drawLine(centers[i].first, centers[i].second, centers[j].first, centers[j].second, p)
                             val vec = Pair(centers[j].first - centers[i].first, centers[j].second - centers[i].second) // it's so normal to calculate because it's constant
                             p.color = Color.GREEN
-//                            TODO("write normal root")
-                            drawText(curField.graph.data[i][j].toString(), centers[i].first + RIBS_POSITION * vec.first,
-                                centers[i].second + RIBS_POSITION * vec.second - (p.descent() + p.ascent())/2, p)
-                            drawText(curField.graph.data[j][i].toString(), centers[i].first + (1 - RIBS_POSITION) * vec.first,
-                                centers[i].second + (1 - RIBS_POSITION) * vec.second - (p.descent() + p.ascent())/2, p)
+                            p.textSize = centerW * TEXT_SIZE_K
+                            if (curField.graph.data[i][j].oper in listOf(Operation.ROOT, Operation.DEGREE)) {
+                                drawText(curField.graph.data[i][j].oper.opToString(), centers[i].first + RIBS_POSITION * vec.first,
+                                    centers[i].second + RIBS_POSITION * vec.second - (p.descent() + p.ascent()) / 2, p)
+                                drawText(curField.graph.data[j][i].oper.opToString(), centers[i].first + (1 - RIBS_POSITION) * vec.first,
+                                    centers[i].second + (1 - RIBS_POSITION) * vec.second - (p.descent() + p.ascent()) / 2, p)
+                                p.textSize = centerW * TEXT_SIZE_K2
+                                val x = if (curField.graph.data[i][j].oper == Operation.ROOT) RIBS_POSITION else 1 - RIBS_POSITION
+                                drawText(curField.graph.data[i][j].num.toString(), centers[i].first + x * vec.first - centerW * TEXT_SHIFT_ROOT_X,
+                                    centers[i].second + x * vec.second - (p.descent() + p.ascent()) / 2 - centerW * TEXT_SHIFT_ROOT_Y, p)
+                                drawText(curField.graph.data[j][i].num.toString(), centers[i].first + (1 - x) * vec.first + centerW * TEXT_SHIFT_DEGREE_X,
+                                    centers[i].second + (1 - x) * vec.second - (p.descent() + p.ascent()) / 2 - centerW * TEXT_SHIFT_DEGREE_Y, p)
+                            }
+                            else {
+                                drawText(curField.graph.data[i][j].toString(), centers[i].first + RIBS_POSITION * vec.first,
+                                    centers[i].second + RIBS_POSITION * vec.second - (p.descent() + p.ascent()) / 2, p)
+                                drawText(curField.graph.data[j][i].toString(), centers[i].first + (1 - RIBS_POSITION) * vec.first,
+                                    centers[i].second + (1 - RIBS_POSITION) * vec.second - (p.descent() + p.ascent()) / 2, p)
+                            }
                         }
                     }
                 }
