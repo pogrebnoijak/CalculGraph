@@ -28,6 +28,7 @@ class GameActivity : AnyActivity() {
     private lateinit var curField: Field
     private lateinit var vecCentres: List<Pair<Float, Float>>
     private lateinit var touchDown: Pair<Float, Float>
+    private lateinit var mode: String
 
     inner class Size(val width: Float, val height: Float)
     val size: Size
@@ -58,7 +59,7 @@ class GameActivity : AnyActivity() {
         }
 
     private fun getIntents() {
-        val a = intent.getStringExtra("mode")
+        mode = intent.getStringExtra("mode") ?: throw error("Wrong intent!")
     }
 
     private fun newGame() {
@@ -70,10 +71,16 @@ class GameActivity : AnyActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun doField() {
-        curField = Field(KOL_MOVES, KOL_NODES)
+        curField = Field(KOL_MOVES, KOL_NODES, mode)
         findViewById<TextView>(R.id.score).text = "score $winCount"
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
-        findViewById<TextView>(R.id.totalNumber).text = "need to get ${curField.totalNumber}"
+        val str = when(mode) {
+            "standard" -> curField.totalNumbers[0].toString()
+            "set" -> curField.totalNumbers.toString()
+            "max" -> "maximum"
+            else -> throw error("wrong mode!")
+        }
+        findViewById<TextView>(R.id.totalNumber).text = "need: $str"
         vecCentres = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
             .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
     }
@@ -246,7 +253,12 @@ class GameActivity : AnyActivity() {
                     textSize = centerW * TEXT_SIZE_BIG_K
                     textAlign = Paint.Align.CENTER
                 }
-                drawText(curField.currentNumber.toString(), centerW, centerH - (p.descent() + p.ascent())/2, p)
+                if (mode == "set") { // believe that length = 3
+                    (-1..1).forEach { i ->
+                        drawText(curField.currentNumbers[i+1].toString(), centerW, centerH - (p.descent() + p.ascent())/2 + i * centerW * SET_TURN_K, p)
+                    }
+                }
+                else drawText(curField.currentNumbers[0].toString(), centerW, centerH - (p.descent() + p.ascent())/2, p)
 
                 p.apply {
                     strokeWidth = LARGE_WIDTH
