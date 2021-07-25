@@ -9,6 +9,9 @@ class Graph(val kolNode: Int, val kolBranch: Int = 6) {
     val data: Array<Array<Inscription>> = generateGraph()
 
     private fun generateGraph(): Array<Array<Inscription>> {
+        fun factorial(n: Int) = (2..n).fold(1L, Long::times)
+        if (factorial(kolNode) < kolBranch) throw error("Too match branches!")
+
         val probList = listOf(PLUS, PLUS, PLUS, MINUS, MINUS, MINUS, MULTIPLICATION, MULTIPLICATION, DIVISION, DIVISION, DEGREE, ROOT)
         val _data = Array(kolNode) {
             Array(kolNode) {
