@@ -6,22 +6,24 @@ import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.MotionEventCompat
 import com.example.calculgraph.constant.*
 import java.util.*
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 
 class GameActivity : AnyActivity() {
     private var play = true
+    private var time = 0L           // ms
     private lateinit var background: DrawView
     private lateinit var curField: Field
-    private var time = 0L           // ms
+    private lateinit var vecCentres: List<Pair<Float, Float>>
+    private lateinit var touchDown: Pair<Float, Float>
 
     inner class Size(val width: Float, val height: Float)
     val size: Size
@@ -37,9 +39,24 @@ class GameActivity : AnyActivity() {
         setContentView(R.layout.activity_game)
         setButtons()
         getIntents()
-        addDraws()
         doField()
+        addDraws()
         setRendering()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val action = MotionEventCompat.getActionMasked(event)
+        return when (action) {
+            MotionEvent.ACTION_DOWN -> {
+                touchDown = Pair(event.rawX, event.rawY)
+                true
+            }
+            MotionEvent.ACTION_UP -> {
+                treatment(touchDown, Pair(event.rawX, event.rawY))
+                true
+            }
+            else -> super.onTouchEvent(event)
+        }
     }
 
     override fun setButtons() {
@@ -50,9 +67,7 @@ class GameActivity : AnyActivity() {
             finish()
         }
         findViewById<Button>(R.id.back).setOnClickListener {
-            val intent = Intent(this, MainActivity :: class.java )
-            startActivity(intent)
-            finish()
+            curField.back()
         }
     }
 
@@ -71,6 +86,8 @@ class GameActivity : AnyActivity() {
         curField = Field(KOL_MOVES,KOL_NODES)
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
         findViewById<TextView>(R.id.totalNumber).text = "need to get ${curField.totalNumber}"
+        vecCentres = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
+            .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
     }
 
     private fun setRendering() {
@@ -87,6 +104,25 @@ class GameActivity : AnyActivity() {
         timer.schedule(motion, 0, DRAWING)
     }
 
+    private fun treatment(start: Pair<Float, Float>, end: Pair<Float, Float>) {
+        operator fun Pair<Float, Float>.minus(v: Pair<Float, Float>) = Pair(first - v.first, second - v.second)
+        fun Pair<Float, Float>.skalProd(v: Pair<Float, Float>) = first * v.first + second * v.second
+        fun Pair<Float, Float>.l2() = sqrt(skalProd(this))
+        fun angle(v1: Pair<Float, Float>, v2: Pair<Float, Float>) = // cos
+            v1.skalProd(v2) / (v1.l2() * v2.l2())  // v1, v2 not 0
+
+        if ((end - start).l2() > CASUAL_MOVE) {
+            curField.graph.data[curField.currentNode]
+                .mapIndexed { i, insc -> Pair(i, insc) }
+                .filter { it.second.oper != Operation.NONE }
+                .map { Pair(it.first, angle(end - start, vecCentres[it.first] - vecCentres[curField.currentNode])) }
+                .filter { it.second >= cos(THRESHOLD_ANGLE) }
+                .maxByOrNull { it.second }
+                ?.first
+                ?.let { curField.move(it) }
+        }
+    }
+
 
     abstract inner class Draws(context: Context?) : View(context) {
         val p: Paint = Paint()
@@ -97,10 +133,8 @@ class GameActivity : AnyActivity() {
         val radMini = centerW * RAD_MINI_K
         val radInner = centerW * RAD_INNER_K
         val rect = RectF(centerW - rad, centerH - rad, centerW + rad, centerH + rad)
-        val centers: List<Pair<Float, Float>>
-            get() = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
-                .map { Pair((centerW + radIn * cos(PI * it)).toFloat(), (centerH + radIn * sin(PI * it)).toFloat()) }
-                .toList()
+        val centers: List<Pair<Float, Float>> =
+            vecCentres.map { pair -> Pair(pair.first * radIn + centerW, pair.second * radIn + centerH) }
     }
 
     private inner class DrawViewConstant(context: Context?) : Draws(context) {
