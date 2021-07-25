@@ -20,6 +20,9 @@ import kotlin.math.*
 class GameActivity : AnyActivity() {
     private var play = true
     private var time = 0L           // ms
+    private var winCount = 0
+    private val timer = Timer()
+    private var motion: TimerTask = object: TimerTask() { override fun run() {} }
     private lateinit var background: DrawView
     private lateinit var curField: Field
     private lateinit var vecCentres: List<Pair<Float, Float>>
@@ -37,11 +40,8 @@ class GameActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_game)
-        setButtons()
         getIntents()
-        doField()
-        addDraws()
-        setRendering()
+        newGame()
     }
 
     override fun onTouchEvent(event: MotionEvent) = when (MotionEventCompat.getActionMasked(event)) {
@@ -50,16 +50,38 @@ class GameActivity : AnyActivity() {
                 true
             }
             MotionEvent.ACTION_UP -> {
-                treatment(touchDown, Pair(event.rawX, event.rawY))
+                if (play) treatment(touchDown, Pair(event.rawX, event.rawY))
                 true
             }
             else -> super.onTouchEvent(event)
         }
 
+    private fun getIntents() {
+        val a = intent.getStringExtra("mode")
+    }
+
+    private fun newGame() {
+        doField()
+        setButtons()
+        addDraws()
+        setRendering()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun doField() {
+        curField = Field(KOL_MOVES, KOL_NODES)
+        findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
+        findViewById<TextView>(R.id.totalNumber).text = "need to get ${curField.totalNumber}"
+        vecCentres = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
+            .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
+    }
+
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
             val intent = Intent(this, MainActivity :: class.java )
             play = false
+            motion.cancel()
+            timer.cancel()
             startActivity(intent)
             finish()
         }
@@ -68,28 +90,18 @@ class GameActivity : AnyActivity() {
         }
     }
 
-    private fun getIntents() {
-        val a = intent.getStringExtra("mode")
-    }
-
     private fun addDraws() {
+        findViewById<ConstraintLayout>(R.id.draw).removeAllViews()
         findViewById<ConstraintLayout>(R.id.draw).addView(DrawViewConstant(this))
         background = DrawView(this)
         findViewById<ConstraintLayout>(R.id.draw).addView(background)
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun doField() {
-        curField = Field(KOL_MOVES,KOL_NODES)
-        findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
-        findViewById<TextView>(R.id.totalNumber).text = "need to get ${curField.totalNumber}"
-        vecCentres = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
-            .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
-    }
-
     private fun setRendering() {
-        val timer = Timer()
-        val motion = object : TimerTask() {
+        motion.cancel()
+        time = 0L
+        play = true
+        motion = object : TimerTask() {
             override fun run() {
                 if(play) {
                     time += DRAWING
@@ -116,7 +128,16 @@ class GameActivity : AnyActivity() {
                 .filter { it.second >= cos(THRESHOLD_ANGLE) }
                 .maxByOrNull { it.second }
                 ?.first
-                ?.let { curField.move(it) }
+                ?.let { move(it) }
+        }
+    }
+
+    private fun move(to: Int) {
+        val win = curField.move(to)
+        findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
+        if (win) {
+            winCount++
+            newGame()
         }
     }
 
