@@ -1,5 +1,7 @@
 package com.example.calculgraph.constant
 
+import kotlin.math.PI
+
 // const
 const val DRAWING = 10L         // ms
 const val LAYOUT_CONST = 0.7F
@@ -17,6 +19,7 @@ const val RAD_MINI_K = 0.1F
 const val RAD_INNER_K = 0.3F
 const val TEXT_SIZE_K = 0.08F
 const val TEXT_SIZE_BIG_K = 0.1F
+const val CASUAL_MOVE = 10F
 
 // params
 const val ALL_TIME = 60_000L     // ms
@@ -24,6 +27,7 @@ const val KOL_MOVES = 2
 const val KOL_NODES = 5
 const val CURRENT_NUMBER_MAX = 100
 const val CURRENT_TOTAL_MAX = 100
+const val THRESHOLD_ANGLE = PI/12
 val BOUNDS_PLUS_MINUS = Pair(0, 100)
 val BOUNDS_MULTIPLICATION = Pair(0, 20)
 val BOUNDS_DIVISION = Pair(1, 20)

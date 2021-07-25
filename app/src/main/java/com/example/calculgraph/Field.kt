@@ -14,10 +14,13 @@ class Field(var kolMoves: Int, kolNode: Int) {
     private val history = Stack<Int>()
 
     fun move(to: Int) {
-        history.push(currentNode)
-        moving(currentNode, to)
-        currentNode = to
-        kolMoves--
+        if (history.isNotEmpty() && history.peek() == to) back()
+        else {
+            history.push(currentNode)
+            moving(currentNode, to)
+            currentNode = to
+            kolMoves--
+        }
     }
 
     fun back() {
@@ -27,20 +30,19 @@ class Field(var kolMoves: Int, kolNode: Int) {
             currentNode = history.pop()
             moving(from, currentNode)
         }
-        // TODO ("else")
     }
 
     private fun moving(from: Int, to: Int) {
         when(graph.data[from][to].oper) {
             NONE              -> throw error("wrong move!")
-            PLUS              -> currentNode += graph.data[from][to].num ?: throw error("wrong data num!")
-            MINUS             -> currentNode -= graph.data[from][to].num ?: throw error("wrong data num!")
-            MULTIPLICATION    -> currentNode *= graph.data[from][to].num ?: throw error("wrong data num!")
+            PLUS              -> currentNumber += graph.data[from][to].num ?: throw error("wrong data num!")
+            MINUS             -> currentNumber -= graph.data[from][to].num ?: throw error("wrong data num!")
+            MULTIPLICATION    -> currentNumber *= graph.data[from][to].num ?: throw error("wrong data num!")
             DIVISION          -> if (graph.data[from][to].num == 0) throw error("0 division")
-            else currentNode /= graph.data[from][to].num ?: throw error("wrong data num!")
-            DEGREE            -> graph.data[from][to].num?.let { currentNode.toDouble().pow(it) } ?: throw error("wrong data num!")
+            else currentNumber /= graph.data[from][to].num ?: throw error("wrong data num!")
+            DEGREE            -> graph.data[from][to].num?.let { currentNumber.toDouble().pow(it) } ?: throw error("wrong data num!")
             ROOT              -> if (graph.data[from][to].num == 0) throw error("0 division")
-            else graph.data[from][to].num?.let { currentNode.toDouble().pow(1 / it) } ?: throw error("wrong data num!")
+            else graph.data[from][to].num?.let { currentNumber.toDouble().pow(1 / it) } ?: throw error("wrong data num!")
         }
     }
 }
