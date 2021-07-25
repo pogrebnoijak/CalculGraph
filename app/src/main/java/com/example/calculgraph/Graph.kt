@@ -4,12 +4,12 @@ import com.example.calculgraph.Operation.*
 import com.example.calculgraph.constant.*
 import kotlin.random.Random
 
-class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, val kolBranch: Int = 6) {
+class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, mode: String, val kolBranch: Int = 6) {
     inner class Inscription(val oper: Operation, val num: Int?) {
         override fun toString() = oper.opToString() + num.toString()
     }
 
-    val data: Array<Array<Inscription>> = generateGraph(kolMoves, currentNode)
+    val data: Array<Array<Inscription>> = generateGraph(kolMoves, currentNode, mode)
 
     fun listTo(data: Array<Array<Inscription>>) = data.map { line ->
         line.mapIndexed { i, insc -> Pair(i, insc) }
@@ -18,12 +18,16 @@ class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, val kolBranch: Int
     }
 
 //    TODO("rewrite to normal generation")
-    private fun generateGraph(kolMoves: Int, currentNode: Int): Array<Array<Inscription>> {
+    private fun generateGraph(kolMoves: Int, currentNode: Int, mode: String): Array<Array<Inscription>> {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
         if (factorial(kolNode) < kolBranch) throw error("Too match branches!")
 
-        val probList =
-            listOf(PLUS, PLUS, PLUS, MINUS, MINUS, MINUS, MULTIPLICATION, MULTIPLICATION, DIVISION, DIVISION, DEGREE, ROOT)
+        val probList: List<Operation> = when(mode) {
+            "standard" -> PROB_LIST_STANDARD
+            "set" -> PROB_LIST_SET
+            "max" -> PROB_LIST_MAX
+            else -> throw error("Wring mode!")
+        }
         lateinit var _data: Array<Array<Inscription>>
         val kolInIndex = Array(kolNode) {0}
 
