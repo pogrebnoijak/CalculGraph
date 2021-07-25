@@ -44,9 +44,7 @@ class GameActivity : AnyActivity() {
         setRendering()
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        val action = MotionEventCompat.getActionMasked(event)
-        return when (action) {
+    override fun onTouchEvent(event: MotionEvent) = when (MotionEventCompat.getActionMasked(event)) {
             MotionEvent.ACTION_DOWN -> {
                 touchDown = Pair(event.rawX, event.rawY)
                 true
@@ -57,7 +55,6 @@ class GameActivity : AnyActivity() {
             }
             else -> super.onTouchEvent(event)
         }
-    }
 
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
