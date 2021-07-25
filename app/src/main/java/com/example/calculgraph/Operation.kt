@@ -23,11 +23,11 @@ fun Operation.reverse() = when(this) {
 }
 
 fun Operation.opToString() = when(this) {
-    PLUS -> "+"
-    MINUS -> "-"
-    MULTIPLICATION -> "*"
-    DIVISION -> "/"
-    DEGREE -> "x"
-    ROOT -> "\u221a¯"
-    NONE -> ""
+    PLUS            -> "+"
+    MINUS           -> "-"
+    MULTIPLICATION  -> "*"
+    DIVISION        -> "/"
+    DEGREE          -> "x"
+    ROOT            -> "\u221a¯"
+    NONE            -> ""
 }

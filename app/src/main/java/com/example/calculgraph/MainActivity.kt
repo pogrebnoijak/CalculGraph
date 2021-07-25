@@ -20,15 +20,15 @@ class MainActivity : AnyActivity() {
             val dialog = Dialog(this@MainActivity)
             dialog.setContentView(R.layout.dialog_game_mode)
             dialog.show()
-            dialog.findViewById<View>(R.id.standard).setOnClickListener {
+            dialog.findViewById<Button>(R.id.standard).setOnClickListener {
                 dialog.dismiss()
                 startGame("standard")
             }
-            dialog.findViewById<View>(R.id.max).setOnClickListener {
+            dialog.findViewById<Button>(R.id.max).setOnClickListener {
                 dialog.dismiss()
                 startGame("max")
             }
-            dialog.findViewById<View>(R.id.set).setOnClickListener {
+            dialog.findViewById<Button>(R.id.set).setOnClickListener {
                 dialog.dismiss()
                 startGame("set")
             }

@@ -1,6 +1,5 @@
 package com.example.calculgraph
 
-import android.provider.DocumentsContract
 import com.example.calculgraph.Operation.*
 import com.example.calculgraph.constant.*
 import kotlin.random.Random
@@ -18,6 +17,7 @@ class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, val kolBranch: Int
             .map { it.first }
     }
 
+//    TODO("rewrite to normal generation")
     private fun generateGraph(kolMoves: Int, currentNode: Int): Array<Array<Inscription>> {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
         if (factorial(kolNode) < kolBranch) throw error("Too match branches!")

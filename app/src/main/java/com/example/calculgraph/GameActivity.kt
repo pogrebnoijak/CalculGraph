@@ -1,6 +1,7 @@
 package com.example.calculgraph
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
@@ -79,12 +80,7 @@ class GameActivity : AnyActivity() {
 
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
-            val intent = Intent(this, MainActivity :: class.java )
-            play = false
-            motion.cancel()
-            timer.cancel()
-            startActivity(intent)
-            finish()
+            exitGame()
         }
         findViewById<Button>(R.id.back).setOnClickListener {
             curField.back()
@@ -108,7 +104,10 @@ class GameActivity : AnyActivity() {
                 if(play) {
                     time += DRAWING
                     background.invalidate()
-                    if (time >= ALL_TIME) play = false
+                    if (time >= ALL_TIME) {
+                        play = false
+                        endGame()
+                    }
                 }
             }
         }
@@ -141,6 +140,33 @@ class GameActivity : AnyActivity() {
             winCount++
             newGame()
         }
+    }
+
+    private fun endGame() {
+        runOnUiThread {
+            val dialog = Dialog(this@GameActivity)
+            dialog.setContentView(R.layout.dialog_yes_no)
+            dialog.findViewById<TextView>(R.id.dial_text).text = "You have scored $winCount points. Do you want to play again?"
+            dialog.show()
+            dialog.findViewById<Button>(R.id.yes).setOnClickListener {
+                dialog.dismiss()
+                winCount = 0
+                newGame()
+            }
+            dialog.findViewById<Button>(R.id.no).setOnClickListener {
+                dialog.dismiss()
+                exitGame()
+            }
+        }
+    }
+
+    private fun exitGame() {
+        val intent = Intent(this, MainActivity :: class.java )
+        play = false
+        motion.cancel()
+        timer.cancel()
+        startActivity(intent)
+        finish()
     }
 
 
