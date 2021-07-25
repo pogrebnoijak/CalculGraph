@@ -70,6 +70,7 @@ class GameActivity : AnyActivity() {
     @SuppressLint("SetTextI18n")
     private fun doField() {
         curField = Field(KOL_MOVES, KOL_NODES)
+        findViewById<TextView>(R.id.score).text = "score $winCount"
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
         findViewById<TextView>(R.id.totalNumber).text = "need to get ${curField.totalNumber}"
         vecCentres = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
@@ -87,6 +88,7 @@ class GameActivity : AnyActivity() {
         }
         findViewById<Button>(R.id.back).setOnClickListener {
             curField.back()
+            findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
         }
     }
 
