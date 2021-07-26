@@ -2,18 +2,30 @@ package com.example.calculgraph
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import kotlin.system.exitProcess
 
+
 class MainActivity : AnyActivity() {
+    var prefs: SharedPreferences? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_main)
         setButtons()
+//        prefs = getSharedPreferences("com.example.calculgraph", MODE_PRIVATE);
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        if (prefs?.getBoolean("firstrun", true) == true) {  // executed once after update
+//            prefs?.edit()?.putBoolean("firstrun", false)?.apply()
+//
+//        }
+//    }
 
     override fun setButtons() {
         findViewById<Button>(R.id.new_game).setOnClickListener {
@@ -32,6 +44,13 @@ class MainActivity : AnyActivity() {
                 dialog.dismiss()
                 startGame("set")
             }
+        }
+
+//        TODO("update this")
+        findViewById<Button>(R.id.continue_).setOnClickListener {
+            val intent = Intent(this, GameActivity :: class.java )
+            startActivity(intent)
+            finish()
         }
 
         findViewById<Button>(R.id.levels).setOnClickListener {
