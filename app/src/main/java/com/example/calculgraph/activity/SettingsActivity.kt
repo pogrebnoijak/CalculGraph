@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.core.view.size
 import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.dataBase.DBWorker
@@ -37,7 +38,7 @@ class SettingsActivity : AnyActivity() {
     private fun setOther() {
         fun tuningSpinner(rIdSmth: Int, list: Array<Any>, update: (String) -> Unit) {
             findViewById<Spinner>(rIdSmth).apply {
-                adapter = ArrayAdapter(this@SettingsActivity, android.R.layout.simple_spinner_item, list)
+                adapter = ArrayAdapter(this@SettingsActivity, android.R.layout.simple_spinner_dropdown_item, list)
                 onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         update(list[position].toString())

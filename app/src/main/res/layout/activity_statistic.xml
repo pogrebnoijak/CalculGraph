@@ -36,6 +36,7 @@
                 android:layout_gravity="center"
                 android:textSize="25sp"
                 android:layout_marginStart="25dp"
+                android:textColor="@color/white"
                 android:text="@string/games" />
 
             <TextView
@@ -46,6 +47,7 @@
                 android:layout_gravity="center"
                 android:textSize="25sp"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:text="@string/placeholder"/>
 
         </LinearLayout>
@@ -62,6 +64,7 @@
                 android:layout_gravity="center"
                 android:textSize="25sp"
                 android:layout_marginStart="25dp"
+                android:textColor="@color/white"
                 android:text="@string/average_score" />
 
             <TextView
@@ -72,6 +75,7 @@
                 android:layout_gravity="center"
                 android:textSize="25sp"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:text="@string/placeholder"/>
 
         </LinearLayout>
@@ -88,6 +92,7 @@
                 android:layout_gravity="center"
                 android:textSize="25sp"
                 android:layout_marginStart="25dp"
+                android:textColor="@color/white"
                 android:text="@string/max_score" />
 
             <TextView
@@ -98,6 +103,7 @@
                 android:layout_gravity="center"
                 android:textSize="25sp"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:text="@string/placeholder"/>
 
         </LinearLayout>
