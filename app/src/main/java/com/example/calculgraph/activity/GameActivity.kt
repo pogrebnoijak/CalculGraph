@@ -29,6 +29,7 @@ class GameActivity : AnyActivity() {
     private var time = 0L           // ms
     private var winCount = 0
     private val timer = Timer()
+    private val dbWorker = DBWorker()
     private var motion: TimerTask = object: TimerTask() { override fun run() {} }
     private lateinit var background: DrawView
     private lateinit var curField: Field
@@ -48,8 +49,8 @@ class GameActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_game)
-        if (getIntentsAndReturnGameStatus()) newGame()
-        else continueGame()
+        dbWorker.init(this)
+        saveStatAndStartGame()
     }
 
     override fun onTouchEvent(event: MotionEvent) = when (MotionEventCompat.getActionMasked(event)) {
@@ -64,6 +65,15 @@ class GameActivity : AnyActivity() {
             else -> super.onTouchEvent(event)
         }
 
+    private fun saveStatAndStartGame() {
+        val saveState: SaveState = (DBHelper(this).read("saveState") ?: throw error("No saveState in the db")) as SaveState
+        if (getIntentsAndReturnGameStatus()) {
+            if (!saveState.endGame) dbWorker.tempUpdateStatistic(saveState.score)
+            newGame()
+        }
+        else continueGame(saveState)
+    }
+
     private fun getIntentsAndReturnGameStatus(): Boolean {
         mode = intent.getStringExtra("mode") ?: throw error("Wrong intent!")
         return intent.getBooleanExtra("isNewGame", true)
@@ -75,8 +85,7 @@ class GameActivity : AnyActivity() {
         sets()
     }
 
-    private fun continueGame() {
-        val saveState: SaveState = (DBHelper(this).read("saveState") ?: throw error("No saveState in the db")) as SaveState
+    private fun continueGame(saveState: SaveState) {
         if (saveState.endGame) newGame()
         else {
             time = saveState.time
@@ -204,10 +213,8 @@ class GameActivity : AnyActivity() {
     }
 
     private fun exitGame() {
-        val dbWorker = DBWorker()
-        dbWorker.init(this)
-//        TODO("remove bug")
-        dbWorker.tempUpdateStatistic(winCount)
+        if (!play)
+            dbWorker.tempUpdateStatistic(winCount)
         saveGameState(dbWorker)
         val intent = Intent(this, MainActivity :: class.java )
         play = false
