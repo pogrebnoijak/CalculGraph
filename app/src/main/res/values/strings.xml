@@ -21,4 +21,8 @@
     <string name="topic">Topic:</string>
     <string name="computability">Computability:</string>
     <string name="time">Time:</string>
+    <string name="continue_">continue</string>
+    <string name="games">Games:</string>
+    <string name="average_score">Average score:</string>
+    <string name="max_score">Max score:</string>
 </resources>
