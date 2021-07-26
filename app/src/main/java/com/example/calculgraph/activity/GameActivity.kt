@@ -2,6 +2,7 @@ package com.example.calculgraph.activity
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
@@ -13,11 +14,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MotionEventCompat
-import com.example.calculgraph.playField.Field
 import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.enums.*
+import com.example.calculgraph.playField.Field
+import com.example.calculgraph.states.SaveState
 import java.util.*
 import kotlin.math.*
 
@@ -175,6 +177,7 @@ class GameActivity : AnyActivity() {
         val dbWorker = DBWorker()
         dbWorker.init(this)
         dbWorker.tempUpdateStatistic(winCount)
+        saveGameState(dbWorker)
         val intent = Intent(this, MainActivity :: class.java )
         play = false
         motion.cancel()
@@ -182,6 +185,22 @@ class GameActivity : AnyActivity() {
         dbWorker.updateExit()
         startActivity(intent)
         finish()
+    }
+
+    private fun saveGameState(dbWorker: DBWorker) {
+        dbWorker.tempUpdateSaveState(SaveState(
+            !play,
+            time,
+            winCount,
+            curField.kolMoves,
+            curField.currentNode,
+            mode,
+            curField.currentNumbers,
+            curField.totalNumbers,
+            curField.history,
+            curField.answer,
+            curField.graph.data.toList().map { it.toList() })
+        )
     }
 
 

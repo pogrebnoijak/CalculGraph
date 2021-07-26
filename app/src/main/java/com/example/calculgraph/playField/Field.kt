@@ -1,6 +1,5 @@
 package com.example.calculgraph.playField
 
-import com.example.calculgraph.playField.Graph
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
@@ -14,8 +13,8 @@ class Field(var kolMoves: Int, kolNode: Int, mode: String) {
     private val lenList = if (mode == "set") SET_LENGTH else 1
     var currentNumbers = List(lenList) { Random.nextInt(0, CURRENT_NUMBER_MAX) }
     var totalNumbers: List<Int>
-    private val history = Stack<Int>()
-    private val answer = Stack<Int>()
+    val history = Stack<Int>()
+    val answer = Stack<Int>()
 
     init {
         val list = graph.listTo(graph.data)
