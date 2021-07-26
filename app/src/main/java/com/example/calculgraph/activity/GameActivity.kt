@@ -2,7 +2,6 @@ package com.example.calculgraph.activity
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
@@ -16,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MotionEventCompat
 import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
+import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.playField.Field
@@ -48,8 +48,8 @@ class GameActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_game)
-        getIntents()
-        newGame()
+        if (getIntentsAndReturnGameStatus()) newGame()
+        else continueGame()
     }
 
     override fun onTouchEvent(event: MotionEvent) = when (MotionEventCompat.getActionMasked(event)) {
@@ -64,20 +64,45 @@ class GameActivity : AnyActivity() {
             else -> super.onTouchEvent(event)
         }
 
-    private fun getIntents() {
+    private fun getIntentsAndReturnGameStatus(): Boolean {
         mode = intent.getStringExtra("mode") ?: throw error("Wrong intent!")
+        return intent.getBooleanExtra("isNewGame", true)
     }
 
     private fun newGame() {
         doField()
-        setButtons()
-        addDraws()
-        setRendering()
+        time = 0L
+        sets()
+    }
+
+    private fun continueGame() {
+        val saveState: SaveState = (DBHelper(this).read("saveState") ?: throw error("No saveState in the db")) as SaveState
+        if (saveState.endGame) newGame()
+        else {
+            time = saveState.time
+            winCount = saveState.score
+            mode = saveState.mode
+            redoField(saveState)
+            sets()
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun doField() {
-        curField = Field(KOL_MOVES, KOL_NODES, mode)
+        curField = Field(KOL_MOVES, KOL_NODES)
+        curField.init(mode)
+        writeField()
+    }
+
+    private fun redoField(saveState: SaveState) {
+        saveState.apply {
+            curField = Field(kolMoves, data.size)
+            curField.set(currentNode, currentNumbers, totalNumbers, history, answer, data)
+        }
+        writeField()
+    }
+
+    private fun writeField() {
         findViewById<TextView>(R.id.score).text = "score $winCount"
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
         val str = when(mode) {
@@ -89,6 +114,12 @@ class GameActivity : AnyActivity() {
         findViewById<TextView>(R.id.totalNumber).text = "need: $str"
         vecCentres = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
             .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
+    }
+
+    private fun sets() {
+        setButtons()
+        addDraws()
+        setRendering()
     }
 
     override fun setButtons() {
@@ -110,7 +141,6 @@ class GameActivity : AnyActivity() {
 
     private fun setRendering() {
         motion.cancel()
-        time = 0L
         play = true
         motion = object : TimerTask() {
             override fun run() {
@@ -176,6 +206,7 @@ class GameActivity : AnyActivity() {
     private fun exitGame() {
         val dbWorker = DBWorker()
         dbWorker.init(this)
+//        TODO("remove bug")
         dbWorker.tempUpdateStatistic(winCount)
         saveGameState(dbWorker)
         val intent = Intent(this, MainActivity :: class.java )

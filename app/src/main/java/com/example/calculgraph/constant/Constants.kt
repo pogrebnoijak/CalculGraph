@@ -6,6 +6,7 @@ import kotlin.math.PI
 // const
 const val DRAWING = 10L         // ms
 const val LAYOUT_CONST = 0.7F
+const val MAGIC = -1
 
 // point
 const val SMALL_WIDTH = 3F

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBHelper
+import com.example.calculgraph.serializer.Serializer
 import com.example.calculgraph.states.SettingsState
 import kotlin.system.exitProcess
 
@@ -54,11 +55,7 @@ class MainActivity : AnyActivity() {
         }
 
 //        TODO("update this")
-        findViewById<Button>(R.id.continue_).setOnClickListener {
-            val intent = Intent(this, GameActivity :: class.java )
-            startActivity(intent)
-            finish()
-        }
+        findViewById<Button>(R.id.continue_).setOnClickListener { continueGame() }
 
         findViewById<Button>(R.id.levels).setOnClickListener {
             val intent = Intent(this, LevelsActivity :: class.java )
@@ -87,6 +84,15 @@ class MainActivity : AnyActivity() {
     private fun startGame(str: String) {
         val intent = Intent(this, GameActivity::class.java)
         intent.putExtra("mode", str)
+        intent.putExtra("isNewGame", true)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun continueGame() {
+        val intent = Intent(this, GameActivity :: class.java )
+        intent.putExtra("mode", "standard")                                             // default mode if not start before
+        intent.putExtra("isNewGame", false)
         startActivity(intent)
         finish()
     }

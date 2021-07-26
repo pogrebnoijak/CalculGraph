@@ -76,6 +76,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvSett.put("time", 60)
         db.insert("settings", null, cvSett)
 
+        val emptyList = Serializer.listToBytes(listOf())
         val cvSave = ContentValues()
         cvSave.put("endGame", 1)
         cvSave.put("time", 0)
@@ -83,11 +84,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvSave.put("kolMoves", 0)
         cvSave.put("currentNode", 0)
         cvSave.put("mode", "")
-        cvSave.put("currentNumbers", "".toByteArray())
-        cvSave.put("totalNumbers", "".toByteArray())
-        cvSave.put("history", "".toByteArray())
-        cvSave.put("answer", "".toByteArray())
-        cvSave.put("data", "".toByteArray())
+        cvSave.put("currentNumbers", emptyList)
+        cvSave.put("totalNumbers", emptyList)
+        cvSave.put("history", emptyList)
+        cvSave.put("answer", emptyList)
+        cvSave.put("data", emptyList)
         db.insert("saveState", null, cvSave)
     }
 
@@ -182,7 +183,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("answer")),
                         object : TypeToken<List<Int>>() {}.type) as List<Int>,
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("data")),
-                        object : TypeToken<List<Int>>() {}.type) as List<List<Graph.Inscription>>
+                        object : TypeToken<List<List<Graph.Inscription>>>() {}.type) as List<List<Graph.Inscription>>
                 )
             }
             else        -> throw error("wrong table name")

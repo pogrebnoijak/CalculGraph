@@ -5,21 +5,28 @@ import com.example.calculgraph.enums.*
 import com.example.calculgraph.constant.*
 import kotlin.random.Random
 
-class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, mode: String, val kolBranch: Int = 6) {
+class Graph(val kolNode: Int) {
     inner class Inscription(val oper: Operation, val num: Int?) {
         override fun toString() = oper.opToString() + num.toString()
     }
 
-    val data: Array<Array<Inscription>> = generateGraph(kolMoves, currentNode, mode)
+//    TODO(do vals)
+    lateinit var data: List<List<Inscription>>
+    var kolBranch: Int = MAGIC
 
-    fun listTo(data: Array<Array<Inscription>>) = data.map { line ->
+    fun init(kolMoves: Int, currentNode:Int, mode: String, _kolBranch: Int = 6) {
+        kolBranch = _kolBranch
+        data = generateGraph(kolMoves, currentNode, mode)
+    }
+
+    fun listTo(data: List<List<Inscription>>) = data.map { line ->
         line.mapIndexed { i, insc -> Pair(i, insc) }
             .filter { it.second.oper != NONE }
             .map { it.first }
     }
 
 //    TODO("rewrite to normal generation")
-    private fun generateGraph(kolMoves: Int, currentNode: Int, mode: String): Array<Array<Inscription>> {
+    private fun generateGraph(kolMoves: Int, currentNode: Int, mode: String): List<List<Inscription>> {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
         if (factorial(kolNode) < kolBranch) throw error("Too match branches!")
 
@@ -29,8 +36,8 @@ class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, mode: String, val 
             "max" -> PROB_LIST_MAX
             else -> throw error("Wring mode!")
         }
-        lateinit var _data: Array<Array<Inscription>>
-        val kolInIndex = Array(kolNode) {0}
+        lateinit var _data: MutableList<MutableList<Inscription>>
+        val kolInIndex = List(kolNode) {0}.toMutableList()
 
         fun doBounds(oper: Operation) = when(oper) {
             PLUS, MINUS                 -> BOUNDS_PLUS_MINUS
@@ -64,13 +71,13 @@ class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, mode: String, val 
                 return false
             }
 
-            return dfs(currentNode, -1, kolMoves)
+            return dfs(currentNode, MAGIC, kolMoves)
         }
 
 
         do {
-            _data = Array(kolNode) {
-                Array(kolNode) {
+            _data = MutableList(kolNode) {
+                MutableList(kolNode) {
                     Inscription(NONE, null)
                 }
             }
@@ -83,7 +90,7 @@ class Graph(val kolNode: Int, kolMoves: Int, currentNode:Int, mode: String, val 
                 kol--
             }
             while (kol != 0) {
-                var i = -1
+                var i = MAGIC
                 while (i < 0 || kolInIndex[i] == kolNode - 1) {
                     i = Random.nextInt(0, kolNode)
                 }

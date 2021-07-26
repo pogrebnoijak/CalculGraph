@@ -7,29 +7,35 @@ import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation.*
 import java.lang.Integer.MIN_VALUE
 
-class Field(var kolMoves: Int, kolNode: Int, mode: String) {
-    var currentNode = Random.nextInt(0, kolNode)
-    val graph = Graph(kolNode, kolMoves, currentNode, mode)
-    private val lenList = if (mode == "set") SET_LENGTH else 1
-    var currentNumbers = List(lenList) { Random.nextInt(0, CURRENT_NUMBER_MAX) }
-    var totalNumbers: List<Int>
+class Field(var kolMoves: Int, kolNodes: Int) {
+    //    TODO(do vals)
+    var currentNode: Int = MAGIC
+    val graph = Graph(kolNodes)
+    lateinit var currentNumbers: List<Int>
+    lateinit var totalNumbers: List<Int>
     val history = Stack<Int>()
     val answer = Stack<Int>()
 
-    init {
+    fun init(mode: String) {
+        currentNode = Random.nextInt(0, graph.kolNode)
+        graph.init(kolMoves, currentNode, mode)
+        val lenList = if (mode == "set") SET_LENGTH else 1
+        currentNumbers = List(lenList) { Random.nextInt(0, CURRENT_NUMBER_MAX) }
+
+
         val list = graph.listTo(graph.data)
 
         if (mode == "max") {
             fun Pair<Int, List<Int>>.mapSecond(function: (List<Int>) -> List<Int>) = Pair(first, function(second))
 
             fun doPath(q: Int, cur: Int, last: Int, kol: Int): Pair<Int, List<Int>> {
-                if (kol == 0) return Pair(if (last == -1) q else _moving(last, cur, listOf(q)).first(), listOf(cur))
+                if (kol == 0) return Pair(if (last == MAGIC) q else _moving(last, cur, listOf(q)).first(), listOf(cur))
                 return list[cur].filter { it != last }
-                    .map { next -> doPath(if (last == -1) q else _moving(last, cur, listOf(q)).first(), next, cur, kol - 1) }
+                    .map { next -> doPath(if (last == MAGIC) q else _moving(last, cur, listOf(q)).first(), next, cur, kol - 1) }
                     .maxByOrNull { it.first }?.mapSecond { it + cur } ?: Pair(MIN_VALUE, listOf())
             }
 
-            val p = doPath(currentNumbers[0], currentNode, -1, kolMoves)
+            val p = doPath(currentNumbers[0], currentNode, MAGIC, kolMoves)
             totalNumbers = listOf(p.first)
             answer.addAll(p.second)
         }
@@ -50,7 +56,7 @@ class Field(var kolMoves: Int, kolNode: Int, mode: String) {
                 return true
             }
 
-            doPath(currentNode, -1, kolMoves)
+            doPath(currentNode, MAGIC, kolMoves)
             val tempCurrentNumber = currentNumbers
             answer.windowed(2).reversed().forEach {
                 moving(it[1], it[0])
@@ -60,6 +66,22 @@ class Field(var kolMoves: Int, kolNode: Int, mode: String) {
             currentNumbers = tempCurrentNumber
         }
 //        println("answer - ${answer.toList()}")                                                    //
+    }
+
+    fun set(
+        _currentNode: Int,
+        _currentNumbers: List<Int>,
+        _totalNumbers: List<Int>,
+        _history: List<Int>,
+        _answer: List<Int>,
+        _data: List<List<Graph.Inscription>>
+    ) {
+        currentNode = _currentNode
+        currentNumbers = _currentNumbers
+        totalNumbers = _totalNumbers
+        _history.forEach { history.add(it) }
+        _answer.forEach { answer.add(it) }
+        graph.data = _data
     }
 
     fun move(to: Int): Boolean {
