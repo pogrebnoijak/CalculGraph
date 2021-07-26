@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MotionEventCompat
 import com.example.calculgraph.constant.*
+import com.example.calculgraph.dataBase.DBWorker
 import java.util.*
 import kotlin.math.*
 
@@ -24,6 +25,7 @@ class GameActivity : AnyActivity() {
     private var winCount = 0
     private val timer = Timer()
     private var motion: TimerTask = object: TimerTask() { override fun run() {} }
+    private val dbWorker = DBWorker()
     private lateinit var background: DrawView
     private lateinit var curField: Field
     private lateinit var vecCentres: List<Pair<Float, Float>>
@@ -42,6 +44,7 @@ class GameActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_game)
+        dbWorker.init(this)
         getIntents()
         newGame()
     }
@@ -168,10 +171,12 @@ class GameActivity : AnyActivity() {
     }
 
     private fun exitGame() {
+        dbWorker.tempUpdateStatistic(winCount)
         val intent = Intent(this, MainActivity :: class.java )
         play = false
         motion.cancel()
         timer.cancel()
+        dbWorker.updateExit()
         startActivity(intent)
         finish()
     }
