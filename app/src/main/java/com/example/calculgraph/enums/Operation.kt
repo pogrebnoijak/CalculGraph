@@ -1,6 +1,6 @@
-package com.example.calculgraph
+package com.example.calculgraph.enums
 
-import com.example.calculgraph.Operation.*
+import com.example.calculgraph.enums.Operation.*
 
 enum class Operation {
     PLUS,

@@ -1,6 +1,7 @@
 package com.example.calculgraph.dataBase
 
 import android.content.Context
+import com.example.calculgraph.states.StatisticState
 import java.lang.Integer.max
 
 class DBWorker {

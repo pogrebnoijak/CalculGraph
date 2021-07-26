@@ -1,14 +1,15 @@
-package com.example.calculgraph
+package com.example.calculgraph.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import com.example.calculgraph.R
 
-class SettingsActivity : AnyActivity() {
+class LevelsActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prepare()
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_levels)
         setButtons()
     }
 

@@ -1,10 +1,11 @@
-package com.example.calculgraph
+package com.example.calculgraph.playField
 
+import com.example.calculgraph.playField.Graph
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
-import com.example.calculgraph.Operation.*
 import com.example.calculgraph.constant.*
+import com.example.calculgraph.enums.Operation.*
 import java.lang.Integer.MIN_VALUE
 
 class Field(var kolMoves: Int, kolNode: Int, mode: String) {

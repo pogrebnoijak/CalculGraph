@@ -1,6 +1,7 @@
-package com.example.calculgraph
+package com.example.calculgraph.playField
 
-import com.example.calculgraph.Operation.*
+import com.example.calculgraph.enums.Operation.*
+import com.example.calculgraph.enums.*
 import com.example.calculgraph.constant.*
 import kotlin.random.Random
 

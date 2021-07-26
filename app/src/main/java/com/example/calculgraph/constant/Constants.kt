@@ -1,6 +1,6 @@
 package com.example.calculgraph.constant
 
-import com.example.calculgraph.Operation.*
+import com.example.calculgraph.enums.Operation.*
 import kotlin.math.PI
 
 // const

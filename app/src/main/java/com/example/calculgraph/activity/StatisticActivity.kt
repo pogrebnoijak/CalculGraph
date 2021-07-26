@@ -1,11 +1,11 @@
-package com.example.calculgraph
+package com.example.calculgraph.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBHelper
-import com.example.calculgraph.dataBase.StatisticState
 
 class StatisticActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

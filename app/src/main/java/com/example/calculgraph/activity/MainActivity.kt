@@ -1,15 +1,15 @@
-package com.example.calculgraph
+package com.example.calculgraph.activity
 
 import android.app.Dialog
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
+import com.example.calculgraph.R
 import kotlin.system.exitProcess
 
 
 class MainActivity : AnyActivity() {
-    var prefs: SharedPreferences? = null
+//    var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

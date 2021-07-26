@@ -1,4 +1,4 @@
-package com.example.calculgraph
+package com.example.calculgraph.activity
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -13,8 +13,11 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MotionEventCompat
+import com.example.calculgraph.playField.Field
+import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.dataBase.DBWorker
+import com.example.calculgraph.enums.*
 import java.util.*
 import kotlin.math.*
 

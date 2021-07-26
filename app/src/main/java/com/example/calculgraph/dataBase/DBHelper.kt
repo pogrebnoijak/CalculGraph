@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.example.calculgraph.states.StatisticState
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1) {
     private val LOG_TAG = "DBLog"
@@ -14,9 +15,9 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.execSQL(
             ("create table IF NOT EXISTS statistic ("
                     + "id integer primary key autoincrement,"
-                    + "kolGame integer default 0,"
-                    + "sredScore double default 0.0,"
-                    + "maxScore integer default 0" + ");")
+                    + "kolGame integer,"
+                    + "sredScore double,"
+                    + "maxScore integer" + ");")
         )
         addDefaults(db)
     }

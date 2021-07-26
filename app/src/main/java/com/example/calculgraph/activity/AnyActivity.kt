@@ -1,4 +1,4 @@
-package com.example.calculgraph
+package com.example.calculgraph.activity
 
 import android.view.View
 import android.view.WindowManager
