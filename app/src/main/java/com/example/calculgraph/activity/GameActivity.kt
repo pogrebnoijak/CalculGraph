@@ -28,7 +28,6 @@ class GameActivity : AnyActivity() {
     private var winCount = 0
     private val timer = Timer()
     private var motion: TimerTask = object: TimerTask() { override fun run() {} }
-    private val dbWorker = DBWorker()
     private lateinit var background: DrawView
     private lateinit var curField: Field
     private lateinit var vecCentres: List<Pair<Float, Float>>
@@ -47,7 +46,6 @@ class GameActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_game)
-        dbWorker.init(this)
         getIntents()
         newGame()
     }
@@ -174,6 +172,8 @@ class GameActivity : AnyActivity() {
     }
 
     private fun exitGame() {
+        val dbWorker = DBWorker()
+        dbWorker.init(this)
         dbWorker.tempUpdateStatistic(winCount)
         val intent = Intent(this, MainActivity :: class.java )
         play = false

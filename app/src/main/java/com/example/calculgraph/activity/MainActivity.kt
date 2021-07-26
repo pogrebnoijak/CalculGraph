@@ -5,15 +5,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.example.calculgraph.R
+import com.example.calculgraph.dataBase.DBHelper
+import com.example.calculgraph.states.SettingsState
 import kotlin.system.exitProcess
 
 
 class MainActivity : AnyActivity() {
+    companion object {
+        var startKol = 0
+    }
 //    var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prepare()
+        if (startKol == 0) firstStart()
+        startKol++
         setContentView(R.layout.activity_main)
         setButtons()
 //        prefs = getSharedPreferences("com.example.calculgraph", MODE_PRIVATE);
@@ -82,5 +89,9 @@ class MainActivity : AnyActivity() {
         intent.putExtra("mode", str)
         startActivity(intent)
         finish()
+    }
+
+    private fun firstStart() {
+        settings = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
     }
 }

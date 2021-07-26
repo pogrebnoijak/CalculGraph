@@ -1,6 +1,8 @@
 package com.example.calculgraph.dataBase
 
 import android.content.Context
+import com.example.calculgraph.activity.AnyActivity.Companion.settings
+import com.example.calculgraph.states.SettingsState
 import com.example.calculgraph.states.StatisticState
 import java.lang.Integer.max
 
@@ -10,12 +12,11 @@ class DBWorker {
 
     fun init(context: Context) {
         db = DBHelper(context)
-        statistic = db.read() ?: throw error("No statistic in the db")
+        statistic = (db.read("statistic") ?: throw error("No statistic in the db")) as StatisticState
     }
 
     fun updateExit() {
         updateStatistic()
-        updateGameParams()
         updateSaveState()
     }
 
@@ -23,16 +24,12 @@ class DBWorker {
         db.update(statistic)
     }
 
-    private fun updateGameParams() {
-
-    }
-
     private fun updateSaveState() {
 
     }
 
     fun updateSettings() {
-
+        db.update(settings)
     }
 
     fun tempUpdateStatistic(score: Int) {
