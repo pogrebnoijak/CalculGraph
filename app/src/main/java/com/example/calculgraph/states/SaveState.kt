@@ -4,6 +4,7 @@ import com.example.calculgraph.playField.Graph
 
 data class SaveState(var endGame: Boolean,
                      var time: Long,
+                     var allTime: Long,
                      var score: Int,
                      var kolMoves: Int,
                      var currentNode: Int,

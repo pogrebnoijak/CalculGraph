@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
+import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
@@ -26,7 +27,9 @@ import kotlin.math.*
 
 class GameActivity : AnyActivity() {
     private var play = true
-    private var time = 0L           // ms
+    private var time = MAGIC.toLong()
+    //    TODO(remove val")// ms
+    private var allTime = MAGIC.toLong()
     private var winCount = 0
     private val timer = Timer()
     private val dbWorker = DBWorker()
@@ -82,6 +85,7 @@ class GameActivity : AnyActivity() {
     private fun newGame() {
         doField()
         time = 0L
+        allTime = settings.time * SECOND_IN_MILLIS
         sets()
     }
 
@@ -89,6 +93,7 @@ class GameActivity : AnyActivity() {
         if (saveState.endGame) newGame()
         else {
             time = saveState.time
+            allTime = saveState.allTime
             winCount = saveState.score
             mode = saveState.mode
             redoField(saveState)
@@ -156,7 +161,7 @@ class GameActivity : AnyActivity() {
                 if(play) {
                     time += DRAWING
                     background.invalidate()
-                    if (time >= ALL_TIME) {
+                    if (time >= allTime) {
                         play = false
                         endGame()
                     }
@@ -229,6 +234,7 @@ class GameActivity : AnyActivity() {
         dbWorker.tempUpdateSaveState(SaveState(
             !play,
             time,
+            allTime,
             winCount,
             curField.kolMoves,
             curField.currentNode,
@@ -330,7 +336,7 @@ class GameActivity : AnyActivity() {
                     color = R.color.color3
                     style = Paint.Style.STROKE
                 }
-                drawArc(rect, -90F, time * 360F / ALL_TIME, false, p)
+                drawArc(rect, -90F, time * 360F / allTime, false, p)
 
                 p.apply {
                     color = Color.YELLOW

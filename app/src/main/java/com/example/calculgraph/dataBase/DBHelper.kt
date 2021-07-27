@@ -48,6 +48,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "id integer primary key autoincrement,"
                     + "endGame integer,"
                     + "time integer,"
+                    + "allTime integer,"
                     + "score integer,"
                     + "kolMoves integer,"
                     + "currentNode integer,"
@@ -83,6 +84,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val cvSave = ContentValues()
         cvSave.put("endGame", 1)
         cvSave.put("time", 0)
+        cvSave.put("allTime", 0)
         cvSave.put("score", 0)
         cvSave.put("kolMoves", 0)
         cvSave.put("currentNode", 0)
@@ -128,6 +130,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
                 cv.put("endGame", state.endGame)
                 cv.put("time", state.time)
+                cv.put("allTime", state.allTime)
                 cv.put("score", state.score)
                 cv.put("kolMoves", state.kolMoves)
                 cv.put("currentNode", state.currentNode)
@@ -148,7 +151,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val list: Array<String> = when(table) {
             "statistic" -> arrayOf("id", "kolGame", "sredScore", "maxScore")
             "settings"  -> arrayOf("id", "sound", "language", "topic", "computability", "moves", "time")
-            "saveState"  -> arrayOf("id", "endGame", "time", "score", "kolMoves", "currentNode",
+            "saveState"  -> arrayOf("id", "endGame", "time", "allTime","score", "kolMoves", "currentNode",
                 "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
             else        -> throw error("wrong table name")
         }
@@ -175,6 +178,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             "saveState" -> {
                 SaveState(cv.getInt(cv.getColumnIndex("endGame")) != 0,
                     cv.getLong(cv.getColumnIndex("time")),
+                    cv.getLong(cv.getColumnIndex("allTime")),
                     cv.getInt(cv.getColumnIndex("score")),
                     cv.getInt(cv.getColumnIndex("kolMoves")),
                     cv.getInt(cv.getColumnIndex("currentNode")),

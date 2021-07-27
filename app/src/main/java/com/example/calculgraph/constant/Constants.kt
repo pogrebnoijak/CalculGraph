@@ -36,7 +36,6 @@ const val CASUAL_MOVE = 10F
 const val SET_LENGTH = 3
 const val CURRENT_NUMBER_MAX = 100
 const val THRESHOLD_ANGLE = PI/12
-val ALL_TIME = 60_000L     // ms
 const val MAX_MOVES = 8
 val KOL_NODES = mapOf(EASY to 4, MEDIUM to 5, HARD to 6, INSANE to 8)
 
