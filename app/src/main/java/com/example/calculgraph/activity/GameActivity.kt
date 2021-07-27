@@ -27,8 +27,8 @@ import kotlin.math.*
 
 class GameActivity : AnyActivity() {
     private var play = true
-    private var time = MAGIC.toLong()
-    //    TODO(remove val")// ms
+    private var time = MAGIC.toLong()                                                               // ms
+    //    TODO(remove val")
     private var allTime = MAGIC.toLong()
     private var winCount = 0
     private val timer = Timer()
@@ -71,7 +71,10 @@ class GameActivity : AnyActivity() {
     private fun saveStatAndStartGame() {
         val saveState: SaveState = (DBHelper(this).read("saveState") ?: throw error("No saveState in the db")) as SaveState
         if (getIntentsAndReturnGameStatus()) {
-            if (!saveState.endGame) dbWorker.tempUpdateStatistic(saveState.score)
+            if (!saveState.endGame) {
+                dbWorker.tempUpdateStatistic(saveState.score)
+//                dbWorker.updateStatistic(saveState.allTime, saveState.kolMoves, saveState.mode, saveState.computability)
+            }
             newGame()
         }
         else continueGame(saveState)
@@ -110,7 +113,7 @@ class GameActivity : AnyActivity() {
 
     private fun redoField(saveState: SaveState) {
         saveState.apply {
-            curField = Field(kolMoves, data.size)
+            curField = Field(kolMoves, KOL_NODES[computability] ?: throw error("wrong computability"))
             curField.set(currentNode, currentNumbers, totalNumbers, history, answer, data)
         }
         writeField()
@@ -237,6 +240,7 @@ class GameActivity : AnyActivity() {
             allTime,
             winCount,
             curField.kolMoves,
+            settings.computability,
             curField.currentNode,
             mode,
             curField.currentNumbers,

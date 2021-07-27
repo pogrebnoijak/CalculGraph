@@ -21,7 +21,7 @@ class DBWorker {
         updateSaveState()
     }
 
-    private fun updateStatistic() {
+    fun updateStatistic() {
         db.update(statistic)
     }
 

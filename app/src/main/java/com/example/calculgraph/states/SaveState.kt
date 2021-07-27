@@ -1,5 +1,6 @@
 package com.example.calculgraph.states
 
+import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.playField.Graph
 
 data class SaveState(var endGame: Boolean,
@@ -7,6 +8,7 @@ data class SaveState(var endGame: Boolean,
                      var allTime: Long,
                      var score: Int,
                      var kolMoves: Int,
+                     val computability: Computability,
                      var currentNode: Int,
                      var mode: String,
                      var currentNumbers: List<Int>,

@@ -51,6 +51,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "allTime integer,"
                     + "score integer,"
                     + "kolMoves integer,"
+                    + "computability text,"
                     + "currentNode integer,"
                     + "mode text,"
                     + "currentNumbers blob,"
@@ -87,6 +88,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvSave.put("allTime", 0)
         cvSave.put("score", 0)
         cvSave.put("kolMoves", 0)
+        cvSave.put("computability", "EASY")
         cvSave.put("currentNode", 0)
         cvSave.put("mode", "")
         cvSave.put("currentNumbers", emptyList)
@@ -133,6 +135,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                 cv.put("allTime", state.allTime)
                 cv.put("score", state.score)
                 cv.put("kolMoves", state.kolMoves)
+                cv.put("computability", state.computability.toString())
                 cv.put("currentNode", state.currentNode)
                 cv.put("mode", state.mode)
                 cv.put("currentNumbers", Serializer.listToBytes(state.currentNumbers))
@@ -151,8 +154,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val list: Array<String> = when(table) {
             "statistic" -> arrayOf("id", "kolGame", "sredScore", "maxScore")
             "settings"  -> arrayOf("id", "sound", "language", "topic", "computability", "moves", "time")
-            "saveState"  -> arrayOf("id", "endGame", "time", "allTime","score", "kolMoves", "currentNode",
-                "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
+            "saveState"  -> arrayOf("id", "endGame", "time", "allTime","score", "kolMoves", "computability",
+                "currentNode", "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
             else        -> throw error("wrong table name")
         }
 
@@ -181,6 +184,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     cv.getLong(cv.getColumnIndex("allTime")),
                     cv.getInt(cv.getColumnIndex("score")),
                     cv.getInt(cv.getColumnIndex("kolMoves")),
+                    cv.getString(cv.getColumnIndex("computability")).toComputability(),
                     cv.getInt(cv.getColumnIndex("currentNode")),
                     cv.getString(cv.getColumnIndex("mode")),
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("currentNumbers")),
@@ -202,4 +206,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.close()
         return state
     }
+}
+
+private fun generateId() {
+
 }
