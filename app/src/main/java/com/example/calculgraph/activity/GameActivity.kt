@@ -16,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MotionEventCompat
 import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
-import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.playField.Field
@@ -31,6 +30,7 @@ class GameActivity : AnyActivity() {
     //    TODO(remove val")
     private var allTime = MAGIC.toLong()
     private var winCount = 0
+    private lateinit var computability: Computability
     private val timer = Timer()
     private val dbWorker = DBWorker()
     private var motion: TimerTask = object: TimerTask() { override fun run() {} }
@@ -52,8 +52,7 @@ class GameActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_game)
-        dbWorker.init(this)
-        saveStatAndStartGame()
+        saveStatAndStartGame(dbWorker.init(this))
     }
 
     override fun onTouchEvent(event: MotionEvent) = when (MotionEventCompat.getActionMasked(event)) {
@@ -68,12 +67,12 @@ class GameActivity : AnyActivity() {
             else -> super.onTouchEvent(event)
         }
 
-    private fun saveStatAndStartGame() {
-        val saveState: SaveState = (DBHelper(this).read("saveState") ?: throw error("No saveState in the db")) as SaveState
+    private fun saveStatAndStartGame(saveState: SaveState) {
         if (getIntentsAndReturnGameStatus()) {
             if (!saveState.endGame) {
-                dbWorker.tempUpdateStatistic(saveState.score)
-//                dbWorker.updateStatistic(saveState.allTime, saveState.kolMoves, saveState.mode, saveState.computability)
+                dbWorker.apply {
+                    updateStatistic(saveState.score)
+                }
             }
             newGame()
         }
@@ -89,6 +88,7 @@ class GameActivity : AnyActivity() {
         doField()
         time = 0L
         allTime = settings.time * SECOND_IN_MILLIS
+        computability = settings.computability
         sets()
     }
 
@@ -98,6 +98,7 @@ class GameActivity : AnyActivity() {
             time = saveState.time
             allTime = saveState.allTime
             winCount = saveState.score
+            computability = saveState.computability
             mode = saveState.mode
             redoField(saveState)
             sets()
@@ -221,26 +222,25 @@ class GameActivity : AnyActivity() {
     }
 
     private fun exitGame() {
-        if (!play)
-            dbWorker.tempUpdateStatistic(winCount)
         saveGameState(dbWorker)
+        if (!play)
+            dbWorker.updateStatistic(winCount)
         val intent = Intent(this, MainActivity :: class.java )
         play = false
         motion.cancel()
         timer.cancel()
-        dbWorker.updateExit()
         startActivity(intent)
         finish()
     }
 
     private fun saveGameState(dbWorker: DBWorker) {
-        dbWorker.tempUpdateSaveState(SaveState(
+        dbWorker.updateSaveState(SaveState(
             !play,
             time,
             allTime,
             winCount,
             curField.kolMoves,
-            settings.computability,
+            computability,
             curField.currentNode,
             mode,
             curField.currentNumbers,

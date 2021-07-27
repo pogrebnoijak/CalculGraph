@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBHelper
+import com.example.calculgraph.states.SaveState
 import com.example.calculgraph.states.StatisticState
 
 class StatisticActivity : AnyActivity() {
@@ -26,7 +27,9 @@ class StatisticActivity : AnyActivity() {
     }
 
     private fun setStatistic() {
-        val statistic: StatisticState = (DBHelper(this).read("statistic") ?: throw error("No statistic in the db")) as StatisticState
+        val db = DBHelper(this)
+        val saveState: SaveState = (db.read("saveState") ?: throw error("No saveState in the db")) as SaveState
+        val statistic: StatisticState = (db.read("statistic", saveState.generateId()) ?: throw error("No statistic in the db")) as StatisticState
         findViewById<TextView>(R.id.kolGame).text = "${statistic.kolGame}"
         findViewById<TextView>(R.id.sredScore).text = String.format("%.3f", statistic.sredScore)
         findViewById<TextView>(R.id.maxScore).text = "${statistic.maxScore}"

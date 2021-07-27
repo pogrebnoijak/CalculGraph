@@ -11,37 +11,33 @@ class DBWorker {
     private lateinit var statistic: StatisticState
     private lateinit var saveState: SaveState
 
-    fun init(context: Context) {
+    fun init(context: Context): SaveState {
         db = DBHelper(context)
-        statistic = (db.read("statistic") ?: throw error("No statistic in the db")) as StatisticState
+        saveState = (db.read("saveState") ?: throw error("No saveState in the db")) as SaveState
+        downloadStatistic()
+        return saveState
     }
 
-    fun updateExit() {
-        updateStatistic()
-        updateSaveState()
+    private fun downloadStatistic() {
+        statistic = (db.read("statistic", saveState.generateId()) ?: throw error("No statistic in the db")) as StatisticState
     }
 
-    fun updateStatistic() {
-        db.update(statistic)
-    }
-
-    private fun updateSaveState() {
-        db.update(saveState)
+    fun updateStatistic(score: Int) {
+        downloadStatistic()
+        statistic.apply {
+            sredScore = (sredScore * kolGame + score) / (kolGame + 1)
+            kolGame++
+            maxScore = max(maxScore, score)
+        }
+        db.update(statistic, saveState.generateId())
     }
 
     fun updateSettings() {
         db.update(settings)
     }
 
-    fun tempUpdateSaveState(_saveState: SaveState) {
+    fun updateSaveState(_saveState: SaveState) {
         saveState = _saveState
-    }
-
-    fun tempUpdateStatistic(score: Int) {
-        statistic.apply {
-            sredScore = (sredScore * kolGame + score) / (kolGame + 1)
-            kolGame++
-            maxScore = max(maxScore, score)
-        }
+        db.update(saveState)
     }
 }

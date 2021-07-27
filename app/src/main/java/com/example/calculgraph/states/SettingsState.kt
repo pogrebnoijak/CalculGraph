@@ -8,4 +8,4 @@ data class SettingsState(var sound: Boolean,
                          var topic: Topic,
                          var computability: Computability,
                          var moves: Int,
-                         var time: Int): State()
+                         var time: Int): State()                                                    //in s

@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.example.calculgraph.constant.DEFAULT_ID
+import com.example.calculgraph.constant.MAX_ID
 import com.example.calculgraph.enums.toComputability
 import com.example.calculgraph.enums.toTopic
 import com.example.calculgraph.enums.topToString
@@ -70,7 +72,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvStat.put("kolGame", 0)
         cvStat.put("sredScore", 0.0)
         cvStat.put("maxScore", 0)
-        db.insert("statistic", null, cvStat)
+        repeat(MAX_ID) { println(db.insert("statistic", null, cvStat)) }
 
         val cvSett = ContentValues()
         cvSett.put("sound", 1)
@@ -85,12 +87,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val cvSave = ContentValues()
         cvSave.put("endGame", 1)
         cvSave.put("time", 0)
-        cvSave.put("allTime", 0)
+        cvSave.put("allTime", 60_000L)
         cvSave.put("score", 0)
-        cvSave.put("kolMoves", 0)
+        cvSave.put("kolMoves", 3)
         cvSave.put("computability", "EASY")
         cvSave.put("currentNode", 0)
-        cvSave.put("mode", "")
+        cvSave.put("mode", "standard")
         cvSave.put("currentNumbers", emptyList)
         cvSave.put("totalNumbers", emptyList)
         cvSave.put("history", emptyList)
@@ -99,7 +101,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.insert("saveState", null, cvSave)
     }
 
-    fun update(state: State) {
+    fun update(state: State, id: Int = DEFAULT_ID) {
         val cv = ContentValues()
         val db = writableDatabase
         val rowID: Int
@@ -145,12 +147,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                 cv.put("data", Serializer.listToBytes(state.data))
             }
         }
-        rowID = db.update(tableName, cv, null, null)
+        rowID = db.update(tableName, cv, "id = ?", arrayOf("$id"))
         Log.d(LOG_TAG, "row updated, ID = $rowID")
         close()
     }
 
-    fun read(table: String) : State? {
+    fun read(table: String, id: Int = DEFAULT_ID) : State? {  // id only for statistic
         val list: Array<String> = when(table) {
             "statistic" -> arrayOf("id", "kolGame", "sredScore", "maxScore")
             "settings"  -> arrayOf("id", "sound", "language", "topic", "computability", "moves", "time")
@@ -162,7 +164,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val db = writableDatabase
         val state: State?
         Log.d(LOG_TAG, "--- Read in $table: ---")
-        val cv = db.query(table, list, null, null, null, null, null)
+        val cv = db.query(table, list, "id = ?", arrayOf("$id"), null, null, null)
 
         state = if (!cv.moveToNext()) null else when(table) {
             "statistic" -> {
@@ -206,8 +208,4 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.close()
         return state
     }
-}
-
-private fun generateId() {
-
 }

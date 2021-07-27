@@ -58,12 +58,10 @@ class SettingsActivity : AnyActivity() {
         findViewById<EditText>(R.id.moves).apply {
             doAfterTextChanged { text ->
                 text.toString().let {
-                    if(it.isNotEmpty()) {
-                        if (it.toInt() > MAX_MOVES) {
-                            setText(MAX_MOVES.toString())
-                        } else {
-                            updateMoves(it.toInt())
-                        }
+                    if(it.isNotEmpty()) when {
+                        it.toInt() > MAX_MOVES  -> setText(MAX_MOVES.toString())
+                        it.toInt() < MIN_MOVES  -> setText(MIN_MOVES.toString())
+                        else                    -> updateMoves(it.toInt())
                     }
                 }
             }

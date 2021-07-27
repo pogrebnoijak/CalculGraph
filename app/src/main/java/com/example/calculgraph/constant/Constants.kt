@@ -1,5 +1,6 @@
 package com.example.calculgraph.constant
 
+import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.enums.Computability.*
 import com.example.calculgraph.enums.Operation.*
 import kotlin.math.PI
@@ -10,6 +11,7 @@ const val LAYOUT_CONST = 0.7F
 const val MAGIC = -1
 const val MINUTE = 60
 const val HOUR = 3600
+const val DEFAULT_ID = 1
 
 // point
 const val SMALL_WIDTH = 3F
@@ -37,13 +39,15 @@ const val SET_LENGTH = 3
 const val CURRENT_NUMBER_MAX = 100
 const val THRESHOLD_ANGLE = PI/12
 const val MAX_MOVES = 8
+const val MIN_MOVES = 2
 val KOL_NODES = mapOf(EASY to 4, MEDIUM to 5, HARD to 6, INSANE to 8)
-
 val LANGUAGES = arrayOf("English", "Русский")
 val TIMES = listOf(10, 15, 30, 60, 300, 600, 3600)
+val MODES = listOf("standard", "set", "max")
 val BOUNDS_PLUS_MINUS = Pair(1, 100)
 val BOUNDS_MULTIPLICATION_DIVISION = Pair(2, 25)
 val BOUNDS_DEGREE_ROOT = Pair(2, 5)
 val PROB_LIST_STANDARD = listOf(PLUS, PLUS, PLUS, MINUS, MINUS, MINUS, MULTIPLICATION, MULTIPLICATION, DIVISION, DIVISION, DEGREE, ROOT)
 val PROB_LIST_SET = listOf(PLUS, PLUS, MINUS, MINUS, MULTIPLICATION, DIVISION)
 val PROB_LIST_MAX = listOf(PLUS, MINUS, MULTIPLICATION, DIVISION, DEGREE, ROOT)
+val MAX_ID = TIMES.size * (MAX_MOVES - MIN_MOVES + 1) * MODES.size * Computability.values().size
