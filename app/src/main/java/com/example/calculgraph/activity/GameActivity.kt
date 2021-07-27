@@ -237,7 +237,7 @@ class GameActivity : AnyActivity() {
             curField.totalNumbers,
             curField.history,
             curField.answer,
-            curField.graph.data.toList().map { it.toList() })
+            curField.graph.data)
         )
     }
 
