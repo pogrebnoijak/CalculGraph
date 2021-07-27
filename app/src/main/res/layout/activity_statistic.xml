@@ -12,9 +12,8 @@
 
         <Button
             android:id="@+id/menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menu" />
+            android:text="@string/menu"
+            style="@style/ButtonStandard"/>
 
     </FrameLayout>
 
@@ -30,24 +29,13 @@
             android:layout_weight="1">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
-                android:layout_marginStart="25dp"
-                android:textColor="@color/white"
+                style="@style/TextViewSettingsMargin"
                 android:text="@string/games" />
 
             <TextView
                 android:id="@+id/kolGame"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
+                style="@style/TextViewSettings"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="@string/placeholder"/>
 
         </LinearLayout>
@@ -58,24 +46,13 @@
             android:layout_weight="1">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
-                android:layout_marginStart="25dp"
-                android:textColor="@color/white"
+                style="@style/TextViewSettingsMargin"
                 android:text="@string/average_score" />
 
             <TextView
                 android:id="@+id/sredScore"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
+                style="@style/TextViewSettings"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="@string/placeholder"/>
 
         </LinearLayout>
@@ -86,24 +63,13 @@
             android:layout_weight="1">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
-                android:layout_marginStart="25dp"
-                android:textColor="@color/white"
+                style="@style/TextViewSettingsMargin"
                 android:text="@string/max_score" />
 
             <TextView
                 android:id="@+id/maxScore"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
+                style="@style/TextViewSettings"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:text="@string/placeholder"/>
 
         </LinearLayout>

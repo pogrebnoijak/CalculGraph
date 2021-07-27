@@ -38,7 +38,7 @@ class SettingsActivity : AnyActivity() {
     private fun setOther() {
         fun tuningSpinner(rIdSmth: Int, list: Array<Any>, update: (String) -> Unit) {
             findViewById<Spinner>(rIdSmth).apply {
-                adapter = ArrayAdapter(this@SettingsActivity, android.R.layout.simple_spinner_dropdown_item, list)
+                adapter = ArrayAdapter(this@SettingsActivity, R.layout.spinner, R.id.sp, list)
                 onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         update(list[position].toString())

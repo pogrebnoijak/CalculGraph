@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBHelper
-import com.example.calculgraph.serializer.Serializer
 import com.example.calculgraph.states.SettingsState
 import kotlin.system.exitProcess
 
@@ -37,7 +36,7 @@ class MainActivity : AnyActivity() {
 
     override fun setButtons() {
         findViewById<Button>(R.id.new_game).setOnClickListener {
-            val dialog = Dialog(this@MainActivity)
+            val dialog = Dialog(this@MainActivity, R.style.AlertDialogCustom)
             dialog.setContentView(R.layout.dialog_game_mode)
             dialog.show()
             dialog.findViewById<Button>(R.id.standard).setOnClickListener {

@@ -196,7 +196,7 @@ class GameActivity : AnyActivity() {
 
     private fun endGame() {
         runOnUiThread {
-            val dialog = Dialog(this@GameActivity)
+            val dialog = Dialog(this@GameActivity, R.style.AlertDialogCustom)
             dialog.setContentView(R.layout.dialog_yes_no)
             dialog.findViewById<TextView>(R.id.dial_text).text = "You have scored $winCount points. Do you want to play again?"
             dialog.show()

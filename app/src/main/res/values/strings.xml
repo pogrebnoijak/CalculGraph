@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CalculGraph</string>
     <string name="back">back</string>
-    <string name="game_mode">game_mode</string>
+    <string name="game_mode">Choose game mode</string>
     <string name="standard">standard</string>
     <string name="max">max</string>
     <string name="set">set</string>

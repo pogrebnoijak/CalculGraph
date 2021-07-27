@@ -36,11 +36,8 @@
 
             <Button
                 android:id="@+id/new_game"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color2"
-                android:textSize="30sp"
-                android:text="@string/new_game" />
+                android:text="@string/new_game"
+                style="@style/ButtonsMain"/>
         </FrameLayout>
 
         <FrameLayout
@@ -50,11 +47,8 @@
 
             <Button
                 android:id="@+id/continue_"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color2"
-                android:textSize="30sp"
-                android:text="@string/continue_" />
+                android:text="@string/continue_"
+                style="@style/ButtonsMain"/>
         </FrameLayout>
 
         <FrameLayout
@@ -64,11 +58,8 @@
 
             <Button
                 android:id="@+id/levels"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color2"
-                android:textSize="30sp"
-                android:text="@string/levels" />
+                android:text="@string/levels"
+                style="@style/ButtonsMain"/>
         </FrameLayout>
 
         <FrameLayout
@@ -78,11 +69,8 @@
 
             <Button
                 android:id="@+id/statistic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color2"
-                android:textSize="30sp"
-                android:text="@string/statistic" />
+                android:text="@string/statistic"
+                style="@style/ButtonsMain"/>
         </FrameLayout>
 
         <FrameLayout
@@ -92,11 +80,8 @@
 
             <Button
                 android:id="@+id/settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color2"
-                android:textSize="30sp"
-                android:text="@string/settings" />
+                android:text="@string/settings"
+                style="@style/ButtonsMain"/>
         </FrameLayout>
 
         <FrameLayout
@@ -106,11 +91,8 @@
 
             <Button
                 android:id="@+id/exit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color2"
-                android:textSize="30sp"
-                android:text="@string/exit" />
+                android:text="@string/exit"
+                style="@style/ButtonsMain"/>
         </FrameLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

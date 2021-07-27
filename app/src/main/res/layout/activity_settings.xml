@@ -12,9 +12,8 @@
 
         <Button
             android:id="@+id/menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menu" />
+            android:text="@string/menu"
+            style="@style/ButtonStandard"/>
 
     </FrameLayout>
 
@@ -30,6 +29,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
+<!--            TODO("fix")-->
             <Switch
                 android:id="@+id/sound"
                 android:layout_width="match_parent"
@@ -50,24 +50,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
+                style="@style/TextViewSettings"
                 android:layout_marginStart="25dp"
-                android:textColor="@color/white"
                 android:text="@string/language" />
 
             <Spinner
                 android:id="@+id/language"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
-                android:textAlignment="center"
-                android:textColor="@color/white"
+                style="@style/Spinner"
                 android:text="@string/placeholder" />
 
         </LinearLayout>
@@ -79,24 +68,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
+                style="@style/TextViewSettings"
                 android:layout_marginStart="25dp"
-                android:textColor="@color/white"
                 android:text="@string/topic" />
 
             <Spinner
                 android:id="@+id/topic"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
-                android:textAlignment="center"
-                android:textColor="@color/white"
+                style="@style/Spinner"
                 android:text="@string/placeholder" />
 
         </LinearLayout>
@@ -108,24 +86,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
+                style="@style/TextViewSettings"
                 android:layout_marginStart="25dp"
-                android:textColor="@color/white"
                 android:text="@string/computability" />
 
             <Spinner
                 android:id="@+id/computability"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
-                android:textAlignment="center"
-                android:textColor="@color/white"
+                style="@style/Spinner"
                 android:text="@string/placeholder" />
 
         </LinearLayout>
@@ -137,24 +104,12 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="25dp"
-                android:textSize="25sp"
-                android:textColor="@color/white"
+                style="@style/TextViewSettingsMargin"
                 android:text="@string/time" />
 
             <Spinner
                 android:id="@+id/time"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="25sp"
-                android:textAlignment="center"
-                android:textColor="@color/white"
+                style="@style/Spinner"
                 android:text="@string/placeholder" />
 
         </LinearLayout>

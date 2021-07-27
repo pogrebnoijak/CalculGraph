@@ -25,14 +25,14 @@
 
         <Button
             android:id="@+id/yes"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
+            style="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/yes" />
 
         <Button
             android:id="@+id/no"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
+            style="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no" />

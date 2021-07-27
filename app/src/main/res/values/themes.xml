@@ -13,4 +13,48 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <!-- my styles -->
+    <style name="ButtonsMain">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:background">@color/color2</item>
+    </style>
+
+    <style name="ButtonStandard">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+<!--        <item name="android:background">@color/?</item>-->
+    </style>
+
+<!--    TODO("rewrite style")-->
+    <style name="AlertDialogCustom" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:background">@color/color3</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextViewSettings">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="TextViewSettingsMargin" parent="TextViewSettings">
+        <item name="android:layout_marginStart">25dp</item>
+    </style>
+
+    <style name="Spinner">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">25sp</item>
+    </style>
 </resources>
