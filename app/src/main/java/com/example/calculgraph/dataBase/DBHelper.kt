@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.calculgraph.enums.toComputability
+import com.example.calculgraph.enums.toTopic
+import com.example.calculgraph.enums.topToString
 import com.example.calculgraph.playField.Graph
 import com.example.calculgraph.serializer.Serializer
 import com.example.calculgraph.states.SaveState
@@ -113,7 +115,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
                 cv.put("language", state.language)
                 cv.put("sound", state.sound)
-                cv.put("topic", state.topic)
+                cv.put("topic", state.topic.topToString())
                 cv.put("computability", state.computability.toString())
                 cv.put("time", state.time)
             }
@@ -163,7 +165,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             "settings"  -> {
                 SettingsState(cv.getString(cv.getColumnIndex("language")),
                     cv.getInt(cv.getColumnIndex("sound")) != 0,
-                    cv.getString(cv.getColumnIndex("topic")),
+                    cv.getString(cv.getColumnIndex("topic")).toTopic(),
                     cv.getString(cv.getColumnIndex("computability")).toComputability(),
                     cv.getInt(cv.getColumnIndex("time")))
             }

@@ -4,13 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.core.view.size
 import com.example.calculgraph.R
+import com.example.calculgraph.constant.LANGUAGES
+import com.example.calculgraph.constant.TIMES
 import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.dataBase.DBWorker
-import com.example.calculgraph.enums.Computability
+import com.example.calculgraph.enums.*
 import com.example.calculgraph.enums.Computability.*
-import com.example.calculgraph.enums.toComputability
 import com.example.calculgraph.states.SettingsState
 
 
@@ -44,17 +44,15 @@ class SettingsActivity : AnyActivity() {
                         update(list[position].toString())
                     }
 
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                        parent?.setSelection(0)
-                    }
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
             }
         }
 
-        tuningSpinner(R.id.language, arrayOf("English", "Русский")) { updateLanguage(it) }
-        tuningSpinner(R.id.topic, arrayOf("Standard", "Other")) { updateTopic(it) }
+        tuningSpinner(R.id.language, LANGUAGES as Array<Any>) { updateLanguage(it) }
+        tuningSpinner(R.id.topic, topicValues() as Array<Any>) { updateTopic(it) }
         tuningSpinner(R.id.computability, Computability.values() as Array<Any>) { updateComputability(it) }
-        tuningSpinner(R.id.time, arrayOf(10, 15, 30, 60, 300, 3600)) { updateTime(it) }
+        tuningSpinner(R.id.time, TIMES as Array<Any>) { updateTime(it) }
 
         findViewById<Switch>(R.id.sound).setOnCheckedChangeListener {
             _: CompoundButton, isChecked: Boolean -> updateSound(isChecked)
@@ -75,7 +73,7 @@ class SettingsActivity : AnyActivity() {
             it.setSelection(getIndexByName(it, _settings.language))
         }
         findViewById<Spinner>(R.id.topic).let {
-            it.setSelection(getIndexByName(it, _settings.topic))
+            it.setSelection(getIndexByName(it, _settings.topic.topToString()))
         }
         findViewById<Spinner>(R.id.computability).let {
             it.setSelection(getIndexByName(it, _settings.computability))
@@ -97,7 +95,7 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateTopic(topic: String) {
-        settings.topic = topic
+        settings.topic = topic.toTopic()
 //        TODO("finish this")
     }
 

@@ -15,7 +15,6 @@ class DBWorker {
     fun init(context: Context) {
         db = DBHelper(context)
         statistic = (db.read("statistic") ?: throw error("No statistic in the db")) as StatisticState
-//        saveState = (db.read("saveState") ?: throw error("No saveState in the db")) as SaveState
     }
 
     fun updateExit() {

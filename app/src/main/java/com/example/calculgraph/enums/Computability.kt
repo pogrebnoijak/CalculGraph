@@ -1,5 +1,7 @@
 package com.example.calculgraph.enums
 
+import com.example.calculgraph.enums.Computability.*
+
 enum class Computability {
     EASY,
     MEDIUM,
@@ -8,9 +10,9 @@ enum class Computability {
 }
 
 fun String.toComputability(): Computability = when(this) {
-    "EASY"      -> Computability.EASY
-    "MEDIUM"    -> Computability.MEDIUM
-    "HARD"      -> Computability.HARD
-    "INSANE"    -> Computability.INSANE
-    else -> throw error("wrong computability")
+    "EASY"      -> EASY
+    "MEDIUM"    -> MEDIUM
+    "HARD"      -> HARD
+    "INSANE"    -> INSANE
+    else        -> throw error("wrong computability")
 }
