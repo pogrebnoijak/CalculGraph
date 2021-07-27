@@ -98,7 +98,7 @@ class GameActivity : AnyActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun doField() {
-        curField = Field(KOL_MOVES, KOL_NODES)
+        curField = Field()
         curField.init(mode)
         writeField()
     }
@@ -121,7 +121,7 @@ class GameActivity : AnyActivity() {
             else -> throw error("wrong mode!")
         }
         findViewById<TextView>(R.id.totalNumber).text = "need: $str"
-        vecCentres = (0 until curField.graph.kolNode).map { 2.0 * it / curField.graph.kolNode }
+        vecCentres = (0 until curField.graph.kolNodes).map { 2.0 * it / curField.graph.kolNodes }
             .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
     }
 
@@ -262,8 +262,8 @@ class GameActivity : AnyActivity() {
                     strokeWidth = AVERAGE_WIDTH
                     textAlign = Paint.Align.CENTER
                 }
-                for (i in 0 until curField.graph.kolNode) {
-                    for (j in 0 until curField.graph.kolNode) {
+                for (i in 0 until curField.graph.kolNodes) {
+                    for (j in 0 until curField.graph.kolNodes) {
                         if (curField.graph.data[i][j].oper == Operation.NONE) continue
                         if (i > j) {
                             p.color = Color.MAGENTA

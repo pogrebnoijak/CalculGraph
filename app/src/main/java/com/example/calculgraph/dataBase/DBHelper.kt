@@ -34,10 +34,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.execSQL(
             ("create table IF NOT EXISTS settings ("
                     + "id integer primary key autoincrement,"
-                    + "language text,"
                     + "sound integer,"
+                    + "language text,"
                     + "topic text,"
                     + "computability text,"
+                    + "moves integer,"
                     + "time integer" + ");")
         )
 
@@ -71,10 +72,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.insert("statistic", null, cvStat)
 
         val cvSett = ContentValues()
-        cvSett.put("language", "English")
         cvSett.put("sound", 1)
+        cvSett.put("language", "English")
         cvSett.put("topic", "Standard")
         cvSett.put("computability", "EASY")
+        cvSett.put("moves", 3)
         cvSett.put("time", 60)
         db.insert("settings", null, cvSett)
 
@@ -113,10 +115,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                 tableName = "settings"
                 Log.d(LOG_TAG, "--- Update in $tableName: ---")
 
-                cv.put("language", state.language)
                 cv.put("sound", state.sound)
+                cv.put("language", state.language)
                 cv.put("topic", state.topic.topToString())
                 cv.put("computability", state.computability.toString())
+                cv.put("moves", state.moves)
                 cv.put("time", state.time)
             }
 
@@ -145,7 +148,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
     fun read(table: String) : State? {
         val list: Array<String> = when(table) {
             "statistic" -> arrayOf("id", "kolGame", "sredScore", "maxScore")
-            "settings"  -> arrayOf("id", "language", "sound", "topic", "computability", "time")
+            "settings"  -> arrayOf("id", "sound", "language", "topic", "computability", "moves", "time")
             "saveState"  -> arrayOf("id", "endGame", "time", "score", "kolMoves", "currentNode",
                 "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
             else        -> throw error("wrong table name")
@@ -163,10 +166,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     cv.getInt(cv.getColumnIndex("maxScore")))
             }
             "settings"  -> {
-                SettingsState(cv.getString(cv.getColumnIndex("language")),
-                    cv.getInt(cv.getColumnIndex("sound")) != 0,
+                SettingsState(cv.getInt(cv.getColumnIndex("sound")) != 0,
+                    cv.getString(cv.getColumnIndex("language")),
                     cv.getString(cv.getColumnIndex("topic")).toTopic(),
                     cv.getString(cv.getColumnIndex("computability")).toComputability(),
+                    cv.getInt(cv.getColumnIndex("moves")),
                     cv.getInt(cv.getColumnIndex("time")))
             }
             "saveState" -> {

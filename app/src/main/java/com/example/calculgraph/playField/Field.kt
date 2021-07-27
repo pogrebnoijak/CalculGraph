@@ -1,5 +1,6 @@
 package com.example.calculgraph.playField
 
+import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
@@ -7,7 +8,7 @@ import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation.*
 import java.lang.Integer.MIN_VALUE
 
-class Field(var kolMoves: Int, kolNodes: Int) {
+class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settings.computability] ?: throw error("wrong computability")) {
     //    TODO(do vals)
     var currentNode: Int = MAGIC
     val graph = Graph(kolNodes)
@@ -17,7 +18,7 @@ class Field(var kolMoves: Int, kolNodes: Int) {
     val answer = Stack<Int>()
 
     fun init(mode: String) {
-        currentNode = Random.nextInt(0, graph.kolNode)
+        currentNode = Random.nextInt(0, graph.kolNodes)
         graph.init(kolMoves, currentNode, mode)
         val lenList = if (mode == "set") SET_LENGTH else 1
         currentNumbers = List(lenList) { Random.nextInt(0, CURRENT_NUMBER_MAX) }

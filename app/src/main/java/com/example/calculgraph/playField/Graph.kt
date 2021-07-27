@@ -5,7 +5,7 @@ import com.example.calculgraph.enums.*
 import com.example.calculgraph.constant.*
 import kotlin.random.Random
 
-class Graph(val kolNode: Int) {
+class Graph(val kolNodes: Int) {
     inner class Inscription(val oper: Operation, val num: Int?) {
         override fun toString() = oper.opToString() + num.toString()
     }
@@ -14,7 +14,7 @@ class Graph(val kolNode: Int) {
     lateinit var data: List<List<Inscription>>
     var kolBranch: Int = MAGIC
 
-    fun init(kolMoves: Int, currentNode:Int, mode: String, _kolBranch: Int = 6) {
+    fun init(kolMoves: Int, currentNode:Int, mode: String, _kolBranch: Int = kolBranches()) {
         kolBranch = _kolBranch
         data = generateGraph(kolMoves, currentNode, mode)
     }
@@ -28,7 +28,7 @@ class Graph(val kolNode: Int) {
 //    TODO("rewrite to normal generation")
     private fun generateGraph(kolMoves: Int, currentNode: Int, mode: String): List<List<Inscription>> {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
-        if (factorial(kolNode) < kolBranch) throw error("Too match branches!")
+        if (factorial(kolNodes) < kolBranch) throw error("Too match branches!")
 
         val probList: List<Operation> = when(mode) {
             "standard" -> PROB_LIST_STANDARD
@@ -37,7 +37,7 @@ class Graph(val kolNode: Int) {
             else -> throw error("Wring mode!")
         }
         lateinit var _data: MutableList<MutableList<Inscription>>
-        val kolInIndex = List(kolNode) {0}.toMutableList()
+        val kolInIndex = List(kolNodes) {0}.toMutableList()
 
         fun doBounds(oper: Operation) = when(oper) {
             PLUS, MINUS                 -> BOUNDS_PLUS_MINUS
@@ -49,7 +49,7 @@ class Graph(val kolNode: Int) {
         fun generateOne(i: Int) {
             var j = i
             while (j == i || _data[i][j].oper != NONE) {
-                j = Random.nextInt(0, kolNode)
+                j = Random.nextInt(0, kolNodes)
             }
             val oper = probList.random()
             val num = doBounds(oper).let { Random.nextInt(it.first, it.second) }
@@ -76,23 +76,23 @@ class Graph(val kolNode: Int) {
 
 
         do {
-            _data = MutableList(kolNode) {
-                MutableList(kolNode) {
+            _data = MutableList(kolNodes) {
+                MutableList(kolNodes) {
                     Inscription(NONE, null)
                 }
             }
-            for (i in 0 until kolNode - 1) {
+            for (i in 0 until kolNodes - 1) {
                 generateOne(i)
             }
-            var kol = kolBranch - kolNode + 1
-            if (kolInIndex[kolNode - 1] == 0) {
-                generateOne(kolNode - 1)
+            var kol = kolBranch - kolNodes + 1
+            if (kolInIndex[kolNodes - 1] == 0) {
+                generateOne(kolNodes - 1)
                 kol--
             }
             while (kol != 0) {
                 var i = MAGIC
-                while (i < 0 || kolInIndex[i] == kolNode - 1) {
-                    i = Random.nextInt(0, kolNode)
+                while (i < 0 || kolInIndex[i] == kolNodes - 1) {
+                    i = Random.nextInt(0, kolNodes)
                 }
                 generateOne(i)
                 kol--
@@ -100,14 +100,16 @@ class Graph(val kolNode: Int) {
         } while (!correctGraph())
         return _data
     }
+
+    private fun kolBranches(): Int = Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1)
 }
 
 // for tests
 internal fun correctnessGraph(graph: Graph): Boolean {
-    if (graph.data.size != graph.kolNode || graph.data[0].size != graph.kolNode || graph.kolBranch < graph.kolNode) return false
+    if (graph.data.size != graph.kolNodes || graph.data[0].size != graph.kolNodes || graph.kolBranch < graph.kolNodes) return false
     var kol = 0
-    for (i in 0 until graph.kolNode) {
-        for (j in 0 until graph.kolNode) {
+    for (i in 0 until graph.kolNodes) {
+        for (j in 0 until graph.kolNodes) {
             if (graph.data[i][j].oper == NONE) continue
             kol++
             if (graph.data[i][j].oper in listOf(DIVISION, ROOT) && graph.data[i][j].num == 0) return false

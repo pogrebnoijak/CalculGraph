@@ -3,7 +3,6 @@ package com.example.calculgraph.dataBase
 import android.content.Context
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import com.example.calculgraph.states.SaveState
-import com.example.calculgraph.states.SettingsState
 import com.example.calculgraph.states.StatisticState
 import java.lang.Integer.max
 

@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.core.widget.doAfterTextChanged
 import com.example.calculgraph.R
 import com.example.calculgraph.constant.LANGUAGES
+import com.example.calculgraph.constant.MAX_MOVES
 import com.example.calculgraph.constant.TIMES
 import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.dataBase.DBWorker
@@ -49,14 +51,26 @@ class SettingsActivity : AnyActivity() {
             }
         }
 
+        findViewById<Switch>(R.id.sound).setOnCheckedChangeListener {
+                _: CompoundButton, isChecked: Boolean -> updateSound(isChecked)
+        }
         tuningSpinner(R.id.language, LANGUAGES as Array<Any>) { updateLanguage(it) }
         tuningSpinner(R.id.topic, topicValues() as Array<Any>) { updateTopic(it) }
         tuningSpinner(R.id.computability, Computability.values() as Array<Any>) { updateComputability(it) }
-        tuningSpinner(R.id.time, TIMES as Array<Any>) { updateTime(it) }
-
-        findViewById<Switch>(R.id.sound).setOnCheckedChangeListener {
-            _: CompoundButton, isChecked: Boolean -> updateSound(isChecked)
+        findViewById<EditText>(R.id.moves).apply {
+            doAfterTextChanged { text ->
+                text.toString().let {
+                    if(it.isNotEmpty()) {
+                        if (it.toInt() > MAX_MOVES) {
+                            setText(MAX_MOVES.toString())
+                        } else {
+                            updateMoves(it.toInt())
+                        }
+                    }
+                }
+            }
         }
+        tuningSpinner(R.id.time, TIMES as Array<Any>) { updateTime(it) }
     }
 
     private fun setSettings() {
@@ -69,6 +83,7 @@ class SettingsActivity : AnyActivity() {
             throw error("spinner error")
         }
 
+        findViewById<Switch>(R.id.sound).isChecked = _settings.sound
         findViewById<Spinner>(R.id.language).let {
             it.setSelection(getIndexByName(it, _settings.language))
         }
@@ -78,10 +93,10 @@ class SettingsActivity : AnyActivity() {
         findViewById<Spinner>(R.id.computability).let {
             it.setSelection(getIndexByName(it, _settings.computability))
         }
+        findViewById<EditText>(R.id.moves).setText(_settings.moves.toString())
         findViewById<Spinner>(R.id.time).let {
             it.setSelection(getIndexByName(it, _settings.time))
         }
-        findViewById<Switch>(R.id.sound).isChecked = _settings.sound
     }
 
     private fun updateLanguage(language: String) {
@@ -105,5 +120,9 @@ class SettingsActivity : AnyActivity() {
 
     private fun updateTime(time: String) {
         settings.time = time.toInt()
+    }
+
+    private fun updateMoves(moves: Int) {
+        settings.moves = moves
     }
 }
