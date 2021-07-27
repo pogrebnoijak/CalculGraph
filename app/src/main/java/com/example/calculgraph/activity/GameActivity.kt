@@ -263,6 +263,7 @@ class GameActivity : AnyActivity() {
 
     private inner class DrawViewConstant(context: Context?) : Draws(context) {
         override fun onDraw(canvas: Canvas) {
+//            TODO("write normal numbers")
             canvas.run {
                 p.apply {
                     strokeWidth = AVERAGE_WIDTH
