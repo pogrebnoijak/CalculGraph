@@ -53,27 +53,22 @@ class MainActivity : AnyActivity() {
             }
         }
 
-//        TODO("update this")
         findViewById<Button>(R.id.continue_).setOnClickListener { continueGame() }
-
         findViewById<Button>(R.id.levels).setOnClickListener {
             val intent = Intent(this, LevelsActivity :: class.java )
             startActivity(intent)
             finish()
         }
-
         findViewById<Button>(R.id.statistic).setOnClickListener {
             val intent = Intent(this, StatisticActivity :: class.java )
             startActivity(intent)
             finish()
         }
-
         findViewById<Button>(R.id.settings).setOnClickListener {
             val intent = Intent(this, SettingsActivity :: class.java )
             startActivity(intent)
             finish()
         }
-
         findViewById<Button>(R.id.exit).setOnClickListener {
             finish()
             exitProcess(0)

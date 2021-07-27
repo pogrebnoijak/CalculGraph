@@ -64,7 +64,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
     private fun addDefaults(db: SQLiteDatabase) {
-//        TODO("to NULL")
         val cvStat = ContentValues()
         cvStat.put("kolGame", 0)
         cvStat.put("sredScore", 0.0)
