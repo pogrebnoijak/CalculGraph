@@ -8,6 +8,8 @@ import kotlin.math.PI
 const val DRAWING = 10L         // ms
 const val LAYOUT_CONST = 0.7F
 const val MAGIC = -1
+const val MINUTE = 60
+const val HOUR = 3600
 
 // point
 const val SMALL_WIDTH = 3F
@@ -34,13 +36,12 @@ const val CASUAL_MOVE = 10F
 const val SET_LENGTH = 3
 const val CURRENT_NUMBER_MAX = 100
 const val THRESHOLD_ANGLE = PI/12
-const val ALL_TIME = 60_000L     // ms
-const val KOL_MOVES = 2
+val ALL_TIME = 60_000L     // ms
 const val MAX_MOVES = 8
 val KOL_NODES = mapOf(EASY to 4, MEDIUM to 5, HARD to 6, INSANE to 8)
 
 val LANGUAGES = arrayOf("English", "Русский")
-val TIMES = arrayOf(10, 15, 30, 60, 300, 3600)
+val TIMES = listOf(10, 15, 30, 60, 300, 600, 3600)
 val BOUNDS_PLUS_MINUS = Pair(1, 100)
 val BOUNDS_MULTIPLICATION_DIVISION = Pair(2, 25)
 val BOUNDS_DEGREE_ROOT = Pair(2, 5)
