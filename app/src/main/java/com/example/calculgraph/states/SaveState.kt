@@ -27,7 +27,7 @@ data class SaveState(var endGame: Boolean,
         val sizeComputability = Computability.values().size
 
         val a = (TIMES.indexOf((allTime / 1000).toInt())) * sizeMoves * sizeMode * sizeComputability +
-                (kolMoves - MIN_MOVES) * sizeMode * sizeComputability +
+                (answer.size - 1 - MIN_MOVES) * sizeMode * sizeComputability +
                 MODES.indexOf(mode) * sizeComputability +
                 Computability.values().indexOf(computability) + 1
         println(a)

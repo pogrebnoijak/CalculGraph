@@ -26,6 +26,7 @@ import kotlin.math.*
 
 class GameActivity : AnyActivity() {
     private var play = true
+    private var savingState = false
     private var time = MAGIC.toLong()                                                               // ms
     //    TODO(remove val")
     private var allTime = MAGIC.toLong()
@@ -177,8 +178,6 @@ class GameActivity : AnyActivity() {
 
     private fun treatment(start: Pair<Float, Float>, end: Pair<Float, Float>) {
         operator fun Pair<Float, Float>.minus(v: Pair<Float, Float>) = Pair(first - v.first, second - v.second)
-        fun Pair<Float, Float>.skalProd(v: Pair<Float, Float>) = first * v.first + second * v.second
-        fun Pair<Float, Float>.l2() = sqrt(skalProd(this))
         fun angle(v1: Pair<Float, Float>, v2: Pair<Float, Float>) = // cos
             v1.skalProd(v2) / (v1.l2() * v2.l2())  // v1, v2 not 0
 
@@ -203,26 +202,39 @@ class GameActivity : AnyActivity() {
         }
     }
 
-    private fun endGame() {
-        runOnUiThread {
-            val dialog = Dialog(this@GameActivity, R.style.AlertDialogCustom)
-            dialog.setContentView(R.layout.dialog_yes_no)
-            dialog.findViewById<TextView>(R.id.dial_text).text = "You have scored $winCount points. Do you want to play again?"
-            dialog.show()
-            dialog.findViewById<Button>(R.id.yes).setOnClickListener {
-                dialog.dismiss()
+    private fun endGame() = runOnUiThread { doDialogEnd() }
+
+    private fun doDialogEnd() {
+        Dialog(this@GameActivity, R.style.AlertDialogCustom).apply {
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
+
+            val params = window?.attributes ?: throw error("dialog error")
+            params.y = -(size.height * DIALOG_K).toInt()
+            window?.attributes = params
+
+            setContentView(R.layout.dialog_yes_no)
+            findViewById<TextView>(R.id.dial_text).text = "You have scored $winCount points. Do you want to play again?"
+            show()
+            findViewById<Button>(R.id.yes).setOnClickListener {
+                dismiss()
+                if (!savingState) {
+                    saveGameState()
+                    savingState = true
+                }
+                dbWorker.updateStatistic(winCount)
                 winCount = 0
                 newGame()
             }
-            dialog.findViewById<Button>(R.id.no).setOnClickListener {
-                dialog.dismiss()
+            findViewById<Button>(R.id.no).setOnClickListener {
+                dismiss()
                 exitGame()
             }
         }
     }
 
     private fun exitGame() {
-        saveGameState(dbWorker)
+        saveGameState()
         if (!play)
             dbWorker.updateStatistic(winCount)
         val intent = Intent(this, MainActivity :: class.java )
@@ -233,7 +245,7 @@ class GameActivity : AnyActivity() {
         finish()
     }
 
-    private fun saveGameState(dbWorker: DBWorker) {
+    private fun saveGameState() {
         dbWorker.updateSaveState(SaveState(
             !play,
             time,
@@ -260,6 +272,7 @@ class GameActivity : AnyActivity() {
         val radIn = centerW * RAD_IN_K
         val radMini = centerW * RAD_MINI_K
         val radInner = centerW * RAD_INNER_K
+        val lettering = centerW * RIBS_POSITION
         val rect = RectF(centerW - rad, centerH - rad, centerW + rad, centerH + rad)
         val centers: List<Pair<Float, Float>> =
             vecCentres.map { pair -> Pair(pair.first * radIn + centerW, pair.second * radIn + centerH) }
@@ -272,33 +285,42 @@ class GameActivity : AnyActivity() {
                 p.apply {
                     strokeWidth = AVERAGE_WIDTH
                     textAlign = Paint.Align.CENTER
+                    color = Color.MAGENTA
                 }
                 for (i in 0 until curField.graph.kolNodes) {
                     for (j in 0 until curField.graph.kolNodes) {
-                        if (curField.graph.data[i][j].oper == Operation.NONE) continue
-                        if (i > j) {
-                            p.color = Color.MAGENTA
+                        if (curField.graph.data[i][j].oper != Operation.NONE && i > j)
                             drawLine(centers[i].first, centers[i].second, centers[j].first, centers[j].second, p)
-                            val vec = Pair(centers[j].first - centers[i].first, centers[j].second - centers[i].second) // it's so normal to calculate because it's constant
-                            p.color = Color.GREEN
+                    }
+                }
+
+                p.color = Color.GREEN
+                for (i in 0 until curField.graph.kolNodes) {
+                    for (j in 0 until curField.graph.kolNodes) {
+                        if (curField.graph.data[i][j].oper != Operation.NONE && i > j) {
+                            val vec = Pair(centers[j].first - centers[i].first, centers[j].second - centers[i].second).run {
+                                l2().let { Pair(first/it, second/it) }
+                            }
                             p.textSize = centerW * TEXT_SIZE_K
                             if (curField.graph.data[i][j].oper in listOf(Operation.ROOT, Operation.DEGREE)) {
-                                drawText(curField.graph.data[i][j].oper.opToString(), centers[i].first + RIBS_POSITION * vec.first,
-                                    centers[i].second + RIBS_POSITION * vec.second - (p.descent() + p.ascent()) / 2, p)
-                                drawText(curField.graph.data[j][i].oper.opToString(), centers[i].first + (1 - RIBS_POSITION) * vec.first,
-                                    centers[i].second + (1 - RIBS_POSITION) * vec.second - (p.descent() + p.ascent()) / 2, p)
+                                drawText(curField.graph.data[i][j].oper.opToString(), centers[i].first + lettering * vec.first,
+                                    centers[i].second + lettering * vec.second - (p.descent() + p.ascent()) / 2, p)
+                                drawText(curField.graph.data[j][i].oper.opToString(), centers[j].first - lettering * vec.first,
+                                    centers[j].second - lettering * vec.second - (p.descent() + p.ascent()) / 2, p)
                                 p.textSize = centerW * TEXT_SIZE_K2
-                                val x = if (curField.graph.data[i][j].oper == Operation.ROOT) RIBS_POSITION else 1 - RIBS_POSITION
-                                drawText(curField.graph.data[i][j].num.toString(), centers[i].first + x * vec.first - centerW * TEXT_SHIFT_ROOT_X,
-                                    centers[i].second + x * vec.second - (p.descent() + p.ascent()) / 2 - centerW * TEXT_SHIFT_ROOT_Y, p)
-                                drawText(curField.graph.data[j][i].num.toString(), centers[i].first + (1 - x) * vec.first + centerW * TEXT_SHIFT_DEGREE_X,
-                                    centers[i].second + (1 - x) * vec.second - (p.descent() + p.ascent()) / 2 - centerW * TEXT_SHIFT_DEGREE_Y, p)
+
+                                class Temp(val i: Int, val j: Int, val let: Float)
+                                val temp = if (curField.graph.data[i][j].oper == Operation.ROOT) Temp(i,j,lettering) else Temp(j,i,-lettering)
+                                drawText(curField.graph.data[temp.i][temp.j].num.toString(), centers[temp.i].first + temp.let * vec.first - centerW * TEXT_SHIFT_ROOT_X,
+                                    centers[temp.i].second + temp.let * vec.second - (p.descent() + p.ascent()) / 2 - centerW * TEXT_SHIFT_ROOT_Y, p)
+                                drawText(curField.graph.data[temp.j][temp.i].num.toString(), centers[temp.j].first - temp.let * vec.first + centerW * TEXT_SHIFT_DEGREE_X,
+                                    centers[temp.j].second - temp.let * vec.second - (p.descent() + p.ascent()) / 2 - centerW * TEXT_SHIFT_DEGREE_Y, p)
                             }
                             else {
-                                drawText(curField.graph.data[i][j].toString(), centers[i].first + RIBS_POSITION * vec.first,
-                                    centers[i].second + RIBS_POSITION * vec.second - (p.descent() + p.ascent()) / 2, p)
-                                drawText(curField.graph.data[j][i].toString(), centers[i].first + (1 - RIBS_POSITION) * vec.first,
-                                    centers[i].second + (1 - RIBS_POSITION) * vec.second - (p.descent() + p.ascent()) / 2, p)
+                                drawText(curField.graph.data[i][j].toString(), centers[i].first + lettering * vec.first,
+                                    centers[i].second + lettering * vec.second - (p.descent() + p.ascent()) / 2, p)
+                                drawText(curField.graph.data[j][i].toString(), centers[j].first - lettering * vec.first,
+                                    centers[j].second - lettering * vec.second - (p.descent() + p.ascent()) / 2, p)
                             }
                         }
                     }
@@ -359,3 +381,6 @@ class GameActivity : AnyActivity() {
         }
     }
 }
+
+private fun Pair<Float, Float>.skalProd(v: Pair<Float, Float>) = first * v.first + second * v.second
+private fun Pair<Float, Float>.l2() = sqrt(skalProd(this))

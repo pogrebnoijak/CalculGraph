@@ -135,7 +135,7 @@ private fun showTime(time: Int): String = when(time) {
 }
 
 private fun String.toTime(): Int {
-    data class Time(var h: Int = 0, var m: Int = 0, var s: Int = 0)
+    class Time(var h: Int = 0, var m: Int = 0, var s: Int = 0)
     val time = Time()
     this.split(" ").forEach {
         when(it.last()) {

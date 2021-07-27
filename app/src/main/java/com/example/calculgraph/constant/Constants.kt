@@ -19,14 +19,15 @@ const val AVERAGE_WIDTH = 5F
 const val LARGE_WIDTH = 7F
 
 // changing
-const val RIBS_POSITION = 0.2F
-const val RAD_K = 0.9F
-const val RAD_IN_K = 0.7F
+const val RIBS_POSITION = 0.25F
+const val RAD_K = 0.95F
+const val RAD_IN_K = 0.8F
 const val RAD_MINI_K = 0.1F
 const val RAD_INNER_K = 0.3F
 const val TEXT_SIZE_K = 0.08F
 const val TEXT_SIZE_K2 = 0.06F
 const val SET_TURN_K = 0.1F
+const val DIALOG_K = 0.42F
 const val TEXT_SHIFT_ROOT_X = 0.04F
 const val TEXT_SHIFT_ROOT_Y = 0.02F
 const val TEXT_SHIFT_DEGREE_X = 0.03F
