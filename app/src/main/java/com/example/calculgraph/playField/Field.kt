@@ -88,7 +88,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
     fun move(to: Int): Boolean {
         if (history.isNotEmpty() && history.peek() == to) back()
         else if (kolMoves != 0) {
-            history.push(currentNode)
+            history.add(currentNode)
             moving(currentNode, to)
             currentNode = to
             kolMoves--

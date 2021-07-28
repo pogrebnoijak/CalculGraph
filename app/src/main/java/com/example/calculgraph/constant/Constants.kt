@@ -34,6 +34,8 @@ const val TEXT_SHIFT_DEGREE_X = 0.03F
 const val TEXT_SHIFT_DEGREE_Y = 0.03F
 const val TEXT_SIZE_BIG_K = 0.1F
 const val CASUAL_MOVE = 10F
+const val ANSWER_K = 50
+const val ANSWER_WAIT_K = 2
 
 // params
 const val SET_LENGTH = 3

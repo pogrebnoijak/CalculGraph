@@ -10,6 +10,7 @@ import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +29,8 @@ class GameActivity : AnyActivity() {
     private var play = true
     private var savingState = false
     private var time = MAGIC.toLong()                                                               // ms
+    private var iter = MAGIC                                                                        // for answer
+    private var iterMax = MAGIC                                                                     // for answer
     //    TODO(remove val")
     private var allTime = MAGIC.toLong()
     private var winCount = 0
@@ -35,7 +38,7 @@ class GameActivity : AnyActivity() {
     private val timer = Timer()
     private val dbWorker = DBWorker()
     private var motion: TimerTask = object: TimerTask() { override fun run() {} }
-    private lateinit var background: DrawView
+    private lateinit var background: Draws
     private lateinit var curField: Field
     private lateinit var vecCentres: List<Pair<Float, Float>>
     private lateinit var touchDown: Pair<Float, Float>
@@ -154,13 +157,14 @@ class GameActivity : AnyActivity() {
     private fun addDraws() {
         findViewById<ConstraintLayout>(R.id.draw).removeAllViews()
         findViewById<ConstraintLayout>(R.id.draw).addView(DrawViewConstant(this))
-        background = DrawView(this)
+        background = DrawView(this@GameActivity)
         findViewById<ConstraintLayout>(R.id.draw).addView(background)
     }
 
     private fun setRendering() {
         motion.cancel()
         play = true
+        iter = MAGIC
         motion = object : TimerTask() {
             override fun run() {
                 if(play) {
@@ -170,6 +174,18 @@ class GameActivity : AnyActivity() {
                         play = false
                         endGame()
                     }
+                } else if (iter == MAGIC) { // show answer
+                    val path = generateAnswer()
+                    iterMax = (path.size) * ANSWER_K
+                    iter = 1
+                    runOnUiThread {
+                        findViewById<ConstraintLayout>(R.id.draw).removeView(background)
+                        background = DrawViewAnswer(this@GameActivity, path + path.last())
+                        findViewById<ConstraintLayout>(R.id.draw).addView(background)
+                    }
+                } else if (iter < iterMax - 1) {
+                    iter++
+                    background.invalidate()
                 }
             }
         }
@@ -196,7 +212,7 @@ class GameActivity : AnyActivity() {
     private fun move(to: Int) {
         val win = curField.move(to)
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
-        if (win) {
+        if (play && win) {
             winCount++
             newGame()
         }
@@ -206,12 +222,14 @@ class GameActivity : AnyActivity() {
 
     private fun doDialogEnd() {
         Dialog(this@GameActivity, R.style.AlertDialogCustom).apply {
-            setCanceledOnTouchOutside(false)
-            setCancelable(false)
-
             val params = window?.attributes ?: throw error("dialog error")
             params.y = -(size.height * DIALOG_K).toInt()
-            window?.attributes = params
+            window?.let {
+                it.attributes = params
+                it.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            }
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
 
             setContentView(R.layout.dialog_yes_no)
             findViewById<TextView>(R.id.dial_text).text = "You have scored $winCount points. Do you want to play again?"
@@ -238,7 +256,6 @@ class GameActivity : AnyActivity() {
         if (!play)
             dbWorker.updateStatistic(winCount)
         val intent = Intent(this, MainActivity :: class.java )
-        play = false
         motion.cancel()
         timer.cancel()
         startActivity(intent)
@@ -263,6 +280,24 @@ class GameActivity : AnyActivity() {
         )
     }
 
+    private fun generateAnswer(): List<Int> {
+        var list = listOf(curField.currentNode) + curField.history.reversed()
+        val answer = Stack<Int>().apply { addAll(curField.answer) }
+        var lastEl = MAGIC
+        while (list.isNotEmpty() && list.last() == answer.peek()) {
+            lastEl = answer.pop()
+            list = list.dropLast(1)
+        }
+
+        return mutableListOf<Int>().apply {
+            (list + lastEl + answer.reversed()).forEach { el ->
+                repeat(ANSWER_WAIT_K) { add(el) }
+            }
+        }
+    }
+
+
+    // Draws
 
     abstract inner class Draws(context: Context?) : View(context) {
         val p: Paint = Paint()
@@ -280,7 +315,6 @@ class GameActivity : AnyActivity() {
 
     private inner class DrawViewConstant(context: Context?) : Draws(context) {
         override fun onDraw(canvas: Canvas) {
-//            TODO("write normal numbers")
             canvas.run {
                 p.apply {
                     strokeWidth = AVERAGE_WIDTH
@@ -341,43 +375,72 @@ class GameActivity : AnyActivity() {
         }
     }
 
-    private inner class DrawView(context: Context?) : Draws(context) {
-        @SuppressLint("ResourceAsColor")
-        override fun onDraw(canvas: Canvas) {
-            canvas.run {
-                p.apply {
+    abstract inner class DrawHelper(context: Context?) : Draws(context) {
+        fun drawText(canvas: Canvas) {
+            p.apply {
                     strokeWidth = SMALL_WIDTH
                     color = Color.GREEN
                     textSize = centerW * TEXT_SIZE_BIG_K
                     textAlign = Paint.Align.CENTER
                 }
-                if (mode == "set") { // believe that length = 3
-                    (-1..1).forEach { i ->
-                        drawText(curField.currentNumbers[i+1].toString(), centerW, centerH - (p.descent() + p.ascent())/2 + i * centerW * SET_TURN_K, p)
-                    }
-                }
-                else drawText(curField.currentNumbers[0].toString(), centerW, centerH - (p.descent() + p.ascent())/2, p)
 
-                p.apply {
-                    strokeWidth = LARGE_WIDTH
-                    color = R.color.color3
-                    style = Paint.Style.STROKE
+            if (mode == "set") { // believe that length = 3
+                (-1..1).forEach { i ->
+                    canvas.drawText(curField.currentNumbers[i+1].toString(), centerW, centerH - (p.descent() + p.ascent())/2 + i * centerW * SET_TURN_K, p)
                 }
-                drawArc(rect, -90F, time * 360F / allTime, false, p)
-
-                p.apply {
-                    color = Color.YELLOW
-                    style = Paint.Style.FILL
-                }
-                centers.forEach {
-                    drawCircle(it.first, it.second, radMini, p)
-                }
-
-                p.apply {
-                    color = Color.RED
-                }
-                drawCircle(centers[curField.currentNode].first, centers[curField.currentNode].second, radMini, p)
             }
+            else canvas.drawText(curField.currentNumbers[0].toString(), centerW, centerH - (p.descent() + p.ascent())/2, p)
+        }
+
+        fun drawCircles(canvas: Canvas) {
+            p.apply {
+                strokeWidth = LARGE_WIDTH
+                color = Color.YELLOW
+                style = Paint.Style.FILL
+            }
+            centers.forEach {
+                canvas.drawCircle(it.first, it.second, radMini, p)
+            }
+        }
+
+        fun drawPosCircle(canvas: Canvas, pair: Pair<Float, Float>) {
+            p.color = Color.RED
+            canvas.drawCircle(pair.first, pair.second, radMini, p)
+        }
+    }
+
+    private inner class DrawView(context: Context?) : DrawHelper(context)  {
+        @SuppressLint("ResourceAsColor")
+        override fun onDraw(canvas: Canvas) {
+            drawText(canvas)
+
+            p.apply {
+                strokeWidth = LARGE_WIDTH
+                color = R.color.color3
+                style = Paint.Style.STROKE
+            }
+            canvas.drawArc(rect, -90F, time * 360F / allTime, false, p)
+
+            drawCircles(canvas)
+
+            drawPosCircle(canvas, centers[curField.currentNode])
+        }
+    }
+
+    private inner class DrawViewAnswer(context: Context?, val path: List<Int>) : DrawHelper(context) {
+        @SuppressLint("ResourceAsColor")
+        override fun onDraw(canvas: Canvas) {
+            val pos = iter / ANSWER_K
+            val q = (iter % ANSWER_K).toFloat()
+            if (curField.currentNode != path[pos]) move(path[pos])
+            val drawCirclePos = Pair(centers[curField.currentNode].first + (centers[path[pos+1]].first - centers[curField.currentNode].first) * (q / ANSWER_K),
+                centers[curField.currentNode].second + (centers[path[pos+1]].second - centers[curField.currentNode].second) * (q / ANSWER_K))
+
+            drawText(canvas)
+
+            drawCircles(canvas)
+
+            drawPosCircle(canvas, drawCirclePos)
         }
     }
 }
