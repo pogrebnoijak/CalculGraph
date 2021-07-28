@@ -62,9 +62,9 @@ class StatisticActivity : AnyActivity() {
 
             fun updateMode() = run { findViewById<TextView>(R.id.mode).text = MODES[modeInd] }
             fun updateComp() = run { findViewById<TextView>(R.id.computability).text = Computability.values()[compInd].toString() }
-            fun updateMoves() = run { findViewById<TextView>(R.id.moves).text = "${movesInd + MIN_MOVES} moves" }
+            fun updateMoves() = run { findViewById<TextView>(R.id.moves).text = getString(R.string.updateMoves, movesInd + MIN_MOVES) }
             fun updateTime() = run { findViewById<TextView>(R.id.time).text = showTime(TIMES[timeInd]) }
-            fun setListner(ind: String, id: Int, isNext: Boolean) {
+            fun setListener(ind: String, id: Int, isNext: Boolean) {
                 findViewById<ImageButton>(id).setOnClickListener {
                     val plus = if (isNext) 1 else -1
                     when(ind) {
@@ -81,14 +81,14 @@ class StatisticActivity : AnyActivity() {
             updateMoves()
             updateTime()
 
-            setListner("mode", R.id.nextMode, true)
-            setListner("mode", R.id.prevMode, false)
-            setListner("computability", R.id.nextComputability, true)
-            setListner("computability", R.id.prevComputability, false)
-            setListner("moves", R.id.nextMoves, true)
-            setListner("moves", R.id.prevMoves, false)
-            setListner("time", R.id.nextTime, true)
-            setListner("time", R.id.prevTime, false)
+            setListener("mode", R.id.nextMode, true)
+            setListener("mode", R.id.prevMode, false)
+            setListener("computability", R.id.nextComputability, true)
+            setListener("computability", R.id.prevComputability, false)
+            setListener("moves", R.id.nextMoves, true)
+            setListener("moves", R.id.prevMoves, false)
+            setListener("time", R.id.nextTime, true)
+            setListener("time", R.id.prevTime, false)
 
             findViewById<Button>(R.id.ok).setOnClickListener {
                 dismiss()

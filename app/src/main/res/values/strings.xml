@@ -28,7 +28,8 @@
     <string name="moves">Moves:</string>
     <string name="info">info</string>
     <string name="statistics">Statistics for settings</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="left">left</string>
     <string name="right">right</string>
+    <string name="updateMoves">%1$d moves</string>
 </resources>

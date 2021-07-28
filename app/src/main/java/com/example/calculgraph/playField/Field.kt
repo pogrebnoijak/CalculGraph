@@ -9,7 +9,7 @@ import com.example.calculgraph.enums.Operation.*
 import java.lang.Integer.MIN_VALUE
 
 class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settings.computability] ?: throw error("wrong computability")) {
-    //    TODO(do vals)
+    //    TODO(do val)
     var currentNode: Int = MAGIC
     val graph = Graph(kolNodes)
     lateinit var currentNumbers: List<Int>
@@ -30,9 +30,9 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
             fun Pair<Int, List<Int>>.mapSecond(function: (List<Int>) -> List<Int>) = Pair(first, function(second))
 
             fun doPath(q: Int, cur: Int, last: Int, kol: Int): Pair<Int, List<Int>> {
-                if (kol == 0) return Pair(if (last == MAGIC) q else _moving(last, cur, listOf(q)).first(), listOf(cur))
+                if (kol == 0) return Pair(if (last == MAGIC) q else movingHelper(last, cur, listOf(q)).first(), listOf(cur))
                 return list[cur].filter { it != last }
-                    .map { next -> doPath(if (last == MAGIC) q else _moving(last, cur, listOf(q)).first(), next, cur, kol - 1) }
+                    .map { next -> doPath(if (last == MAGIC) q else movingHelper(last, cur, listOf(q)).first(), next, cur, kol - 1) }
                     .maxByOrNull { it.first }?.mapSecond { it + cur } ?: Pair(MIN_VALUE, listOf())
             }
 
@@ -107,9 +107,9 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         }
     }
 
-    private fun moving(from: Int, to: Int) { currentNumbers = _moving(from, to, currentNumbers) }
+    private fun moving(from: Int, to: Int) { currentNumbers = movingHelper(from, to, currentNumbers) }
 
-    private fun _moving(from: Int, to: Int, list: List<Int>) = when(graph.data[from][to].oper) {
+    private fun movingHelper(from: Int, to: Int, list: List<Int>) = when(graph.data[from][to].oper) {
         NONE              -> throw error("wrong move!")
         PLUS              -> list.map { x -> graph.data[from][to].num?.let { x + it } ?: throw error("wrong data num!") }
         MINUS             -> list.map { x -> graph.data[from][to].num?.let { x - it } ?: throw error("wrong data num!") }

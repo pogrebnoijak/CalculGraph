@@ -17,4 +17,4 @@ fun String.toTopic(): Topic = when(this) {
     else        -> throw error("wrong topic")
 }
 
-fun topicValues() = Topic.values().toList().map { it.topToString() }.toTypedArray()
+fun topicValues() = Topic.values().toList().map { it.topToString() }

@@ -10,7 +10,7 @@ class Graph(val kolNodes: Int) {
         override fun toString() = oper.opToString() + num.toString()
     }
 
-//    TODO(do vals)
+//    TODO(do val)
     lateinit var data: List<List<Inscription>>
     var kolBranch: Int = MAGIC
 
@@ -20,7 +20,7 @@ class Graph(val kolNodes: Int) {
     }
 
     fun listTo(data: List<List<Inscription>>) = data.map { line ->
-        line.mapIndexed { i, insc -> Pair(i, insc) }
+        line.mapIndexed { i, inscription -> Pair(i, inscription) }
             .filter { it.second.oper != NONE }
             .map { it.first }
     }
@@ -36,7 +36,7 @@ class Graph(val kolNodes: Int) {
             "max" -> PROB_LIST_MAX
             else -> throw error("Wring mode!")
         }
-        lateinit var _data: MutableList<MutableList<Inscription>>
+        lateinit var tempData: MutableList<MutableList<Inscription>>
         val kolInIndex = List(kolNodes) {0}.toMutableList()
 
         fun doBounds(oper: Operation) = when(oper) {
@@ -48,19 +48,19 @@ class Graph(val kolNodes: Int) {
 
         fun generateOne(i: Int) {
             var j = i
-            while (j == i || _data[i][j].oper != NONE) {
+            while (j == i || tempData[i][j].oper != NONE) {
                 j = Random.nextInt(0, kolNodes)
             }
             val oper = probList.random()
             val num = doBounds(oper).let { Random.nextInt(it.first, it.second) }
-            _data[i][j] = Inscription(oper, num)
-            _data[j][i] = Inscription(oper.reverse(), num)
+            tempData[i][j] = Inscription(oper, num)
+            tempData[j][i] = Inscription(oper.reverse(), num)
             kolInIndex[i]++
             kolInIndex[j]++
         }
 
         fun correctGraph(): Boolean {
-            val list = listTo(_data)
+            val list = listTo(tempData)
 
             fun dfs(cur: Int, last: Int, length: Int): Boolean {
                 if (length == 0) return true
@@ -76,7 +76,7 @@ class Graph(val kolNodes: Int) {
 
 
         do {
-            _data = MutableList(kolNodes) {
+            tempData = MutableList(kolNodes) {
                 MutableList(kolNodes) {
                     Inscription(NONE, null)
                 }
@@ -98,7 +98,7 @@ class Graph(val kolNodes: Int) {
                 kol--
             }
         } while (!correctGraph())
-        return _data
+        return tempData
     }
 
     private fun kolBranches(): Int = Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1)

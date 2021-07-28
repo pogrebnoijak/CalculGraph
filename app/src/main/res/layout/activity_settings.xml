@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -35,11 +36,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="15dp"
                 android:text="@string/sound"
                 android:textColor="@color/white"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         </FrameLayout>
 
@@ -112,7 +114,8 @@
                 style="@style/EditText"
                 android:inputType="number"
                 android:maxLength="1"
-                android:autofillHints="3" />
+                android:autofillHints="3"
+                tools:ignore="LabelFor" />
 
         </LinearLayout>
 

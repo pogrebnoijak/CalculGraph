@@ -38,8 +38,8 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun setOther() {
-        fun tuningSpinner(rIdSmth: Int, list: Array<Any>, update: (String) -> Unit) {
-            findViewById<Spinner>(rIdSmth).apply {
+        fun tuningSpinner(id: Int, list: Array<Any>, update: (String) -> Unit) {
+            findViewById<Spinner>(id).apply {
                 adapter = ArrayAdapter(this@SettingsActivity, R.layout.spinner, R.id.sp, list)
                 onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -54,9 +54,9 @@ class SettingsActivity : AnyActivity() {
         findViewById<Switch>(R.id.sound).setOnCheckedChangeListener {
                 _: CompoundButton, isChecked: Boolean -> updateSound(isChecked)
         }
-        tuningSpinner(R.id.language, LANGUAGES as Array<Any>) { updateLanguage(it) }
-        tuningSpinner(R.id.topic, topicValues() as Array<Any>) { updateTopic(it) }
-        tuningSpinner(R.id.computability, Computability.values() as Array<Any>) { updateComputability(it) }
+        tuningSpinner(R.id.language, Array(LANGUAGES.size) { LANGUAGES[it] } ) { updateLanguage(it) }
+        tuningSpinner(R.id.topic, Array(topicValues().size) { topicValues()[it] } ) { updateTopic(it) }
+        tuningSpinner(R.id.computability, Array(Computability.values().size) { Computability.values()[it] } ) { updateComputability(it) }
         findViewById<EditText>(R.id.moves).apply {
             doAfterTextChanged { text ->
                 text.toString().let {
@@ -68,11 +68,11 @@ class SettingsActivity : AnyActivity() {
                 }
             }
         }
-        tuningSpinner(R.id.time, TIMES.map { showTime(it) }.toTypedArray() as Array<Any>) { updateTime(it) }
+        tuningSpinner(R.id.time, Array(TIMES.size) { showTime(TIMES[it]) }) { updateTime(it) }
     }
 
     private fun setSettings() {
-        val _settings: SettingsState = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
+        val (sound, language, topic, computability, moves, time) = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
 
         fun getIndexByName(spin: Spinner, name: Any): Int {
             (0 until spin.count).forEach { i ->
@@ -81,19 +81,19 @@ class SettingsActivity : AnyActivity() {
             throw error("spinner error")
         }
 
-        findViewById<Switch>(R.id.sound).isChecked = _settings.sound
+        findViewById<Switch>(R.id.sound).isChecked = sound
         findViewById<Spinner>(R.id.language).let {
-            it.setSelection(getIndexByName(it, _settings.language))
+            it.setSelection(getIndexByName(it, language))
         }
         findViewById<Spinner>(R.id.topic).let {
-            it.setSelection(getIndexByName(it, _settings.topic.topToString()))
+            it.setSelection(getIndexByName(it, topic.topToString()))
         }
         findViewById<Spinner>(R.id.computability).let {
-            it.setSelection(getIndexByName(it, _settings.computability))
+            it.setSelection(getIndexByName(it, computability))
         }
-        findViewById<EditText>(R.id.moves).setText(_settings.moves.toString())
+        findViewById<EditText>(R.id.moves).setText(moves.toString())
         findViewById<Spinner>(R.id.time).let {
-            it.setSelection(getIndexByName(it, showTime(_settings.time)))
+            it.setSelection(getIndexByName(it, showTime(time)))
         }
     }
 

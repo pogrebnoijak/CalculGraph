@@ -28,8 +28,8 @@ class MainActivity : AnyActivity() {
 
 //    override fun onResume() {
 //        super.onResume()
-//        if (prefs?.getBoolean("firstrun", true) == true) {  // executed once after update
-//            prefs?.edit()?.putBoolean("firstrun", false)?.apply()
+//        if (prefs?.getBoolean("firstRun", true) == true) {  // executed once after update
+//            prefs?.edit()?.putBoolean("firstRun", false)?.apply()
 //
 //        }
 //    }

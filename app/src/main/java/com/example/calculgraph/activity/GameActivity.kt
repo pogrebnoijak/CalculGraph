@@ -124,6 +124,7 @@ class GameActivity : AnyActivity() {
         writeField()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun writeField() {
         findViewById<TextView>(R.id.score).text = "score $winCount"
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
@@ -144,6 +145,7 @@ class GameActivity : AnyActivity() {
         setRendering()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
             exitGame()
@@ -199,7 +201,7 @@ class GameActivity : AnyActivity() {
 
         if ((end - start).l2() > CASUAL_MOVE) {
             curField.graph.data[curField.currentNode]
-                .mapIndexed { i, insc -> Pair(i, insc) }
+                .mapIndexed { i, inscription -> Pair(i, inscription) }
                 .filter { it.second.oper != Operation.NONE }
                 .map { Pair(it.first, angle(end - start, vecCentres[it.first] - vecCentres[curField.currentNode])) }
                 .filter { it.second >= cos(THRESHOLD_ANGLE) }
@@ -209,6 +211,7 @@ class GameActivity : AnyActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun move(to: Int) {
         val win = curField.move(to)
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
@@ -220,6 +223,7 @@ class GameActivity : AnyActivity() {
 
     private fun endGame() = runOnUiThread { doDialogEnd() }
 
+    @SuppressLint("SetTextI18n")
     private fun doDialogEnd() {
         Dialog(this@GameActivity, R.style.AlertDialogCustom).apply {
             val params = window?.attributes ?: throw error("dialog error")
@@ -304,7 +308,7 @@ class GameActivity : AnyActivity() {
         val centerH = size.height / 2
         val centerW = size.width / 2
         val rad = centerW * RAD_K
-        val radIn = centerW * RAD_IN_K
+        private val radIn = centerW * RAD_IN_K
         val radMini = centerW * RAD_MINI_K
         val radInner = centerW * RAD_INNER_K
         val lettering = centerW * RIBS_POSITION
@@ -314,6 +318,7 @@ class GameActivity : AnyActivity() {
     }
 
     private inner class DrawViewConstant(context: Context?) : Draws(context) {
+        @SuppressLint("DrawAllocation")
         override fun onDraw(canvas: Canvas) {
             canvas.run {
                 p.apply {
@@ -428,7 +433,7 @@ class GameActivity : AnyActivity() {
     }
 
     private inner class DrawViewAnswer(context: Context?, val path: List<Int>) : DrawHelper(context) {
-        @SuppressLint("ResourceAsColor")
+        @SuppressLint("ResourceAsColor", "DrawAllocation")
         override fun onDraw(canvas: Canvas) {
             val pos = iter / ANSWER_K
             val q = (iter % ANSWER_K).toFloat()
