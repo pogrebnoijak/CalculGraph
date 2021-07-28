@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/dial_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/statistics"
+            android:textSize="25sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="5" >
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/prevMode"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/left"
+                    android:contentDescription="@string/left" />
+
+                <TextView
+                    android:id="@+id/mode"
+                    android:text="@string/placeholder"
+                    style="@style/TextViewInfo" />
+
+                <ImageButton
+                    android:id="@+id/nextMode"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/right"
+                    android:contentDescription="@string/right" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/prevComputability"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/left"
+                    android:contentDescription="@string/left" />
+
+                <TextView
+                    android:id="@+id/computability"
+                    android:text="@string/placeholder"
+                    style="@style/TextViewInfo" />
+
+                <ImageButton
+                    android:id="@+id/nextComputability"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/right"
+                    android:contentDescription="@string/right" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/prevMoves"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/left"
+                    android:contentDescription="@string/left" />
+
+                <TextView
+                    android:id="@+id/moves"
+                    android:text="@string/placeholder"
+                    style="@style/TextViewInfo" />
+
+                <ImageButton
+                    android:id="@+id/nextMoves"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/right"
+                    android:contentDescription="@string/right" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/prevTime"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/left"
+                    android:contentDescription="@string/left" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:text="@string/placeholder"
+                    style="@style/TextViewInfo" />
+
+                <ImageButton
+                    android:id="@+id/nextTime"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.1"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/right"
+                    android:contentDescription="@string/right" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <Button
+                android:id="@+id/ok"
+                style="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ok" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
