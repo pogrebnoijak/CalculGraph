@@ -39,7 +39,7 @@ const val ANSWER_WAIT_K = 2
 
 // params
 const val SET_LENGTH = 3
-const val CURRENT_NUMBER_MAX = 100
+const val CURRENT_NUMBER_MAX = 10000
 const val THRESHOLD_ANGLE = PI/12
 const val MAX_MOVES = 8
 const val MIN_MOVES = 2

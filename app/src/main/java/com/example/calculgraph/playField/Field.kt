@@ -19,12 +19,9 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
 
     fun init(mode: String) {
         currentNode = Random.nextInt(0, graph.kolNodes)
-        graph.init(kolMoves, currentNode, mode)
-        val lenList = if (mode == "set") SET_LENGTH else 1
-        currentNumbers = List(lenList) { Random.nextInt(0, CURRENT_NUMBER_MAX) }
+        currentNumbers = graph.init(kolMoves, currentNode, mode)
 
-
-        val list = graph.listTo(graph.data)
+        val list = graph.generator.listTo(graph.data)
 
         if (mode == "max") {
             fun Pair<Int, List<Int>>.mapSecond(function: (List<Int>) -> List<Int>) = Pair(first, function(second))
@@ -83,6 +80,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         _history.forEach { history.add(it) }
         _answer.forEach { answer.add(it) }
         graph.data = _data
+        graph.kolBranch = graph.data.sumOf { it.count { inscription -> inscription.oper != NONE } }
     }
 
     fun move(to: Int): Boolean {
