@@ -36,20 +36,21 @@ class MainActivity : AnyActivity() {
 
     override fun setButtons() {
         findViewById<Button>(R.id.new_game).setOnClickListener {
-            val dialog = Dialog(this@MainActivity, R.style.AlertDialogCustom)
-            dialog.setContentView(R.layout.dialog_game_mode)
-            dialog.show()
-            dialog.findViewById<Button>(R.id.standard).setOnClickListener {
-                dialog.dismiss()
-                startGame("standard")
-            }
-            dialog.findViewById<Button>(R.id.max).setOnClickListener {
-                dialog.dismiss()
-                startGame("max")
-            }
-            dialog.findViewById<Button>(R.id.set).setOnClickListener {
-                dialog.dismiss()
-                startGame("set")
+            Dialog(this@MainActivity, R.style.AlertDialogCustom).apply {
+                setContentView(R.layout.dialog_game_mode)
+                findViewById<Button>(R.id.standard).setOnClickListener {
+                    dismiss()
+                    startGame("standard")
+                }
+                findViewById<Button>(R.id.max).setOnClickListener {
+                    dismiss()
+                    startGame("max")
+                }
+                findViewById<Button>(R.id.set).setOnClickListener {
+                    dismiss()
+                    startGame("set")
+                }
+                show()
             }
         }
 

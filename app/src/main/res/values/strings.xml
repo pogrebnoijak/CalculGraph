@@ -26,4 +26,9 @@
     <string name="average_score">Average score:</string>
     <string name="max_score">Max score:</string>
     <string name="moves">Moves:</string>
+    <string name="info">info</string>
+    <string name="statistics">Statistics for settings</string>
+    <string name="ok">ok</string>
+    <string name="left">left</string>
+    <string name="right">right</string>
 </resources>

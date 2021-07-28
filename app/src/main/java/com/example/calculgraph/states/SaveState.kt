@@ -12,7 +12,7 @@ data class SaveState(var endGame: Boolean,
                      var allTime: Long,                                                             //in ms
                      var score: Int,
                      var kolMoves: Int,
-                     val computability: Computability,
+                     var computability: Computability,
                      var currentNode: Int,
                      var mode: String,
                      var currentNumbers: List<Int>,

@@ -215,7 +215,6 @@ class GameActivity : AnyActivity() {
 
             setContentView(R.layout.dialog_yes_no)
             findViewById<TextView>(R.id.dial_text).text = "You have scored $winCount points. Do you want to play again?"
-            show()
             findViewById<Button>(R.id.yes).setOnClickListener {
                 dismiss()
                 if (!savingState) {
@@ -230,6 +229,7 @@ class GameActivity : AnyActivity() {
                 dismiss()
                 exitGame()
             }
+            show()
         }
     }
 

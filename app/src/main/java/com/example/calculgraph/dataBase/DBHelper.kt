@@ -11,7 +11,7 @@ import com.example.calculgraph.enums.toComputability
 import com.example.calculgraph.enums.toTopic
 import com.example.calculgraph.enums.topToString
 import com.example.calculgraph.playField.Graph
-import com.example.calculgraph.serializer.Serializer
+import com.example.calculgraph.helpers.Serializer
 import com.example.calculgraph.states.SaveState
 import com.example.calculgraph.states.SettingsState
 import com.example.calculgraph.states.State
@@ -96,7 +96,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvSave.put("currentNumbers", emptyList)
         cvSave.put("totalNumbers", emptyList)
         cvSave.put("history", emptyList)
-        cvSave.put("answer", emptyList)
+        cvSave.put("answer", Serializer.listToBytes(listOf(0,0,0,0))) // for default count Moves
         cvSave.put("data", emptyList)
         db.insert("saveState", null, cvSave)
     }
