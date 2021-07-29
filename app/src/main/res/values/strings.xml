@@ -32,4 +32,5 @@
     <string name="left">left</string>
     <string name="right">right</string>
     <string name="updateMoves">%1$d moves</string>
+    <string name="wait">The creator doesn\'t know how to write optimal code, so wait ...</string>
 </resources>
