@@ -3,28 +3,42 @@ package com.example.calculgraph.playField
 import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.constant.*
-import com.example.calculgraph.helpers.GraphGenerator
+import com.example.calculgraph.service.GraphGeneratorService
 import kotlin.random.Random
+import android.content.Intent
+import android.content.Context
 
-class Graph(val kolNodes: Int) {
+
+class Graph(val kolNodes: Int, var kolBranch: Int = Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1)) {
     class Inscription(val oper: Operation, val num: Int?) {
         override fun toString() = oper.opToString() + num.toString()
     }
 
 //    TODO(do val)
     lateinit var data: List<List<Inscription>>
-    var kolBranch: Int = MAGIC
-    lateinit var generator: GraphGenerator
 
-    fun init(kolMoves: Int, currentNode:Int, mode: String, _kolBranch: Int = kolBranches()): List<Int> {
-        kolBranch = _kolBranch
-        generator = GraphGenerator(kolNodes, kolBranch)
-        data = generator.generateGraph(kolMoves, currentNode, mode)
-        val lenList = if (mode == "set") SET_LENGTH else 1
-        return List(lenList) { generator.possibleNumbers.random() }
+    fun preparationGraph(kolMoves: Int, currentNode: Int, mode: String, context: Context) {
+        generateData(kolMoves, currentNode, mode, context)
     }
 
-    private fun kolBranches(): Int = Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1)
+    fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>): List<Int> {
+        this.data = data
+        val lenList = if (mode == "set") SET_LENGTH else 1
+        return List(lenList) { possibleNumbers.random() }
+    }
+
+    private fun generateData(kolMoves: Int, currentNode: Int, mode: String, context: Context) {
+        val intent = Intent(context, GraphGeneratorService::class.java)
+        intent.apply {
+            putExtra("kolMoves", kolMoves)
+            putExtra("currentNode", currentNode)
+            putExtra("mode", mode)
+            putExtra("kolNodes", kolNodes)
+            putExtra("kolBranch", kolBranch)
+            println("startService")
+            context.startService(this)
+        }
+    }
 }
 
 // for tests

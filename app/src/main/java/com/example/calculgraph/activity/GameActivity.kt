@@ -18,20 +18,23 @@ import androidx.core.view.MotionEventCompat
 import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.dataBase.DBWorker
+import com.example.calculgraph.enums.GameState.*
+import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.playField.Field
+import com.example.calculgraph.playField.Graph
+import com.example.calculgraph.service.GraphGeneratorService
 import com.example.calculgraph.states.SaveState
 import java.util.*
 import kotlin.math.*
 
 
 class GameActivity : AnyActivity() {
-    private var play = true
+    private var gameStatus = WAIT
     private var savingState = false
     private var time = MAGIC.toLong()                                                               // ms
     private var iter = MAGIC                                                                        // for answer
     private var iterMax = MAGIC                                                                     // for answer
-    //    TODO(remove val")
     private var allTime = MAGIC.toLong()
     private var winCount = 0
     private lateinit var computability: Computability
@@ -40,9 +43,20 @@ class GameActivity : AnyActivity() {
     private var motion: TimerTask = object: TimerTask() { override fun run() {} }
     private lateinit var background: Draws
     private lateinit var curField: Field
+    private lateinit var tempField: Field
     private lateinit var vecCentres: List<Pair<Float, Float>>
     private lateinit var touchDown: Pair<Float, Float>
     private lateinit var mode: String
+
+
+    init {
+        GraphGeneratorService.resultLauncher = { data, possibleNumbers ->
+            println("resultLauncher")
+            runOnUiThread {
+                newGame(data, possibleNumbers)
+            }
+        }
+    }
 
     inner class Size(val width: Float, val height: Float)
     val size: Size
@@ -53,9 +67,10 @@ class GameActivity : AnyActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("oncreate")
         super.onCreate(savedInstanceState)
         prepare()
-        setContentView(R.layout.activity_game)
+        setContentView(R.layout.activity_wait)
         saveStatAndStartGame(dbWorker.init(this))
     }
 
@@ -65,7 +80,7 @@ class GameActivity : AnyActivity() {
                 true
             }
             MotionEvent.ACTION_UP -> {
-                if (play) treatment(touchDown, Pair(event.rawX, event.rawY))
+                if (gameStatus == PLAY) treatment(touchDown, Pair(event.rawX, event.rawY))
                 true
             }
             else -> super.onTouchEvent(event)
@@ -73,12 +88,12 @@ class GameActivity : AnyActivity() {
 
     private fun saveStatAndStartGame(saveState: SaveState) {
         if (getIntentsAndReturnGameStatus()) {
-            if (!saveState.endGame) {
+            if (saveState.gameStatus == END) {
                 dbWorker.apply {
                     updateStatistic(saveState.score)
                 }
             }
-            newGame()
+            newGamePreparation()
         }
         else continueGame(saveState)
     }
@@ -88,8 +103,13 @@ class GameActivity : AnyActivity() {
         return intent.getBooleanExtra("isNewGame", true)
     }
 
-    private fun newGame() {
-        doField()
+    private fun newGamePreparation() {
+        tempField = Field().apply { preparationField(mode, this@GameActivity) }
+    }
+
+    private fun newGame(data: List<List<Graph.Inscription>>, possibleNumbers: List<Int>) {
+        curField = tempField
+        curField.init(mode, data, possibleNumbers)
         time = 0L
         allTime = settings.time * SECOND_IN_MILLIS
         computability = settings.computability
@@ -97,7 +117,7 @@ class GameActivity : AnyActivity() {
     }
 
     private fun continueGame(saveState: SaveState) {
-        if (saveState.endGame) newGame()
+        if (saveState.gameStatus != PLAY) newGamePreparation()
         else {
             time = saveState.time
             allTime = saveState.allTime
@@ -109,19 +129,11 @@ class GameActivity : AnyActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun doField() {
-        curField = Field()
-        curField.init(mode)
-        writeField()
-    }
-
     private fun redoField(saveState: SaveState) {
         saveState.apply {
             curField = Field(kolMoves, KOL_NODES[computability] ?: throw error("wrong computability"))
             curField.set(currentNode, currentNumbers, totalNumbers, history, answer, data)
         }
-        writeField()
     }
 
     @SuppressLint("SetTextI18n")
@@ -140,6 +152,8 @@ class GameActivity : AnyActivity() {
     }
 
     private fun sets() {
+        setContentView(R.layout.activity_game)
+        writeField()
         setButtons()
         addDraws()
         setRendering()
@@ -165,30 +179,32 @@ class GameActivity : AnyActivity() {
 
     private fun setRendering() {
         motion.cancel()
-        play = true
+        gameStatus = PLAY
         iter = MAGIC
         motion = object : TimerTask() {
             override fun run() {
-                if(play) {
+                if(gameStatus == PLAY) {
                     time += DRAWING
                     background.invalidate()
                     if (time >= allTime) {
-                        play = false
+                        gameStatus = END
                         endGame()
                     }
-                } else if (iter == MAGIC) { // show answer
-                    val path = generateAnswer()
-                    iterMax = (path.size) * ANSWER_K
-                    iter = 1
-                    runOnUiThread {
-                        findViewById<ConstraintLayout>(R.id.draw).removeView(background)
-                        background = DrawViewAnswer(this@GameActivity, path + path.last())
-                        findViewById<ConstraintLayout>(R.id.draw).addView(background)
+                } else if (gameStatus == END) {
+                    if (iter == MAGIC) { // show answer
+                        val path = generateAnswer()
+                        iterMax = (path.size) * ANSWER_K
+                        iter = 1
+                        runOnUiThread {
+                            findViewById<ConstraintLayout>(R.id.draw).removeView(background)
+                            background = DrawViewAnswer(this@GameActivity, path + path.last())
+                            findViewById<ConstraintLayout>(R.id.draw).addView(background)
+                        }
+                    } else if (iter < iterMax - 1) {
+                        iter++
+                        background.invalidate()
                     }
-                } else if (iter < iterMax - 1) {
-                    iter++
-                    background.invalidate()
-                }
+                } // else gameStatus = WAIT
             }
         }
         timer.schedule(motion, 0, DRAWING)
@@ -202,7 +218,7 @@ class GameActivity : AnyActivity() {
         if ((end - start).l2() > CASUAL_MOVE) {
             curField.graph.data[curField.currentNode]
                 .mapIndexed { i, inscription -> Pair(i, inscription) }
-                .filter { it.second.oper != Operation.NONE }
+                .filter { it.second.oper != NONE }
                 .map { Pair(it.first, angle(end - start, vecCentres[it.first] - vecCentres[curField.currentNode])) }
                 .filter { it.second >= cos(THRESHOLD_ANGLE) }
                 .maxByOrNull { it.second }
@@ -215,9 +231,10 @@ class GameActivity : AnyActivity() {
     private fun move(to: Int) {
         val win = curField.move(to)
         findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
-        if (play && win) {
+        if (gameStatus == PLAY && win) {
             winCount++
-            newGame()
+            gameStatus = WAIT
+            newGamePreparation()
         }
     }
 
@@ -245,7 +262,8 @@ class GameActivity : AnyActivity() {
                 }
                 dbWorker.updateStatistic(winCount)
                 winCount = 0
-                newGame()
+                gameStatus = WAIT
+                newGamePreparation()
             }
             findViewById<Button>(R.id.no).setOnClickListener {
                 dismiss()
@@ -257,7 +275,7 @@ class GameActivity : AnyActivity() {
 
     private fun exitGame() {
         saveGameState()
-        if (!play)
+        if (gameStatus != PLAY)
             dbWorker.updateStatistic(winCount)
         val intent = Intent(this, MainActivity :: class.java )
         motion.cancel()
@@ -268,7 +286,7 @@ class GameActivity : AnyActivity() {
 
     private fun saveGameState() {
         dbWorker.updateSaveState(SaveState(
-            !play,
+            gameStatus,
             time,
             allTime,
             winCount,
@@ -328,7 +346,7 @@ class GameActivity : AnyActivity() {
                 }
                 for (i in 0 until curField.graph.kolNodes) {
                     for (j in 0 until curField.graph.kolNodes) {
-                        if (curField.graph.data[i][j].oper != Operation.NONE && i > j)
+                        if (curField.graph.data[i][j].oper != NONE && i > j)
                             drawLine(centers[i].first, centers[i].second, centers[j].first, centers[j].second, p)
                     }
                 }
@@ -336,12 +354,12 @@ class GameActivity : AnyActivity() {
                 p.color = Color.GREEN
                 for (i in 0 until curField.graph.kolNodes) {
                     for (j in 0 until curField.graph.kolNodes) {
-                        if (curField.graph.data[i][j].oper != Operation.NONE && i > j) {
+                        if (curField.graph.data[i][j].oper != NONE && i > j) {
                             val vec = Pair(centers[j].first - centers[i].first, centers[j].second - centers[i].second).run {
                                 l2().let { Pair(first/it, second/it) }
                             }
                             p.textSize = centerW * TEXT_SIZE_K
-                            if (curField.graph.data[i][j].oper in listOf(Operation.ROOT, Operation.DEGREE)) {
+                            if (curField.graph.data[i][j].oper in listOf(ROOT, DEGREE)) {
                                 drawText(curField.graph.data[i][j].oper.opToString(), centers[i].first + lettering * vec.first,
                                     centers[i].second + lettering * vec.second - (p.descent() + p.ascent()) / 2, p)
                                 drawText(curField.graph.data[j][i].oper.opToString(), centers[j].first - lettering * vec.first,
@@ -349,7 +367,7 @@ class GameActivity : AnyActivity() {
                                 p.textSize = centerW * TEXT_SIZE_K2
 
                                 class Temp(val i: Int, val j: Int, val let: Float)
-                                val temp = if (curField.graph.data[i][j].oper == Operation.ROOT) Temp(i,j,lettering) else Temp(j,i,-lettering)
+                                val temp = if (curField.graph.data[i][j].oper == ROOT) Temp(i,j,lettering) else Temp(j,i,-lettering)
                                 drawText(curField.graph.data[temp.i][temp.j].num.toString(), centers[temp.i].first + temp.let * vec.first - centerW * TEXT_SHIFT_ROOT_X,
                                     centers[temp.i].second + temp.let * vec.second - (p.descent() + p.ascent()) / 2 - centerW * TEXT_SHIFT_ROOT_Y, p)
                                 drawText(curField.graph.data[temp.j][temp.i].num.toString(), centers[temp.j].first - temp.let * vec.first + centerW * TEXT_SHIFT_DEGREE_X,
@@ -417,35 +435,41 @@ class GameActivity : AnyActivity() {
     private inner class DrawView(context: Context?) : DrawHelper(context)  {
         @SuppressLint("ResourceAsColor")
         override fun onDraw(canvas: Canvas) {
-            drawText(canvas)
+//            if (gameStatus == PLAY) {
+                drawText(canvas)
 
-            p.apply {
-                strokeWidth = LARGE_WIDTH
-                color = R.color.color3
-                style = Paint.Style.STROKE
-            }
-            canvas.drawArc(rect, -90F, time * 360F / allTime, false, p)
+                p.apply {
+                    strokeWidth = LARGE_WIDTH
+                    color = R.color.color3
+                    style = Paint.Style.STROKE
+                }
+                canvas.drawArc(rect, -90F, time * 360F / allTime, false, p)
 
-            drawCircles(canvas)
+                drawCircles(canvas)
 
-            drawPosCircle(canvas, centers[curField.currentNode])
+                drawPosCircle(canvas, centers[curField.currentNode])
+//            }
         }
     }
 
     private inner class DrawViewAnswer(context: Context?, val path: List<Int>) : DrawHelper(context) {
         @SuppressLint("ResourceAsColor", "DrawAllocation")
         override fun onDraw(canvas: Canvas) {
-            val pos = iter / ANSWER_K
-            val q = (iter % ANSWER_K).toFloat()
-            if (curField.currentNode != path[pos]) move(path[pos])
-            val drawCirclePos = Pair(centers[curField.currentNode].first + (centers[path[pos+1]].first - centers[curField.currentNode].first) * (q / ANSWER_K),
-                centers[curField.currentNode].second + (centers[path[pos+1]].second - centers[curField.currentNode].second) * (q / ANSWER_K))
+//            if (gameStatus == END) {
+                val pos = iter / ANSWER_K
+                val q = (iter % ANSWER_K).toFloat()
+                if (curField.currentNode != path[pos]) move(path[pos])
+                val drawCirclePos = Pair(
+                    centers[curField.currentNode].first + (centers[path[pos + 1]].first - centers[curField.currentNode].first) * (q / ANSWER_K),
+                    centers[curField.currentNode].second + (centers[path[pos + 1]].second - centers[curField.currentNode].second) * (q / ANSWER_K)
+                )
 
-            drawText(canvas)
+                drawText(canvas)
 
-            drawCircles(canvas)
+                drawCircles(canvas)
 
-            drawPosCircle(canvas, drawCirclePos)
+                drawPosCircle(canvas, drawCirclePos)
+//            }
         }
     }
 }

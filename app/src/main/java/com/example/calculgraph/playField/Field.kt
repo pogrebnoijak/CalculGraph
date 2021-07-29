@@ -1,27 +1,32 @@
 package com.example.calculgraph.playField
 
+import android.content.Context
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation.*
+import com.example.calculgraph.helpers.listTo
 import java.lang.Integer.MIN_VALUE
 
-class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settings.computability] ?: throw error("wrong computability")) {
-    //    TODO(do val)
-    var currentNode: Int = MAGIC
+
+class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settings.computability] ?: throw error("wrong computability"),
+            var currentNode: Int = Random.nextInt(0, kolNodes)) {
     val graph = Graph(kolNodes)
     lateinit var currentNumbers: List<Int>
     lateinit var totalNumbers: List<Int>
     val history = Stack<Int>()
     val answer = Stack<Int>()
 
-    fun init(mode: String) {
-        currentNode = Random.nextInt(0, graph.kolNodes)
-        currentNumbers = graph.init(kolMoves, currentNode, mode)
+    fun preparationField(mode: String, context: Context) {
+        graph.preparationGraph(kolMoves, currentNode, mode, context)
+    }
 
-        val list = graph.generator.listTo(graph.data)
+    fun init(mode: String, data: List<List<Graph.Inscription>>, possibleNumbers: List<Int>) {
+        currentNumbers = graph.init(mode, data, possibleNumbers)
+
+        val list = listTo(graph.data)
 
         if (mode == "max") {
             fun Pair<Int, List<Int>>.mapSecond(function: (List<Int>) -> List<Int>) = Pair(first, function(second))
