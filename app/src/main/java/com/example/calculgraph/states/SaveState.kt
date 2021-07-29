@@ -5,9 +5,10 @@ import com.example.calculgraph.constant.MIN_MOVES
 import com.example.calculgraph.constant.MODES
 import com.example.calculgraph.constant.TIMES
 import com.example.calculgraph.enums.Computability
+import com.example.calculgraph.enums.GameState
 import com.example.calculgraph.playField.Graph
 
-data class SaveState(var endGame: Boolean,
+data class SaveState(var gameStatus: GameState,
                      var time: Long,                                                                //in ms
                      var allTime: Long,                                                             //in ms
                      var score: Int,

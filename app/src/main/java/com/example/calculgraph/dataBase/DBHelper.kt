@@ -8,6 +8,7 @@ import android.util.Log
 import com.example.calculgraph.constant.DEFAULT_ID
 import com.example.calculgraph.constant.MAX_ID
 import com.example.calculgraph.enums.toComputability
+import com.example.calculgraph.enums.toGameState
 import com.example.calculgraph.enums.toTopic
 import com.example.calculgraph.enums.topToString
 import com.example.calculgraph.playField.Graph
@@ -48,7 +49,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.execSQL(
             ("create table IF NOT EXISTS saveState ("
                     + "id integer primary key autoincrement,"
-                    + "endGame integer,"
+                    + "gameStatus text,"
                     + "time integer,"
                     + "allTime integer,"
                     + "score integer,"
@@ -85,7 +86,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
         val emptyList = Serializer.listToBytes(listOf())
         val cvSave = ContentValues()
-        cvSave.put("endGame", 1)
+        cvSave.put("gameStatus", "PLAY")
         cvSave.put("time", 0)
         cvSave.put("allTime", 60_000L)
         cvSave.put("score", 0)
@@ -132,7 +133,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                 tableName = "saveState"
                 Log.d(logTag, "--- Update in $tableName: ---")
 
-                cv.put("endGame", state.endGame)
+                cv.put("gameStatus", state.gameStatus.toString())
                 cv.put("time", state.time)
                 cv.put("allTime", state.allTime)
                 cv.put("score", state.score)
@@ -148,7 +149,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             }
         }
         rowID = db.update(tableName, cv, "id = ?", arrayOf("$id"))
-        Log.d(logTag, "row updated, ID = $rowID")
+        Log.d(logTag, "$tableName updated, rowID = $rowID")
         close()
     }
 
@@ -156,7 +157,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val list: Array<String> = when(table) {
             "statistic" -> arrayOf("id", "kolGame", "sredScore", "maxScore")
             "settings"  -> arrayOf("id", "sound", "language", "topic", "computability", "moves", "time")
-            "saveState"  -> arrayOf("id", "endGame", "time", "allTime","score", "kolMoves", "computability",
+            "saveState"  -> arrayOf("id", "gameStatus", "time", "allTime","score", "kolMoves", "computability",
                 "currentNode", "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
             else        -> throw error("wrong table name")
         }
@@ -181,7 +182,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     cv.getInt(cv.getColumnIndex("time")))
             }
             "saveState" -> {
-                SaveState(cv.getInt(cv.getColumnIndex("endGame")) != 0,
+                SaveState(cv.getString(cv.getColumnIndex("gameStatus")).toGameState(),
                     cv.getLong(cv.getColumnIndex("time")),
                     cv.getLong(cv.getColumnIndex("allTime")),
                     cv.getInt(cv.getColumnIndex("score")),
@@ -209,3 +210,4 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         return state
     }
 }
+
