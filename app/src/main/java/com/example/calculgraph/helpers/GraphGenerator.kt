@@ -9,8 +9,9 @@ import kotlin.math.pow
 import kotlin.random.Random
 
 class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
-    var possibleNumbers: List<Int> = listOf(1)
+    lateinit var possibleNumbers: List<Int>
 
+//    TODO("rewrite this")
     fun generateGraph(kolMoves: Int, currentNode: Int, mode: String): List<List<Inscription>> {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
         if (factorial(kolNodes) < kolBranch) throw error("Too match branches!")
@@ -22,7 +23,7 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
             else -> throw error("Wring mode!")
         }
         lateinit var tempData: MutableList<MutableList<Inscription>>
-        val kolInIndex = List(kolNodes) {0}.toMutableList()
+        lateinit var kolInIndex: MutableList<Int>
 
         fun doBounds(oper: Operation) = when(oper) {
             PLUS, MINUS -> BOUNDS_PLUS_MINUS
@@ -44,20 +45,20 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
             kolInIndex[j]++
         }
 
-        fun correctGraph(): Boolean {
-            val list = listTo(tempData)
-
-            fun dfs(cur: Int, last: Int, length: Int): Boolean {
-                if (length == 0) return true
-                for (i in list[cur]) {
-                    if (i == last) continue
-                    if(dfs(i, cur, length - 1)) return true
-                }
-                return false
-            }
-
-            return dfs(currentNode, MAGIC, kolMoves)
-        }
+//        fun correctGraph(): Boolean {
+//            val list = listTo(tempData)
+//
+//            fun dfs(cur: Int, last: Int, length: Int): Boolean {
+//                if (length == 0) return true
+//                for (i in list[cur]) {
+//                    if (i == last) continue
+//                    if(dfs(i, cur, length - 1)) return true
+//                }
+//                return false
+//            }
+//
+//            return dfs(currentNode, MAGIC, kolMoves)
+//        }
 
 //        TODO("fix duplicate")
         fun movingHelper(from: Int, to: Int, num: Int) = when(tempData[from][to].oper) {
@@ -73,32 +74,37 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
         }
 
 //        TODO("rewrite this")
-//        fun correctGraph(): Boolean {
-//            val list = listTo(tempData)
-//            possibleNumbers = List(CURRENT_NUMBER_MAX) { it }
-//
-//            fun dfs(cur: Int, last: Int, length: Int): Boolean {
-//                if (length == 0) return true
-//                val answers = mutableListOf<Boolean>()
-//                for (i in list[cur]) {
-//                    if (i == last) continue
-//                    possibleNumbers = possibleNumbers.filterMap({ movingHelper(cur, i, it) }, { movingHelper(i, cur, it) })
-//                    answers.add(dfs(i, cur, length - 1))
-//                    possibleNumbers = possibleNumbers.map { movingHelper(i, cur, it) }
-//                }
-//                return answers.any { it }
-//            }
-//
-//            return dfs(currentNode, MAGIC, kolMoves) && possibleNumbers.isNotEmpty()
-//        }
+        fun correctGraph(): Boolean {
+            val list = listTo(tempData)
+            possibleNumbers = List(CURRENT_NUMBER_MAX) { it }
+
+            fun dfs(cur: Int, last: Int, length: Int): Boolean {
+                if (possibleNumbers.isEmpty()) return false
+                if (length == 0) {
+                    return true
+                }
+                val answers = mutableListOf<Boolean>()
+                for (i in list[cur]) {
+                    if (i == last) continue
+                    possibleNumbers = possibleNumbers.filterMap({ movingHelper(cur, i, it) }, { movingHelper(i, cur, it) })
+                    answers.add(dfs(i, cur, length - 1))
+                    possibleNumbers = possibleNumbers.map { movingHelper(i, cur, it) }
+                }
+                return answers.any { it } && possibleNumbers.isNotEmpty()
+            }
+
+            return dfs(currentNode, MAGIC, kolMoves)
+        }
 
 
+        var kolIter = 0
         do {
             tempData = MutableList(kolNodes) {
                 MutableList(kolNodes) {
                     Inscription(NONE, null)
                 }
             }
+            kolInIndex = List(kolNodes) {0}.toMutableList()
             for (i in 0 until kolNodes - 1) {
                 generateOne(i)
             }
@@ -115,15 +121,11 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
                 generateOne(i)
                 kol--
             }
+            kolIter++
         } while (!correctGraph())
+        println("Iteration count: $kolIter")
         println("possibleNumbers.size ${possibleNumbers.size}")
         return tempData
-    }
-
-    fun listTo(data: List<List<Inscription>>) = data.map { line ->
-        line.mapIndexed { i, inscription -> Pair(i, inscription) }
-            .filter { it.second.oper != NONE }
-            .map { it.first }
     }
 }
 
@@ -131,3 +133,9 @@ private fun <E> List<E>.filterMap(function1: (E) -> E, function2: (E) -> E) =
     this.map { Pair(it, function1(it)) }
         .filter { a -> a.first == function2(a.second) }
         .map { b -> b.second }
+
+fun listTo(data: List<List<Inscription>>) = data.map { line ->
+    line.mapIndexed { i, inscription -> Pair(i, inscription) }
+        .filter { it.second.oper != NONE }
+        .map { it.first }
+}
