@@ -26,6 +26,7 @@ import com.example.calculgraph.playField.Graph
 import com.example.calculgraph.service.GraphGeneratorService
 import com.example.calculgraph.states.SaveState
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import kotlin.math.*
 
 
@@ -47,12 +48,14 @@ class GameActivity : AnyActivity() {
     private lateinit var vecCentres: List<Pair<Float, Float>>
     private lateinit var touchDown: Pair<Float, Float>
     private lateinit var mode: String
-
+    var latch = CountDownLatch(1)
 
     init {
         GraphGeneratorService.resultLauncher = { data, possibleNumbers ->
             println("resultLauncher")
+            latch.await()
             runOnUiThread {
+                latch = CountDownLatch(1)
                 newGame(data, possibleNumbers)
             }
         }
@@ -67,7 +70,6 @@ class GameActivity : AnyActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        println("oncreate")
         super.onCreate(savedInstanceState)
         prepare()
         setContentView(R.layout.activity_wait)
@@ -94,6 +96,7 @@ class GameActivity : AnyActivity() {
                 }
             }
             newGamePreparation()
+            latch.countDown()
         }
         else continueGame(saveState)
     }
@@ -108,7 +111,9 @@ class GameActivity : AnyActivity() {
     }
 
     private fun newGame(data: List<List<Graph.Inscription>>, possibleNumbers: List<Int>) {
+        gameStatus = WAIT
         curField = tempField
+        newGamePreparation()
         curField.init(mode, data, possibleNumbers)
         time = 0L
         allTime = settings.time * SECOND_IN_MILLIS
@@ -117,7 +122,9 @@ class GameActivity : AnyActivity() {
     }
 
     private fun continueGame(saveState: SaveState) {
-        if (saveState.gameStatus != PLAY) newGamePreparation()
+        if (saveState.gameStatus != PLAY) {
+            latch.countDown()
+        }
         else {
             time = saveState.time
             allTime = saveState.allTime
@@ -190,7 +197,7 @@ class GameActivity : AnyActivity() {
                         gameStatus = END
                         endGame()
                     }
-                } else if (gameStatus == END) {
+                } else if (gameStatus == END || gameStatus == WAIT_SHOW) {
                     if (iter == MAGIC) { // show answer
                         val path = generateAnswer()
                         iterMax = (path.size) * ANSWER_K
@@ -204,7 +211,7 @@ class GameActivity : AnyActivity() {
                         iter++
                         background.invalidate()
                     }
-                } // else gameStatus = WAIT
+                }
             }
         }
         timer.schedule(motion, 0, DRAWING)
@@ -234,7 +241,7 @@ class GameActivity : AnyActivity() {
         if (gameStatus == PLAY && win) {
             winCount++
             gameStatus = WAIT
-            newGamePreparation()
+            latch.countDown()
         }
     }
 
@@ -262,8 +269,8 @@ class GameActivity : AnyActivity() {
                 }
                 dbWorker.updateStatistic(winCount)
                 winCount = 0
-                gameStatus = WAIT
-                newGamePreparation()
+                gameStatus = WAIT_SHOW
+                latch.countDown()
             }
             findViewById<Button>(R.id.no).setOnClickListener {
                 dismiss()
@@ -435,7 +442,6 @@ class GameActivity : AnyActivity() {
     private inner class DrawView(context: Context?) : DrawHelper(context)  {
         @SuppressLint("ResourceAsColor")
         override fun onDraw(canvas: Canvas) {
-//            if (gameStatus == PLAY) {
                 drawText(canvas)
 
                 p.apply {
@@ -448,28 +454,25 @@ class GameActivity : AnyActivity() {
                 drawCircles(canvas)
 
                 drawPosCircle(canvas, centers[curField.currentNode])
-//            }
         }
     }
 
     private inner class DrawViewAnswer(context: Context?, val path: List<Int>) : DrawHelper(context) {
         @SuppressLint("ResourceAsColor", "DrawAllocation")
         override fun onDraw(canvas: Canvas) {
-//            if (gameStatus == END) {
-                val pos = iter / ANSWER_K
-                val q = (iter % ANSWER_K).toFloat()
-                if (curField.currentNode != path[pos]) move(path[pos])
-                val drawCirclePos = Pair(
-                    centers[curField.currentNode].first + (centers[path[pos + 1]].first - centers[curField.currentNode].first) * (q / ANSWER_K),
-                    centers[curField.currentNode].second + (centers[path[pos + 1]].second - centers[curField.currentNode].second) * (q / ANSWER_K)
-                )
+            val pos = iter / ANSWER_K
+            val q = (iter % ANSWER_K).toFloat()
+            if (curField.currentNode != path[pos]) move(path[pos])
+            val drawCirclePos = Pair(
+                centers[curField.currentNode].first + (centers[path[pos + 1]].first - centers[curField.currentNode].first) * (q / ANSWER_K),
+                centers[curField.currentNode].second + (centers[path[pos + 1]].second - centers[curField.currentNode].second) * (q / ANSWER_K)
+            )
 
-                drawText(canvas)
+            drawText(canvas)
 
-                drawCircles(canvas)
+            drawCircles(canvas)
 
-                drawPosCircle(canvas, drawCirclePos)
-//            }
+            drawPosCircle(canvas, drawCirclePos)
         }
     }
 }
