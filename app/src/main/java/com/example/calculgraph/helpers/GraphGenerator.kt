@@ -14,7 +14,6 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
         var shutdown = false
     }
 
-//    TODO("rewrite this")
     fun generateGraph(kolMoves: Int, currentNode: Int, mode: String) {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
         if (factorial(kolNodes) < kolBranch) throw error("Too match branches!")
@@ -48,50 +47,22 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
             kolInIndex[j]++
         }
 
-//        fun correctGraph(): Boolean {
-//            val list = listTo(preGen.data)
-//
-//            fun dfs(cur: Int, last: Int, length: Int): Boolean {
-//                if (length == 0) return true
-//                for (i in list[cur]) {
-//                    if (i == last) continue
-//                    if(dfs(i, cur, length - 1)) return true
-//                }
-//                return false
-//            }
-//
-//            return dfs(currentNode, MAGIC, kolMoves)
-//        }
-
-//        TODO("fix duplicate")
-        fun movingHelper(from: Int, to: Int, num: Int) = when(preGen.data[from][to].oper) {
-            NONE -> throw error("wrong move!")
-            PLUS -> num.let { x -> preGen.data[from][to].num?.let { x + it } ?: throw error("wrong data num!") }
-            MINUS -> num.let { x -> preGen.data[from][to].num?.let { x - it } ?: throw error("wrong data num!") }
-            MULTIPLICATION -> num.let { x -> preGen.data[from][to].num?.let { x * it } ?: throw error("wrong data num!") }
-            DIVISION -> if (preGen.data[from][to].num == 0) throw error("0 division")
-            else num.let { x -> preGen.data[from][to].num?.let { x / it } ?: throw error("wrong data num!") }
-            DEGREE -> num.let { x -> preGen.data[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!") }
-            ROOT -> if (preGen.data[from][to].num == 0) throw error("0 division")
-            else num.let { x -> preGen.data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!") }
-        }
-
 //        TODO("rewrite this")
         fun correctGraph(): Boolean {
             val list = listTo(preGen.data)
             preGen.possibleNumbers = List(CURRENT_NUMBER_MAX) { it }
 
             fun dfs(cur: Int, last: Int, length: Int): Boolean {
-                if (preGen.possibleNumbers.isEmpty()) return false
+                if (preGen.possibleNumbers.isEmpty() || shutdown) return false
                 if (length == 0) {
                     return true
                 }
                 val answers = mutableListOf<Boolean>()
                 for (i in list[cur]) {
                     if (i == last) continue
-                    preGen.possibleNumbers = preGen.possibleNumbers.filterMap({ movingHelper(cur, i, it) }, { movingHelper(i, cur, it) })
+                    preGen.possibleNumbers = preGen.possibleNumbers.filterMap({ movingHelper(cur, i, it, preGen.data) }, { movingHelper(i, cur, it, preGen.data) })
                     answers.add(dfs(i, cur, length - 1))
-                    preGen.possibleNumbers = preGen.possibleNumbers.map { movingHelper(i, cur, it) }
+                    preGen.possibleNumbers = preGen.possibleNumbers.map { movingHelper(i, cur, it, preGen.data) }
                 }
                 return answers.any { it } && preGen.possibleNumbers.isNotEmpty()
             }
@@ -144,4 +115,16 @@ fun listTo(data: List<List<Inscription>>) = data.map { line ->
     line.mapIndexed { i, inscription -> Pair(i, inscription) }
         .filter { it.second.oper != NONE }
         .map { it.first }
+}
+
+fun movingHelper(from: Int, to: Int, x: Int, data: List<List<Inscription>>) = when(data[from][to].oper) {
+    NONE -> throw error("wrong move!")
+    PLUS -> data[from][to].num?.let { x + it } ?: throw error("wrong data num!")
+    MINUS -> data[from][to].num?.let { x - it } ?: throw error("wrong data num!")
+    MULTIPLICATION -> data[from][to].num?.let { x * it } ?: throw error("wrong data num!")
+    DIVISION -> if (data[from][to].num == 0) throw error("0 division")
+    else data[from][to].num?.let { x / it } ?: throw error("wrong data num!")
+    DEGREE -> data[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!")
+    ROOT -> if (data[from][to].num == 0) throw error("0 division")
+    else data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!")
 }

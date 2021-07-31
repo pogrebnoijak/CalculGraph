@@ -3,7 +3,7 @@ package com.example.calculgraph.playField
 import android.content.Context
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import java.util.*
-import kotlin.math.pow
+import com.example.calculgraph.helpers.movingHelper
 import kotlin.random.Random
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation.*
@@ -113,15 +113,5 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
 
     private fun moving(from: Int, to: Int) { currentNumbers = movingHelper(from, to, currentNumbers) }
 
-    private fun movingHelper(from: Int, to: Int, list: List<Int>) = when(graph.data[from][to].oper) {
-        NONE              -> throw error("wrong move!")
-        PLUS              -> list.map { x -> graph.data[from][to].num?.let { x + it } ?: throw error("wrong data num!") }
-        MINUS             -> list.map { x -> graph.data[from][to].num?.let { x - it } ?: throw error("wrong data num!") }
-        MULTIPLICATION    -> list.map { x -> graph.data[from][to].num?.let { x * it } ?: throw error("wrong data num!") }
-        DIVISION          -> if (graph.data[from][to].num == 0) throw error("0 division")
-        else list.map { x -> graph.data[from][to].num?.let { x / it } ?: throw error("wrong data num!") }
-        DEGREE            -> list.map { x -> graph.data[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!") }
-        ROOT              -> if (graph.data[from][to].num == 0) throw error("0 division")
-        else list.map { x -> graph.data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!") }
-    }
+    private fun movingHelper(from: Int, to: Int, list: List<Int>) = list.map { movingHelper(from, to, it, graph.data) }
 }
