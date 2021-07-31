@@ -11,12 +11,8 @@ import com.example.calculgraph.enums.toComputability
 import com.example.calculgraph.enums.toGameState
 import com.example.calculgraph.enums.toTopic
 import com.example.calculgraph.enums.topToString
-import com.example.calculgraph.playField.Graph
 import com.example.calculgraph.helpers.Serializer
-import com.example.calculgraph.states.SaveState
-import com.example.calculgraph.states.SettingsState
-import com.example.calculgraph.states.State
-import com.example.calculgraph.states.StatisticState
+import com.example.calculgraph.states.*
 import com.google.gson.reflect.TypeToken
 
 
@@ -199,7 +195,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("answer")),
                         object : TypeToken<List<Int>>() {}.type) as List<Int>,
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("data")),
-                        object : TypeToken<List<List<Graph.Inscription>>>() {}.type) as List<List<Graph.Inscription>>
+                        object : TypeToken<List<List<Inscription>>>() {}.type) as List<List<Inscription>>
                 )
             }
             else        -> throw error("wrong table name")

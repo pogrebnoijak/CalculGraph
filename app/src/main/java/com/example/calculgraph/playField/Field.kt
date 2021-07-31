@@ -8,6 +8,7 @@ import kotlin.random.Random
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.helpers.listTo
+import com.example.calculgraph.states.Inscription
 import java.lang.Integer.MIN_VALUE
 
 
@@ -23,7 +24,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         graph.preparationGraph(kolMoves, currentNode, mode, context)
     }
 
-    fun init(mode: String, data: List<List<Graph.Inscription>>, possibleNumbers: List<Int>) {
+    fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>) {
         currentNumbers = graph.init(mode, data, possibleNumbers)
 
         val list = listTo(graph.data)
@@ -77,7 +78,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         _totalNumbers: List<Int>,
         _history: List<Int>,
         _answer: List<Int>,
-        _data: List<List<Graph.Inscription>>
+        _data: List<List<Inscription>>
     ) {
         currentNode = _currentNode
         currentNumbers = _currentNumbers

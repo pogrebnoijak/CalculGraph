@@ -8,7 +8,6 @@ import com.example.calculgraph.R
 class LevelsActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prepare()
         setContentView(R.layout.activity_levels)
         setButtons()
     }

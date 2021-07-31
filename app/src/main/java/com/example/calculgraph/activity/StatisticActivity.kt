@@ -20,7 +20,6 @@ class StatisticActivity : AnyActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prepare()
         setContentView(R.layout.activity_statistic)
         setButtons()
         setStatistic()
