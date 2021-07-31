@@ -6,7 +6,6 @@ import com.example.calculgraph.constant.MODES
 import com.example.calculgraph.constant.TIMES
 import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.enums.GameState
-import com.example.calculgraph.playField.Graph
 
 data class SaveState(var gameStatus: GameState,
                      var time: Long,                                                                //in ms
@@ -20,7 +19,7 @@ data class SaveState(var gameStatus: GameState,
                      var totalNumbers: List<Int>,
                      var history: List<Int>,
                      var answer: List<Int>,
-                     var data: List<List<Graph.Inscription>>): State() {
+                     var data: List<List<Inscription>>): State() {
     fun generateId(): Int {
 //    val sizeTime = TIMES.size
         val sizeMoves = MAX_MOVES - MIN_MOVES + 1

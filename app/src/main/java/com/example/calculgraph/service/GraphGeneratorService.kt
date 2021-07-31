@@ -1,12 +1,15 @@
 package com.example.calculgraph.service
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import com.example.calculgraph.activity.AnyActivity.Companion.preGen
 import com.example.calculgraph.constant.MAGIC
 import com.example.calculgraph.helpers.GraphGenerator
-import com.example.calculgraph.playField.Graph
+import com.example.calculgraph.playField.Field
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -18,7 +21,19 @@ class GraphGeneratorService : Service() {
     private lateinit var es: ExecutorService
 
     companion object {
-        lateinit var resultLauncher: (List<List<Graph.Inscription>>, List<Int>) -> Unit
+        lateinit var resultLauncher: () -> Unit
+        fun updatePreGen(context: Context, doAfter: () -> Unit = {}) {
+            preGen.apply {
+                GraphGenerator.shutdown = true
+                resultLauncher = {
+                    GraphGenerator.shutdown = false
+                    latch = CountDownLatch(1)
+                    filed = Field().apply { preparationField("any", context) }
+                    doAfter()
+                }
+                latch.countDown()
+            }
+        }
     }
 
     override fun onCreate() {
@@ -28,6 +43,7 @@ class GraphGeneratorService : Service() {
     }
 
     override fun onDestroy() {
+        es.shutdown()
         super.onDestroy()
         Log.d(logTAG, "GraphGeneratorService onDestroy")
     }
@@ -41,7 +57,6 @@ class GraphGeneratorService : Service() {
         val kolBranch = intent.getIntExtra("kolBranch", MAGIC)
         val mr = GenHelper(kolMoves, currentNode, mode, kolNodes, kolBranch, startId)
         es.execute(mr)
-        es.shutdown()
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -54,8 +69,11 @@ class GraphGeneratorService : Service() {
         override fun run() {
             Log.d(logTAG, "GenHelper#$startId start, kolMoves = $kolMoves, currentNode = $currentNode, mode = $mode")
             val generator = GraphGenerator(kolNodes, kolBranch)
-            val data = generator.generateGraph(kolMoves, currentNode, mode)
-            resultLauncher(data, generator.possibleNumbers)
+            preGen.actual = false
+            generator.generateGraph(kolMoves, currentNode, mode)
+            preGen.actual = true
+            preGen.latch.await()
+            resultLauncher()
             Log.d(logTAG, "GenHelper#" + startId + " end, stopSelfResult("+ startId + ") = " + stopSelfResult(startId))
         }
     }

@@ -1,20 +1,16 @@
 package com.example.calculgraph.playField
 
 import com.example.calculgraph.enums.Operation.*
-import com.example.calculgraph.enums.*
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.service.GraphGeneratorService
 import kotlin.random.Random
 import android.content.Intent
 import android.content.Context
+import com.example.calculgraph.states.Inscription
 
 
 class Graph(val kolNodes: Int, var kolBranch: Int = Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1)) {
-    class Inscription(val oper: Operation, val num: Int?) {
-        override fun toString() = oper.opToString() + num.toString()
-    }
-
-//    TODO(do val)
+    //    TODO(do val)
     lateinit var data: List<List<Inscription>>
 
     fun preparationGraph(kolMoves: Int, currentNode: Int, mode: String, context: Context) {

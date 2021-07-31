@@ -1,28 +1,31 @@
 package com.example.calculgraph.helpers
 
+import com.example.calculgraph.activity.AnyActivity.Companion.preGen
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation
 import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.enums.reverse
-import com.example.calculgraph.playField.Graph.Inscription
+import com.example.calculgraph.states.Inscription
 import kotlin.math.pow
 import kotlin.random.Random
 
 class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
-    lateinit var possibleNumbers: List<Int>
+    companion object {
+        var shutdown = false
+    }
 
 //    TODO("rewrite this")
-    fun generateGraph(kolMoves: Int, currentNode: Int, mode: String): List<List<Inscription>> {
+    fun generateGraph(kolMoves: Int, currentNode: Int, mode: String) {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
         if (factorial(kolNodes) < kolBranch) throw error("Too match branches!")
 
         val probList: List<Operation> = when(mode) {
-            "standard" -> PROB_LIST_STANDARD
-            "set" -> PROB_LIST_SET
-            "max" -> PROB_LIST_MAX
-            else -> throw error("Wring mode!")
+            "standard"  -> PROB_LIST_STANDARD
+            "set"       -> PROB_LIST_SET
+            "max"       -> PROB_LIST_MAX
+            "any"       -> PROB_LIST_ANY
+            else        -> throw error("Wring mode!")
         }
-        lateinit var tempData: MutableList<MutableList<Inscription>>
         lateinit var kolInIndex: MutableList<Int>
 
         fun doBounds(oper: Operation) = when(oper) {
@@ -34,19 +37,19 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
 
         fun generateOne(i: Int) {
             var j = i
-            while (j == i || tempData[i][j].oper != NONE) {
+            while (j == i || preGen.data[i][j].oper != NONE) {
                 j = Random.nextInt(0, kolNodes)
             }
             val oper = probList.random()
             val num = doBounds(oper).let { Random.nextInt(it.first, it.second) }
-            tempData[i][j] = Inscription(oper, num)
-            tempData[j][i] = Inscription(oper.reverse(), num)
+            preGen.data[i][j] = Inscription(oper, num)
+            preGen.data[j][i] = Inscription(oper.reverse(), num)
             kolInIndex[i]++
             kolInIndex[j]++
         }
 
 //        fun correctGraph(): Boolean {
-//            val list = listTo(tempData)
+//            val list = listTo(preGen.data)
 //
 //            fun dfs(cur: Int, last: Int, length: Int): Boolean {
 //                if (length == 0) return true
@@ -61,36 +64,36 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
 //        }
 
 //        TODO("fix duplicate")
-        fun movingHelper(from: Int, to: Int, num: Int) = when(tempData[from][to].oper) {
+        fun movingHelper(from: Int, to: Int, num: Int) = when(preGen.data[from][to].oper) {
             NONE -> throw error("wrong move!")
-            PLUS -> num.let { x -> tempData[from][to].num?.let { x + it } ?: throw error("wrong data num!") }
-            MINUS -> num.let { x -> tempData[from][to].num?.let { x - it } ?: throw error("wrong data num!") }
-            MULTIPLICATION -> num.let { x -> tempData[from][to].num?.let { x * it } ?: throw error("wrong data num!") }
-            DIVISION -> if (tempData[from][to].num == 0) throw error("0 division")
-            else num.let { x -> tempData[from][to].num?.let { x / it } ?: throw error("wrong data num!") }
-            DEGREE -> num.let { x -> tempData[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!") }
-            ROOT -> if (tempData[from][to].num == 0) throw error("0 division")
-            else num.let { x -> tempData[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!") }
+            PLUS -> num.let { x -> preGen.data[from][to].num?.let { x + it } ?: throw error("wrong data num!") }
+            MINUS -> num.let { x -> preGen.data[from][to].num?.let { x - it } ?: throw error("wrong data num!") }
+            MULTIPLICATION -> num.let { x -> preGen.data[from][to].num?.let { x * it } ?: throw error("wrong data num!") }
+            DIVISION -> if (preGen.data[from][to].num == 0) throw error("0 division")
+            else num.let { x -> preGen.data[from][to].num?.let { x / it } ?: throw error("wrong data num!") }
+            DEGREE -> num.let { x -> preGen.data[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!") }
+            ROOT -> if (preGen.data[from][to].num == 0) throw error("0 division")
+            else num.let { x -> preGen.data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!") }
         }
 
 //        TODO("rewrite this")
         fun correctGraph(): Boolean {
-            val list = listTo(tempData)
-            possibleNumbers = List(CURRENT_NUMBER_MAX) { it }
+            val list = listTo(preGen.data)
+            preGen.possibleNumbers = List(CURRENT_NUMBER_MAX) { it }
 
             fun dfs(cur: Int, last: Int, length: Int): Boolean {
-                if (possibleNumbers.isEmpty()) return false
+                if (preGen.possibleNumbers.isEmpty()) return false
                 if (length == 0) {
                     return true
                 }
                 val answers = mutableListOf<Boolean>()
                 for (i in list[cur]) {
                     if (i == last) continue
-                    possibleNumbers = possibleNumbers.filterMap({ movingHelper(cur, i, it) }, { movingHelper(i, cur, it) })
+                    preGen.possibleNumbers = preGen.possibleNumbers.filterMap({ movingHelper(cur, i, it) }, { movingHelper(i, cur, it) })
                     answers.add(dfs(i, cur, length - 1))
-                    possibleNumbers = possibleNumbers.map { movingHelper(i, cur, it) }
+                    preGen.possibleNumbers = preGen.possibleNumbers.map { movingHelper(i, cur, it) }
                 }
-                return answers.any { it } && possibleNumbers.isNotEmpty()
+                return answers.any { it } && preGen.possibleNumbers.isNotEmpty()
             }
 
             return dfs(currentNode, MAGIC, kolMoves)
@@ -99,7 +102,7 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
 
         var kolIter = 0
         do {
-            tempData = MutableList(kolNodes) {
+            preGen.data = MutableList(kolNodes) {
                 MutableList(kolNodes) {
                     Inscription(NONE, null)
                 }
@@ -122,10 +125,13 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
                 kol--
             }
             kolIter++
-        } while (!correctGraph())
+        } while (!correctGraph() && !shutdown)
         println("Iteration count: $kolIter")
-        println("possibleNumbers.size ${possibleNumbers.size}")
-        return tempData
+        if (shutdown) {
+            println("Shutdown generateGraph")
+        } else {
+            println("possibleNumbers.size ${preGen.possibleNumbers.size}")
+        }
     }
 }
 
