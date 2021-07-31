@@ -1,13 +1,23 @@
 package com.example.calculgraph.activity
 
+import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.example.calculgraph.states.PreGenerationState
 import com.example.calculgraph.states.SettingsState
 
 abstract class AnyActivity : AppCompatActivity() {
     companion object {
         lateinit var settings: SettingsState
+//            set(value) = if (field == null) field = value else throw error("no change settings")
+
+        lateinit var preGen: PreGenerationState
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        prepare()
     }
 
     open fun setButtons() {}
