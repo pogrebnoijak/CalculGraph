@@ -6,19 +6,20 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBHelper
+import com.example.calculgraph.playField.Field
+import com.example.calculgraph.states.PreGenerationState
 import com.example.calculgraph.states.SettingsState
 import kotlin.system.exitProcess
 
 
 class MainActivity : AnyActivity() {
     companion object {
-        var startKol = 0
+        private var startKol = 0
     }
 //    var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prepare()
         if (startKol == 0) firstStart()
         startKol++
         setContentView(R.layout.activity_main)
@@ -77,7 +78,7 @@ class MainActivity : AnyActivity() {
     }
 
     private fun startGame(str: String) {
-        val intent = Intent(this, GameActivity::class.java)
+        val intent = Intent(this, WaitActivity :: class.java )
         intent.putExtra("mode", str)
         intent.putExtra("isNewGame", true)
         startActivity(intent)
@@ -85,7 +86,7 @@ class MainActivity : AnyActivity() {
     }
 
     private fun continueGame() {
-        val intent = Intent(this, GameActivity :: class.java )
+        val intent = Intent(this, WaitActivity :: class.java )
         intent.putExtra("mode", "standard")                                             // default mode if not start before
         intent.putExtra("isNewGame", false)
         startActivity(intent)
@@ -94,5 +95,6 @@ class MainActivity : AnyActivity() {
 
     private fun firstStart() {
         settings = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
+        preGen = PreGenerationState(Field().apply { preparationField("any", this@MainActivity) })
     }
 }

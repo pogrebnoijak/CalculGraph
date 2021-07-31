@@ -22,8 +22,8 @@ import com.example.calculgraph.enums.GameState.*
 import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.playField.Field
-import com.example.calculgraph.playField.Graph
 import com.example.calculgraph.service.GraphGeneratorService
+import com.example.calculgraph.service.GraphGeneratorService.Companion.updatePreGen
 import com.example.calculgraph.states.SaveState
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -44,19 +44,16 @@ class GameActivity : AnyActivity() {
     private var motion: TimerTask = object: TimerTask() { override fun run() {} }
     private lateinit var background: Draws
     private lateinit var curField: Field
-    private lateinit var tempField: Field
     private lateinit var vecCentres: List<Pair<Float, Float>>
     private lateinit var touchDown: Pair<Float, Float>
     private lateinit var mode: String
-    var latch = CountDownLatch(1)
 
     init {
-        GraphGeneratorService.resultLauncher = { data, possibleNumbers ->
-            println("resultLauncher")
-            latch.await()
+        GraphGeneratorService.resultLauncher = {
+            println("resultLauncher 2")
             runOnUiThread {
-                latch = CountDownLatch(1)
-                newGame(data, possibleNumbers)
+                preGen.latch = CountDownLatch(1)
+                newGame()
             }
         }
     }
@@ -71,8 +68,7 @@ class GameActivity : AnyActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prepare()
-        setContentView(R.layout.activity_wait)
+        setContentView(R.layout.activity_game)
         saveStatAndStartGame(dbWorker.init(this))
     }
 
@@ -95,8 +91,8 @@ class GameActivity : AnyActivity() {
                     updateStatistic(saveState.score)
                 }
             }
-            newGamePreparation()
-            latch.countDown()
+            if (intent.getBooleanExtra("needStart", false)) newGame()
+            else preGen.latch.countDown()
         }
         else continueGame(saveState)
     }
@@ -107,14 +103,14 @@ class GameActivity : AnyActivity() {
     }
 
     private fun newGamePreparation() {
-        tempField = Field().apply { preparationField(mode, this@GameActivity) }
+        preGen.filed = Field().apply { preparationField(mode, this@GameActivity) }
     }
 
-    private fun newGame(data: List<List<Graph.Inscription>>, possibleNumbers: List<Int>) {
+    private fun newGame() {
         gameStatus = WAIT
-        curField = tempField
+        curField = preGen.filed
         newGamePreparation()
-        curField.init(mode, data, possibleNumbers)
+        curField.init(mode, preGen.data, preGen.possibleNumbers)
         time = 0L
         allTime = settings.time * SECOND_IN_MILLIS
         computability = settings.computability
@@ -123,7 +119,7 @@ class GameActivity : AnyActivity() {
 
     private fun continueGame(saveState: SaveState) {
         if (saveState.gameStatus != PLAY) {
-            latch.countDown()
+            preGen.latch.countDown()
         }
         else {
             time = saveState.time
@@ -143,6 +139,13 @@ class GameActivity : AnyActivity() {
         }
     }
 
+    private fun sets() {
+        writeField()
+        setButtons()
+        addDraws()
+        setRendering()
+    }
+
     @SuppressLint("SetTextI18n")
     private fun writeField() {
         findViewById<TextView>(R.id.score).text = "score $winCount"
@@ -156,14 +159,6 @@ class GameActivity : AnyActivity() {
         findViewById<TextView>(R.id.totalNumber).text = "need: $str"
         vecCentres = (0 until curField.graph.kolNodes).map { 2.0 * it / curField.graph.kolNodes }
             .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
-    }
-
-    private fun sets() {
-        setContentView(R.layout.activity_game)
-        writeField()
-        setButtons()
-        addDraws()
-        setRendering()
     }
 
     @SuppressLint("SetTextI18n")
@@ -210,6 +205,9 @@ class GameActivity : AnyActivity() {
                     } else if (iter < iterMax - 1) {
                         iter++
                         background.invalidate()
+                    } else if (iter == iterMax - 1) {
+                        gameStatus = WAIT
+                        exitToWait(true)
                     }
                 }
             }
@@ -241,7 +239,8 @@ class GameActivity : AnyActivity() {
         if (gameStatus == PLAY && win) {
             winCount++
             gameStatus = WAIT
-            latch.countDown()
+            if (preGen.actual) preGen.latch.countDown()
+            else exitToWait()
         }
     }
 
@@ -270,7 +269,7 @@ class GameActivity : AnyActivity() {
                 dbWorker.updateStatistic(winCount)
                 winCount = 0
                 gameStatus = WAIT_SHOW
-                latch.countDown()
+                preGen.latch.countDown()
             }
             findViewById<Button>(R.id.no).setOnClickListener {
                 dismiss()
@@ -287,8 +286,10 @@ class GameActivity : AnyActivity() {
         val intent = Intent(this, MainActivity :: class.java )
         motion.cancel()
         timer.cancel()
-        startActivity(intent)
-        finish()
+        updatePreGen(this@GameActivity) {
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun saveGameState() {
@@ -323,6 +324,19 @@ class GameActivity : AnyActivity() {
                 repeat(ANSWER_WAIT_K) { add(el) }
             }
         }
+    }
+
+    private fun exitToWait(updateStatistic: Boolean = false) {
+        saveGameState()
+        if (updateStatistic)
+            dbWorker.updateStatistic(winCount)
+        val intent = Intent(this, WaitActivity :: class.java )
+        intent.putExtra("mode", mode)
+        intent.putExtra("isNewGame", true)
+        motion.cancel()
+        timer.cancel()
+        startActivity(intent)
+        finish()
     }
 
 

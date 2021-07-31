@@ -13,13 +13,13 @@ import com.example.calculgraph.enums.*
 import com.example.calculgraph.enums.Computability.*
 import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.helpers.TimeWorking.toTime
+import com.example.calculgraph.service.GraphGeneratorService.Companion.updatePreGen
 import com.example.calculgraph.states.SettingsState
 
 
 class SettingsActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prepare()
         setContentView(R.layout.activity_settings)
         setButtons()
         setOther()
@@ -32,8 +32,10 @@ class SettingsActivity : AnyActivity() {
             val dbWorker = DBWorker()
             dbWorker.init(this)
             dbWorker.updateSettings()
-            startActivity(intent)
-            finish()
+            updatePreGen(this@SettingsActivity) {
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
