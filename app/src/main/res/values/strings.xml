@@ -30,6 +30,12 @@
     <string name="ok">OK</string>
     <string name="left">left</string>
     <string name="right">right</string>
-    <string name="updateMoves">%1$d moves</string>
+    <string name="updateMoves">moves: %1$d</string>
     <string name="wait">The creator doesn\'t know how to write optimal code, so wait …</string>
+    <string name="seconds">s</string>
+    <string name="minutes">m</string>
+    <string name="hours">h</string>
+    <string name="score">score: %1$d</string>
+    <string name="need">need: %1$s</string>
+    <string name="after_game">"You have scored %1$d points. Do you want to play again?"</string>
 </resources>

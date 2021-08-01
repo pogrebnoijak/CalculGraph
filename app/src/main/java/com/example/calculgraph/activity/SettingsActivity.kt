@@ -13,6 +13,10 @@ import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.enums.Computability.*
+import com.example.calculgraph.helpers.LanguageHelper.computabilityTranslation
+import com.example.calculgraph.helpers.LanguageHelper.computabilityUnTranslation
+import com.example.calculgraph.helpers.LanguageHelper.topicTranslation
+import com.example.calculgraph.helpers.LanguageHelper.topicUnTranslation
 import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.helpers.TimeWorking.toTime
 import com.example.calculgraph.service.GraphGeneratorService.Companion.updatePreGen
@@ -60,13 +64,17 @@ class SettingsActivity : AnyActivity() {
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
             val intent = Intent(this, MainActivity :: class.java )
-            val dbWorker = DBWorker()
-            dbWorker.init(this)
-            dbWorker.updateSettings()
-            updatePreGen(this@SettingsActivity) {
-                startActivity(intent)
-                finish()
-            }
+            updateSettings(intent)
+        }
+    }
+
+    private fun updateSettings(intent: Intent) {
+        val dbWorker = DBWorker()
+        dbWorker.init(this)
+        dbWorker.updateSettings()
+        updatePreGen(this@SettingsActivity) {
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -88,8 +96,9 @@ class SettingsActivity : AnyActivity() {
                 _: CompoundButton, isChecked: Boolean -> updateSound(isChecked)
         }
         tuningSpinner(R.id.language, Array(LANGUAGES.size) { LANGUAGES[it] } ) { updateLanguage(it) }
-        tuningSpinner(R.id.topic, Array(topicValues().size) { topicValues()[it] } ) { updateTopic(it) }
-        tuningSpinner(R.id.computability, Array(Computability.values().size) { Computability.values()[it] } ) { updateComputability(it) }
+        tuningSpinner(R.id.topic, Array(topicValues().size) { topicValues()[it].topicTranslation() } ) { updateTopic(it.topicUnTranslation()) }
+        tuningSpinner(R.id.computability, Array(Computability.values().size) {
+            Computability.values()[it].toString().computabilityTranslation() } ) { updateComputability(it.computabilityUnTranslation()) }
         findViewById<EditText>(R.id.moves).apply {
             doAfterTextChanged { text ->
                 text.toString().let {
@@ -101,7 +110,7 @@ class SettingsActivity : AnyActivity() {
                 }
             }
         }
-        tuningSpinner(R.id.time, Array(TIMES.size) { showTime(TIMES[it]) }) { updateTime(it) }
+        tuningSpinner(R.id.time, Array(TIMES.size) { showTime(TIMES[it], this) }) { updateTime(it) }
     }
 
     private fun setSettings() {
@@ -119,20 +128,22 @@ class SettingsActivity : AnyActivity() {
             it.setSelection(getIndexByName(it, language))
         }
         findViewById<Spinner>(R.id.topic).let {
-            it.setSelection(getIndexByName(it, topic.topToString()))
+            it.setSelection(getIndexByName(it, topic.topToString().topicTranslation()))
         }
         findViewById<Spinner>(R.id.computability).let {
-            it.setSelection(getIndexByName(it, computability))
+            it.setSelection(getIndexByName(it, computability.toString().computabilityTranslation()))
         }
         findViewById<EditText>(R.id.moves).setText(moves.toString())
         findViewById<Spinner>(R.id.time).let {
-            it.setSelection(getIndexByName(it, showTime(time)))
+            it.setSelection(getIndexByName(it, showTime(time, this)))
         }
     }
 
     private fun updateLanguage(language: String) {
+        val needUpdate = (settings.language != language)
         settings.language = language
         setLanguage(baseContext)
+        if (needUpdate) recreate()
     }
 
     private fun updateSound(sound: Boolean) {
@@ -150,10 +161,15 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateTime(time: String) {
-        settings.time = time.toTime()
+        settings.time = time.toTime(this)
     }
 
     private fun updateMoves(moves: Int) {
         settings.moves = moves
+    }
+
+    override fun recreate() {
+        val intent = Intent(this, SettingsActivity :: class.java )
+        updateSettings(intent)
     }
 }

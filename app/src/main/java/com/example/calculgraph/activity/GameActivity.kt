@@ -152,15 +152,15 @@ class GameActivity : AnyActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun writeField() {
-        findViewById<TextView>(R.id.score).text = "score $winCount"
-        findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
+        findViewById<TextView>(R.id.score).text = getString(R.string.score, winCount)
+        findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         val str = when(mode) {
             "standard" -> curField.totalNumbers[0].toString()
             "set" -> curField.totalNumbers.toString()
-            "max" -> "maximum"
+            "max" -> getString(R.string.max)
             else -> throw error("wrong mode!")
         }
-        findViewById<TextView>(R.id.totalNumber).text = "need: $str"
+        findViewById<TextView>(R.id.totalNumber).text = getString(R.string.need, str)
         vecCentres = (0 until curField.graph.kolNodes).map { 2.0 * it / curField.graph.kolNodes }
             .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
     }
@@ -172,7 +172,7 @@ class GameActivity : AnyActivity() {
         }
         findViewById<Button>(R.id.back).setOnClickListener {
             curField.back()
-            findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
+            findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         }
     }
 
@@ -239,7 +239,7 @@ class GameActivity : AnyActivity() {
     @SuppressLint("SetTextI18n")
     private fun move(to: Int) {
         val win = curField.move(to)
-        findViewById<TextView>(R.id.kolMoves).text = "moves: ${curField.kolMoves}"
+        findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         if (gameStatus == PLAY && win) {
             winCount++
             gameStatus = WAIT
@@ -263,7 +263,7 @@ class GameActivity : AnyActivity() {
             setCancelable(false)
 
             setContentView(R.layout.dialog_yes_no)
-            findViewById<TextView>(R.id.dial_text).text = "You have scored $winCount points. Do you want to play again?"
+            findViewById<TextView>(R.id.dial_text).text = getString(R.string.after_game, winCount)
             findViewById<Button>(R.id.yes).setOnClickListener {
                 dismiss()
                 if (!savingState) {

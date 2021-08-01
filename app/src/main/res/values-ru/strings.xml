@@ -30,6 +30,12 @@
     <string name="ok">ОК</string>
     <string name="left">лево</string>
     <string name="right">право</string>
-    <string name="updateMoves">%1$d ходов</string>
+    <string name="updateMoves">ходов: %1$d</string>
     <string name="wait">Создатель не умеет писать оптимальный код, так что ждите…</string>
+    <string name="seconds">с</string>
+    <string name="minutes">м</string>
+    <string name="hours">ч</string>
+    <string name="score">счёт: %1$d</string>
+    <string name="need">нужно: %1$s</string>
+    <string name="after_game">"Вы набрали %1$d очков. Хотете сыграть снова?"</string>
 </resources>

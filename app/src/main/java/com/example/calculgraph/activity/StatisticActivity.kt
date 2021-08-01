@@ -11,6 +11,8 @@ import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.enums.Computability
+import com.example.calculgraph.helpers.LanguageHelper.computabilityTranslation
+import com.example.calculgraph.helpers.LanguageHelper.modeTranslation
 import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.states.SaveState
 import com.example.calculgraph.states.StatisticState
@@ -59,10 +61,10 @@ class StatisticActivity : AnyActivity() {
             var movesInd = saveState.answer.size - 1 - MIN_MOVES
             var timeInd = TIMES.indexOf((saveState.allTime / SECOND_IN_MILLIS).toInt())
 
-            fun updateMode() = run { findViewById<TextView>(R.id.mode).text = MODES[modeInd] }
-            fun updateComp() = run { findViewById<TextView>(R.id.computability).text = Computability.values()[compInd].toString() }
+            fun updateMode() = run { findViewById<TextView>(R.id.mode).text = MODES[modeInd].modeTranslation(this@StatisticActivity) }
+            fun updateComp() = run { findViewById<TextView>(R.id.computability).text = Computability.values()[compInd].toString().computabilityTranslation() }
             fun updateMoves() = run { findViewById<TextView>(R.id.moves).text = getString(R.string.updateMoves, movesInd + MIN_MOVES) }
-            fun updateTime() = run { findViewById<TextView>(R.id.time).text = showTime(TIMES[timeInd]) }
+            fun updateTime() = run { findViewById<TextView>(R.id.time).text = showTime(TIMES[timeInd], this@StatisticActivity) }
             fun setListener(ind: String, id: Int, isNext: Boolean) {
                 findViewById<ImageButton>(id).setOnClickListener {
                     val plus = if (isNext) 1 else -1
