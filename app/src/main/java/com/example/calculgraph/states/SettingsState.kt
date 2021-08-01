@@ -5,7 +5,7 @@ import com.example.calculgraph.enums.Topic
 
 data class SettingsState(var sound: Boolean,
                          var language: String,
-                         var topic: Topic,
+                         var theme: Topic,
                          var computability: Computability,
                          var moves: Int,
                          var time: Int): State()                                                    //in s

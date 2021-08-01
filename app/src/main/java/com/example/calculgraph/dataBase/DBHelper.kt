@@ -35,7 +35,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "id integer primary key autoincrement,"
                     + "sound integer,"
                     + "language text,"
-                    + "topic text,"
+                    + "theme text,"
                     + "computability text,"
                     + "moves integer,"
                     + "time integer" + ");")
@@ -74,7 +74,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val cvSett = ContentValues()
         cvSett.put("sound", 1)
         cvSett.put("language", "English")
-        cvSett.put("topic", "Standard")
+        cvSett.put("theme", "Standard")
         cvSett.put("computability", "EASY")
         cvSett.put("moves", 3)
         cvSett.put("time", 60)
@@ -119,7 +119,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
                 cv.put("sound", state.sound)
                 cv.put("language", state.language)
-                cv.put("topic", state.topic.topToString())
+                cv.put("theme", state.theme.topToString())
                 cv.put("computability", state.computability.toString())
                 cv.put("moves", state.moves)
                 cv.put("time", state.time)
@@ -152,7 +152,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
     fun read(table: String, id: Int = DEFAULT_ID) : State? {  // id only for statistic
         val list: Array<String> = when(table) {
             "statistic" -> arrayOf("id", "kolGame", "sredScore", "maxScore")
-            "settings"  -> arrayOf("id", "sound", "language", "topic", "computability", "moves", "time")
+            "settings"  -> arrayOf("id", "sound", "language", "theme", "computability", "moves", "time")
             "saveState"  -> arrayOf("id", "gameStatus", "time", "allTime","score", "kolMoves", "computability",
                 "currentNode", "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
             else        -> throw error("wrong table name")
@@ -172,7 +172,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             "settings"  -> {
                 SettingsState(cv.getInt(cv.getColumnIndex("sound")) != 0,
                     cv.getString(cv.getColumnIndex("language")),
-                    cv.getString(cv.getColumnIndex("topic")).toTopic(),
+                    cv.getString(cv.getColumnIndex("theme")).toTopic(),
                     cv.getString(cv.getColumnIndex("computability")).toComputability(),
                     cv.getInt(cv.getColumnIndex("moves")),
                     cv.getInt(cv.getColumnIndex("time")))

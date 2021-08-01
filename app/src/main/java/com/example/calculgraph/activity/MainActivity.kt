@@ -20,8 +20,8 @@ class MainActivity : AnyActivity() {
 //    var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         if (startKol == 0) firstStart()
+        super.onCreate(savedInstanceState)
         startKol++
         setContentView(R.layout.activity_main)
         setButtons()

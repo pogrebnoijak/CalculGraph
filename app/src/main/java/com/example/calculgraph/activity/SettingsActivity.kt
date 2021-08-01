@@ -29,7 +29,6 @@ class SettingsActivity : AnyActivity() {
         fun initSettings(baseContext: Context) {
             setLanguage(baseContext)
             setSound(baseContext)
-            setTopic(baseContext)
         }
 
         private fun setLanguage(baseContext: Context) {
@@ -45,10 +44,6 @@ class SettingsActivity : AnyActivity() {
         }
 
         private fun setSound(baseContext: Context) {
-//        TODO("finish this")
-        }
-
-        private fun setTopic(baseContext: Context) {
 //        TODO("finish this")
         }
     }
@@ -96,7 +91,7 @@ class SettingsActivity : AnyActivity() {
                 _: CompoundButton, isChecked: Boolean -> updateSound(isChecked)
         }
         tuningSpinner(R.id.language, Array(LANGUAGES.size) { LANGUAGES[it] } ) { updateLanguage(it) }
-        tuningSpinner(R.id.topic, Array(topicValues().size) { topicValues()[it].topicTranslation() } ) { updateTopic(it.topicUnTranslation()) }
+        tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].topicTranslation() } ) { updateTopic(it.topicUnTranslation()) }
         tuningSpinner(R.id.computability, Array(Computability.values().size) {
             Computability.values()[it].toString().computabilityTranslation() } ) { updateComputability(it.computabilityUnTranslation()) }
         findViewById<EditText>(R.id.moves).apply {
@@ -114,7 +109,7 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun setSettings() {
-        val (sound, language, topic, computability, moves, time) = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
+        val (sound, language, theme, computability, moves, time) = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
 
         fun getIndexByName(spin: Spinner, name: Any): Int {
             (0 until spin.count).forEach { i ->
@@ -127,8 +122,8 @@ class SettingsActivity : AnyActivity() {
         findViewById<Spinner>(R.id.language).let {
             it.setSelection(getIndexByName(it, language))
         }
-        findViewById<Spinner>(R.id.topic).let {
-            it.setSelection(getIndexByName(it, topic.topToString().topicTranslation()))
+        findViewById<Spinner>(R.id.theme).let {
+            it.setSelection(getIndexByName(it, theme.topToString().topicTranslation()))
         }
         findViewById<Spinner>(R.id.computability).let {
             it.setSelection(getIndexByName(it, computability.toString().computabilityTranslation()))
@@ -151,9 +146,11 @@ class SettingsActivity : AnyActivity() {
         setSound(baseContext)
     }
 
-    private fun updateTopic(topic: String) {
-        settings.topic = topic.toTopic()
-        setTopic(baseContext)
+    private fun updateTopic(theme: String) {
+        val newTopic = theme.toTopic()
+        val needUpdate = (settings.theme != newTopic)
+        settings.theme = newTopic
+        if (needUpdate) recreate()
     }
 
     private fun updateComputability(compatibility: String) {

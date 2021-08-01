@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.example.calculgraph.R
+import com.example.calculgraph.enums.Topic.*
 import com.example.calculgraph.states.PreGenerationState
 import com.example.calculgraph.states.SettingsState
+
 
 abstract class AnyActivity : AppCompatActivity() {
     companion object {
@@ -16,6 +19,7 @@ abstract class AnyActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme()
         super.onCreate(savedInstanceState)
         prepare()
     }
@@ -33,6 +37,13 @@ abstract class AnyActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
+
+    private fun setTheme() {
+        when (settings.theme) {
+            STANDARD -> setTheme(R.style.Theme_CalculGraph)
+            OTHER -> setTheme(R.style.Theme_CalculGraph2)
+        }
     }
 }
 

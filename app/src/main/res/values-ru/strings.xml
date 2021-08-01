@@ -18,7 +18,7 @@
     <string name="placeholder">.</string>
     <string name="sound">Звук</string>
     <string name="language">Язык:</string>
-    <string name="topic">Тема:</string>
+    <string name="theme">Тема:</string>
     <string name="computability">Сложность:</string>
     <string name="time">Время:</string>
     <string name="games">Игры:</string>
