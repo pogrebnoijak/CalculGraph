@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+<!--        TODO("animation activity transition")-->
     </style>
 
     <!-- my styles -->
@@ -44,6 +45,7 @@
     </style>
 
     <style name="TextViewSettingsMargin" parent="TextViewSettings">
+        <item name="android:layout_weight">2</item>
         <item name="android:layout_marginStart">25dp</item>
     </style>
 
