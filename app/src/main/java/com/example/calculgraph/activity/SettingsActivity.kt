@@ -1,6 +1,8 @@
 package com.example.calculgraph.activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -15,9 +17,38 @@ import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.helpers.TimeWorking.toTime
 import com.example.calculgraph.service.GraphGeneratorService.Companion.updatePreGen
 import com.example.calculgraph.states.SettingsState
+import java.util.*
 
 
 class SettingsActivity : AnyActivity() {
+    companion object {
+        fun initSettings(baseContext: Context) {
+            setLanguage(baseContext)
+            setSound(baseContext)
+            setTopic(baseContext)
+        }
+
+        private fun setLanguage(baseContext: Context) {
+            val locale = when (settings.language) {
+                "Русский" -> Locale("ru")
+                "English" -> Locale("en")
+                else -> throw error("wrong language")
+            }
+            Configuration().apply {
+                setLocale(locale)
+                baseContext.resources.updateConfiguration(this, null)
+            }
+        }
+
+        private fun setSound(baseContext: Context) {
+//        TODO("finish this")
+        }
+
+        private fun setTopic(baseContext: Context) {
+//        TODO("finish this")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -101,17 +132,17 @@ class SettingsActivity : AnyActivity() {
 
     private fun updateLanguage(language: String) {
         settings.language = language
-//        TODO("finish this")
+        setLanguage(baseContext)
     }
 
     private fun updateSound(sound: Boolean) {
         settings.sound = sound
-//        TODO("finish this")
+        setSound(baseContext)
     }
 
     private fun updateTopic(topic: String) {
         settings.topic = topic.toTopic()
-//        TODO("finish this")
+        setTopic(baseContext)
     }
 
     private fun updateComputability(compatibility: String) {

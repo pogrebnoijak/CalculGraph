@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.example.calculgraph.R
+import com.example.calculgraph.activity.SettingsActivity.Companion.initSettings
 import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.playField.Field
 import com.example.calculgraph.states.PreGenerationState
@@ -95,6 +96,7 @@ class MainActivity : AnyActivity() {
 
     private fun firstStart() {
         settings = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
+        initSettings(baseContext)
         preGen = PreGenerationState(Field().apply { preparationField("any", this@MainActivity) })
     }
 }

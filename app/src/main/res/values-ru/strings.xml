@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">CalculGraph</string>
+    <string name="back">назад</string>
+    <string name="game_mode">Выберите мод</string>
+    <string name="standard">стандартный</string>
+    <string name="max">максимум</string>
+    <string name="set">набор</string>
+    <string name="yes">да</string>
+    <string name="no">нет</string>
+    <string name="calculGraph">CalculGraph</string>
+    <string name="new_game">НОВАЯ ИГРА</string>
+    <string name="levels">УРОВНИ</string>
+    <string name="statistic">СТАТИСТИКА</string>
+    <string name="settings">НАСТРОЙКИ</string>
+    <string name="continue_">ПРОДОЛЖИТЬ</string>
+    <string name="exit">ВЫХОД</string>
+    <string name="menu">меню</string>
+    <string name="placeholder">.</string>
+    <string name="sound">Звук</string>
+    <string name="language">Язык:</string>
+    <string name="topic">Тема:</string>
+    <string name="computability">Сложность:</string>
+    <string name="time">Время:</string>
+    <string name="games">Игры:</string>
+    <string name="average_score">Средний счёт:</string>
+    <string name="max_score">Максимальный счёт:</string>
+    <string name="moves">Ходы:</string>
+    <string name="info">инфо</string>
+    <string name="statistics">Статистика для настроек</string>
+    <string name="ok">ОК</string>
+    <string name="left">лево</string>
+    <string name="right">право</string>
+    <string name="updateMoves">%1$d ходов</string>
+    <string name="wait">Создатель не умеет писать оптимальный код, так что ждите…</string>
+</resources>

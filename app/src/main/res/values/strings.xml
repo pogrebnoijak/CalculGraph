@@ -7,12 +7,12 @@
     <string name="set">set</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
-    <string name="name">CalculGraph</string>
     <string name="calculGraph">CalculGraph</string>
     <string name="new_game">NEW GAME</string>
     <string name="levels">LEVELS</string>
     <string name="statistic">STATISTIC</string>
     <string name="settings">SETTINGS</string>
+    <string name="continue_">CONTINUE</string>
     <string name="exit">EXIT</string>
     <string name="menu">menu</string>
     <string name="placeholder">.</string>
@@ -21,7 +21,6 @@
     <string name="topic">Topic:</string>
     <string name="computability">Computability:</string>
     <string name="time">Time:</string>
-    <string name="continue_">continue</string>
     <string name="games">Games:</string>
     <string name="average_score">Average score:</string>
     <string name="max_score">Max score:</string>
@@ -32,5 +31,5 @@
     <string name="left">left</string>
     <string name="right">right</string>
     <string name="updateMoves">%1$d moves</string>
-    <string name="wait">The creator doesn\'t know how to write optimal code, so wait ...</string>
+    <string name="wait">The creator doesn\'t know how to write optimal code, so wait …</string>
 </resources>
