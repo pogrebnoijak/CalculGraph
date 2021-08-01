@@ -11,10 +11,10 @@ class DBWorker {
     private lateinit var statistic: StatisticState
     private lateinit var saveState: SaveState
 
-    fun init(context: Context): SaveState {
+    fun init(context: Context, downloadStat: Boolean = true): SaveState {
         db = DBHelper(context)
         saveState = (db.read("saveState") ?: throw error("No saveState in the db")) as SaveState
-        downloadStatistic()
+        if (downloadStat) downloadStatistic()
         return saveState
     }
 
