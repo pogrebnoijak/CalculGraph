@@ -91,10 +91,14 @@ class GameActivity : AnyActivity() {
                     updateStatistic(saveState.score)
                 }
             }
-            if (intent.getBooleanExtra("needStart", false)) newGame()
-            else preGen.latch.countDown()
+            newGameOrLatchUpdate()
         }
         else continueGame(saveState)
+    }
+
+    private fun newGameOrLatchUpdate() {
+        if (intent.getBooleanExtra("needStart", false)) newGame()
+        else preGen.latch.countDown()
     }
 
     private fun getIntentsAndReturnGameStatus(): Boolean {
@@ -119,7 +123,7 @@ class GameActivity : AnyActivity() {
 
     private fun continueGame(saveState: SaveState) {
         if (saveState.gameStatus != PLAY) {
-            preGen.latch.countDown()
+            newGameOrLatchUpdate()
         }
         else {
             time = saveState.time
@@ -281,7 +285,7 @@ class GameActivity : AnyActivity() {
 
     private fun exitGame() {
         saveGameState()
-        if (gameStatus != PLAY)
+        if (gameStatus == END)
             dbWorker.updateStatistic(winCount)
         val intent = Intent(this, MainActivity :: class.java )
         motion.cancel()
