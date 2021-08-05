@@ -27,6 +27,7 @@ class MainActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         startKol++
         setContentView(R.layout.activity_main)
+        setTransitionActivity(R.id.mainAll)
         setButtons()
 //        prefs = getSharedPreferences("com.example.calculgraph", MODE_PRIVATE);
     }
@@ -66,19 +67,19 @@ class MainActivity : AnyActivity() {
         findViewById<Button>(R.id.levels).setOnClickListener {
             playSound(TO)
             val intent = Intent(this, LevelsActivity :: class.java )
-            startActivity(intent)
+            startActivity(intent, transitionActivity.toBundle())
             finish()
         }
         findViewById<Button>(R.id.statistic).setOnClickListener {
             playSound(TO)
             val intent = Intent(this, StatisticActivity :: class.java )
-            startActivity(intent)
+            startActivity(intent, transitionActivity.toBundle())
             finish()
         }
         findViewById<Button>(R.id.settings).setOnClickListener {
             playSound(TO)
             val intent = Intent(this, SettingsActivity :: class.java )
-            startActivity(intent)
+            startActivity(intent, transitionActivity.toBundle())
             finish()
         }
         findViewById<Button>(R.id.exit).setOnClickListener {
@@ -92,7 +93,7 @@ class MainActivity : AnyActivity() {
         val intent = Intent(this, WaitActivity :: class.java )
         intent.putExtra("mode", str)
         intent.putExtra("isNewGame", true)
-        startActivity(intent)
+        startActivity(intent, transitionActivity.toBundle())
         finish()
     }
 
@@ -100,7 +101,7 @@ class MainActivity : AnyActivity() {
         val intent = Intent(this, WaitActivity :: class.java )
         intent.putExtra("mode", "standard")                                             // default mode if not start before
         intent.putExtra("isNewGame", false)
-        startActivity(intent)
+        startActivity(intent, transitionActivity.toBundle())
         finish()
     }
 

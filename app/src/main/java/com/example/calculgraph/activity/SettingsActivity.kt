@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.view.View
 import android.widget.*
@@ -54,7 +53,7 @@ class SettingsActivity : AnyActivity() {
         setButtons()
         setOther()
         setSettings()
-        Handler().postDelayed({ configuring = false }, SECOND_IN_MILLIS / 2)
+        handler.postDelayed({ configuring = false }, SECOND_IN_MILLIS / 2)
     }
 
     override fun setButtons() {
@@ -70,7 +69,7 @@ class SettingsActivity : AnyActivity() {
         dbWorker.init(this)
         dbWorker.updateSettings()
         updatePreGen(this@SettingsActivity) {
-            startActivity(intent)
+            startActivity(intent, transitionActivity.toBundle())
             finish()
         }
     }
@@ -114,6 +113,7 @@ class SettingsActivity : AnyActivity() {
             updateSound(isChecked)
             if (!configuring) playSound(SHIFT)
         }
+        setTransitionActivity(R.id.settingsAll)
     }
 
     private fun setSettings() {
@@ -173,8 +173,5 @@ class SettingsActivity : AnyActivity() {
         settings.moves = moves
     }
 
-    override fun recreate() {
-        val intent = Intent(this, SettingsActivity :: class.java )
-        updateSettings(intent)
-    }
+    override fun recreate() = updateSettings(Intent(this, SettingsActivity :: class.java ))
 }

@@ -26,6 +26,7 @@ class StatisticActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistic)
+        setTransitionActivity(R.id.statisticAll)
         setButtons()
         setStatistic()
     }
@@ -34,7 +35,7 @@ class StatisticActivity : AnyActivity() {
         findViewById<Button>(R.id.menu).setOnClickListener {
             playSound(MENU)
             val intent = Intent(this, MainActivity :: class.java )
-            startActivity(intent)
+            startActivity(intent, transitionActivity.toBundle())
             finish()
         }
     }

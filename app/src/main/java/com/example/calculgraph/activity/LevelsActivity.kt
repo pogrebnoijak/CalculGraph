@@ -11,6 +11,7 @@ class LevelsActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_levels)
+        setTransitionActivity(R.id.levelsAll)
         setButtons()
     }
 
@@ -18,7 +19,7 @@ class LevelsActivity : AnyActivity() {
         findViewById<Button>(R.id.menu).setOnClickListener {
             playSound(MENU)
             val intent = Intent(this, MainActivity :: class.java )
-            startActivity(intent)
+            startActivity(intent, transitionActivity.toBundle())
             finish()
         }
     }

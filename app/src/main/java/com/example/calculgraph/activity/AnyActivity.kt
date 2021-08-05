@@ -1,6 +1,9 @@
 package com.example.calculgraph.activity
 
+import android.app.ActivityOptions
 import android.os.Bundle
+import android.os.Handler
+import android.text.format.DateUtils
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +20,16 @@ abstract class AnyActivity : AppCompatActivity() {
 
         lateinit var preGen: PreGenerationState
     }
+    val handler = Handler()
+    lateinit var transitionActivity: ActivityOptions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme()
         super.onCreate(savedInstanceState)
         prepare()
     }
+
+    override fun finish() { handler.postDelayed({ super.finish() }, DateUtils.SECOND_IN_MILLIS / 2) }
 
     open fun setButtons() {}
 
@@ -44,6 +51,10 @@ abstract class AnyActivity : AppCompatActivity() {
             STANDARD -> setTheme(R.style.Theme_CalculGraph)
             OTHER -> setTheme(R.style.Theme_CalculGraph2)
         }
+    }
+
+    fun setTransitionActivity(id: Int) {
+        transitionActivity = ActivityOptions.makeSceneTransitionAnimation(this, findViewById(id), "")
     }
 }
 

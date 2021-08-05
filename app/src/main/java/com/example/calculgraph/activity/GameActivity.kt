@@ -71,6 +71,7 @@ class GameActivity : AnyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        setTransitionActivity(R.id.gameAll)
         saveStatAndStartGame(dbWorker.init(this))
     }
 
@@ -307,7 +308,7 @@ class GameActivity : AnyActivity() {
         motion.cancel()
         timer.cancel()
         updatePreGen(this@GameActivity) {
-            startActivity(intent)
+            startActivity(intent, transitionActivity.toBundle())
             finish()
         }
     }
@@ -355,7 +356,7 @@ class GameActivity : AnyActivity() {
         intent.putExtra("isNewGame", true)
         motion.cancel()
         timer.cancel()
-        startActivity(intent)
+        startActivity(intent, transitionActivity.toBundle())
         finish()
     }
 

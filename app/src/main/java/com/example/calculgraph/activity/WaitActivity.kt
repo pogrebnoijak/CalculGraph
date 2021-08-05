@@ -45,8 +45,8 @@ class WaitActivity : AnyActivity() {
         if (preGen.actual || (setSaveState() && !isNewGame)) newGame()
         else {
             setContentView(R.layout.activity_wait)
+            setTransitionActivity(R.id.waitAll)
             preGen.latch.countDown()
-//            TODO("fix stop sound")
             playWaitingStart()
             setButtons()
         }
@@ -64,7 +64,7 @@ class WaitActivity : AnyActivity() {
             val intent = Intent(this, MainActivity :: class.java )
             dbWorker.updateSaveState(saveState.apply { gameStatus = END })
             startActivity(intent)
-            finish()
+            startActivity(intent, transitionActivity.toBundle())
         }
     }
 
