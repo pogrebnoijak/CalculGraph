@@ -131,7 +131,7 @@ class SettingsActivity : AnyActivity() {
             it.setSelection(getIndexByName(it, language))
         }
         findViewById<Spinner>(R.id.theme).let {
-            it.setSelection(getIndexByName(it, theme.topToString().topicTranslation()))
+            it.setSelection(getIndexByName(it, theme.thToString().topicTranslation()))
         }
         findViewById<Spinner>(R.id.computability).let {
             it.setSelection(getIndexByName(it, computability.toString().computabilityTranslation()))
@@ -155,7 +155,7 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateTopic(theme: String) {
-        val newTheme = theme.toTopic()
+        val newTheme = theme.toTheme()
         val needUpdate = (settings.theme != newTheme)
         settings.theme = newTheme
         if (needUpdate) recreate()

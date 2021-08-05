@@ -9,8 +9,8 @@ import com.example.calculgraph.constant.DEFAULT_ID
 import com.example.calculgraph.constant.MAX_ID
 import com.example.calculgraph.enums.toComputability
 import com.example.calculgraph.enums.toGameState
-import com.example.calculgraph.enums.toTopic
-import com.example.calculgraph.enums.topToString
+import com.example.calculgraph.enums.toTheme
+import com.example.calculgraph.enums.thToString
 import com.example.calculgraph.helpers.Serializer
 import com.example.calculgraph.states.*
 import com.google.gson.reflect.TypeToken
@@ -69,7 +69,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvStat.put("kolGame", 0)
         cvStat.put("sredScore", 0.0)
         cvStat.put("maxScore", 0)
-        repeat(MAX_ID) { println(db.insert("statistic", null, cvStat)) }
+        repeat(MAX_ID) { db.insert("statistic", null, cvStat) }
 
         val cvSett = ContentValues()
         cvSett.put("sound", 1)
@@ -119,7 +119,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
                 cv.put("sound", state.sound)
                 cv.put("language", state.language)
-                cv.put("theme", state.theme.topToString())
+                cv.put("theme", state.theme.thToString())
                 cv.put("computability", state.computability.toString())
                 cv.put("moves", state.moves)
                 cv.put("time", state.time)
@@ -172,7 +172,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             "settings"  -> {
                 SettingsState(cv.getInt(cv.getColumnIndex("sound")) != 0,
                     cv.getString(cv.getColumnIndex("language")),
-                    cv.getString(cv.getColumnIndex("theme")).toTopic(),
+                    cv.getString(cv.getColumnIndex("theme")).toTheme(),
                     cv.getString(cv.getColumnIndex("computability")).toComputability(),
                     cv.getInt(cv.getColumnIndex("moves")),
                     cv.getInt(cv.getColumnIndex("time")))

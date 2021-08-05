@@ -1,20 +1,20 @@
 package com.example.calculgraph.enums
-import com.example.calculgraph.enums.Topic.*
+import com.example.calculgraph.enums.Theme.*
 
-enum class Topic {
+enum class Theme {
     STANDARD,
     OTHER
 }
 
-fun Topic.topToString() = when(this) {
+fun Theme.thToString() = when(this) {
     STANDARD -> "Standard"
     OTHER -> "Other"
 }
 
-fun String.toTopic(): Topic = when(this) {
+fun String.toTheme(): Theme = when(this) {
     "Standard"  -> STANDARD
     "Other"     -> OTHER
     else        -> throw error("wrong topic")
 }
 
-fun topicValues() = Topic.values().toList().map { it.topToString() }
+fun topicValues() = Theme.values().toList().map { it.thToString() }
