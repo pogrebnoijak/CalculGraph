@@ -6,6 +6,10 @@ import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.enums.GameState.*
+import com.example.calculgraph.enums.Sounds.*
+import com.example.calculgraph.helpers.SoundPoolHelper.playSound
+import com.example.calculgraph.helpers.SoundPoolHelper.playWaitingPause
+import com.example.calculgraph.helpers.SoundPoolHelper.playWaitingStart
 import com.example.calculgraph.service.GraphGeneratorService
 import com.example.calculgraph.states.SaveState
 import java.util.concurrent.CountDownLatch
@@ -42,12 +46,20 @@ class WaitActivity : AnyActivity() {
         else {
             setContentView(R.layout.activity_wait)
             preGen.latch.countDown()
+//            TODO("fix stop sound")
+            playWaitingStart()
             setButtons()
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        playWaitingPause()
+    }
+
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
+            playSound(MENU)
             preGen.latch = CountDownLatch(1)
             val intent = Intent(this, MainActivity :: class.java )
             dbWorker.updateSaveState(saveState.apply { gameStatus = END })

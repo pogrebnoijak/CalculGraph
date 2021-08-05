@@ -7,6 +7,8 @@ import com.example.calculgraph.helpers.movingHelper
 import kotlin.random.Random
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation.*
+import com.example.calculgraph.enums.Sounds.*
+import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 import com.example.calculgraph.helpers.listTo
 import com.example.calculgraph.states.Inscription
 import java.lang.Integer.MIN_VALUE
@@ -92,6 +94,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
     fun move(to: Int): Boolean {
         if (history.isNotEmpty() && history.peek() == to) back()
         else if (kolMoves != 0) {
+            playSound(TAP)
             history.add(currentNode)
             moving(currentNode, to)
             currentNode = to
@@ -104,6 +107,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
 
     fun back() {
         if(history.isNotEmpty()) {
+            playSound(TAP)
             kolMoves++
             val from = currentNode
             currentNode = history.pop()

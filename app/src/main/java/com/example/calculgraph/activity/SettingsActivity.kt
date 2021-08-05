@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.view.View
 import android.widget.*
 import androidx.core.widget.doAfterTextChanged
@@ -13,10 +15,12 @@ import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.enums.Computability.*
+import com.example.calculgraph.enums.Sounds.*
 import com.example.calculgraph.helpers.LanguageHelper.computabilityTranslation
 import com.example.calculgraph.helpers.LanguageHelper.computabilityUnTranslation
 import com.example.calculgraph.helpers.LanguageHelper.topicTranslation
 import com.example.calculgraph.helpers.LanguageHelper.topicUnTranslation
+import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.helpers.TimeWorking.toTime
 import com.example.calculgraph.service.GraphGeneratorService.Companion.updatePreGen
@@ -28,7 +32,6 @@ class SettingsActivity : AnyActivity() {
     companion object {
         fun initSettings(baseContext: Context) {
             setLanguage(baseContext)
-            setSound(baseContext)
         }
 
         private fun setLanguage(baseContext: Context) {
@@ -42,11 +45,8 @@ class SettingsActivity : AnyActivity() {
                 baseContext.resources.updateConfiguration(this, null)
             }
         }
-
-        private fun setSound(baseContext: Context) {
-//        TODO("finish this")
-        }
     }
+    private var configuring = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +54,12 @@ class SettingsActivity : AnyActivity() {
         setButtons()
         setOther()
         setSettings()
+        Handler().postDelayed({ configuring = false }, SECOND_IN_MILLIS / 2)
     }
 
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
+            playSound(MENU)
             val intent = Intent(this, MainActivity :: class.java )
             updateSettings(intent)
         }
@@ -79,6 +81,7 @@ class SettingsActivity : AnyActivity() {
                 adapter = ArrayAdapter(this@SettingsActivity, R.layout.spinner, R.id.sp, list)
                 onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        if (!configuring) playSound(SHIFT)
                         update(list[position].toString())
                     }
 
@@ -87,9 +90,6 @@ class SettingsActivity : AnyActivity() {
             }
         }
 
-        findViewById<Switch>(R.id.sound).setOnCheckedChangeListener {
-                _: CompoundButton, isChecked: Boolean -> updateSound(isChecked)
-        }
         tuningSpinner(R.id.language, Array(LANGUAGES.size) { LANGUAGES[it] } ) { updateLanguage(it) }
         tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].topicTranslation() } ) { updateTopic(it.topicUnTranslation()) }
         tuningSpinner(R.id.computability, Array(Computability.values().size) {
@@ -100,12 +100,20 @@ class SettingsActivity : AnyActivity() {
                     if(it.isNotEmpty()) when {
                         it.toInt() > MAX_MOVES  -> setText(MAX_MOVES.toString())
                         it.toInt() < MIN_MOVES  -> setText(MIN_MOVES.toString())
-                        else                    -> updateMoves(it.toInt())
+                        else                    -> {
+                            if (!configuring) playSound(SHIFT)
+                            updateMoves(it.toInt())
+                        }
                     }
                 }
             }
         }
         tuningSpinner(R.id.time, Array(TIMES.size) { showTime(TIMES[it], this) }) { updateTime(it) }
+        findViewById<Switch>(R.id.sound).setOnCheckedChangeListener {
+                _: CompoundButton, isChecked: Boolean ->
+            updateSound(isChecked)
+            if (!configuring) playSound(SHIFT)
+        }
     }
 
     private fun setSettings() {
@@ -118,7 +126,7 @@ class SettingsActivity : AnyActivity() {
             throw error("spinner error")
         }
 
-        findViewById<Switch>(R.id.sound).isChecked = sound
+        updateSound(false)
         findViewById<Spinner>(R.id.language).let {
             it.setSelection(getIndexByName(it, language))
         }
@@ -132,6 +140,7 @@ class SettingsActivity : AnyActivity() {
         findViewById<Spinner>(R.id.time).let {
             it.setSelection(getIndexByName(it, showTime(time, this)))
         }
+        findViewById<Switch>(R.id.sound).isChecked = sound
     }
 
     private fun updateLanguage(language: String) {
@@ -143,13 +152,12 @@ class SettingsActivity : AnyActivity() {
 
     private fun updateSound(sound: Boolean) {
         settings.sound = sound
-        setSound(baseContext)
     }
 
     private fun updateTopic(theme: String) {
-        val newTopic = theme.toTopic()
-        val needUpdate = (settings.theme != newTopic)
-        settings.theme = newTopic
+        val newTheme = theme.toTopic()
+        val needUpdate = (settings.theme != newTheme)
+        settings.theme = newTheme
         if (needUpdate) recreate()
     }
 

@@ -11,11 +11,14 @@ import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.enums.Computability
+import com.example.calculgraph.enums.Sounds.*
 import com.example.calculgraph.helpers.LanguageHelper.computabilityTranslation
 import com.example.calculgraph.helpers.LanguageHelper.modeTranslation
+import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.states.SaveState
 import com.example.calculgraph.states.StatisticState
+
 
 class StatisticActivity : AnyActivity() {
     private lateinit var dbHelper: DBHelper
@@ -29,6 +32,7 @@ class StatisticActivity : AnyActivity() {
 
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
+            playSound(MENU)
             val intent = Intent(this, MainActivity :: class.java )
             startActivity(intent)
             finish()
@@ -46,7 +50,10 @@ class StatisticActivity : AnyActivity() {
         findViewById<TextView>(R.id.kolGame).text = "${statistic.kolGame}"
         findViewById<TextView>(R.id.sredScore).text = String.format("%.3f", statistic.sredScore)
         findViewById<TextView>(R.id.maxScore).text = "${statistic.maxScore}"
-        findViewById<ImageButton>(R.id.info).setOnClickListener { doDialogInfo(saveState) }
+        findViewById<ImageButton>(R.id.info).setOnClickListener {
+            playSound(TO)
+            doDialogInfo(saveState)
+        }
     }
 
     private fun doDialogInfo(saveState: SaveState) {
@@ -67,6 +74,7 @@ class StatisticActivity : AnyActivity() {
             fun updateTime() = run { findViewById<TextView>(R.id.time).text = showTime(TIMES[timeInd], this@StatisticActivity) }
             fun setListener(ind: String, id: Int, isNext: Boolean) {
                 findViewById<ImageButton>(id).setOnClickListener {
+                    playSound(SHIFT)
                     val plus = if (isNext) 1 else -1
                     when(ind) {
                         "mode" -> { modeInd = (modeInd + plus + modeMax) % modeMax; updateMode() }
@@ -92,6 +100,7 @@ class StatisticActivity : AnyActivity() {
             setListener("time", R.id.prevTime, false)
 
             findViewById<Button>(R.id.ok).setOnClickListener {
+                playSound(TO)
                 dismiss()
                 saveState.apply {
                     mode = MODES[modeInd]

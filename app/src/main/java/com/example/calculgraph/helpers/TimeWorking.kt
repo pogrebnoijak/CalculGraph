@@ -16,7 +16,10 @@ object TimeWorking {
             else minutes.toString() + context.getString(R.string.minutes) + " " + sec.toString() + context.getString(R.string.seconds)
         }
         3600 -> "1" + context.getString(R.string.hours)
-        else -> throw error("wrong time game")
+        else -> {
+//            TODO("find and remove error - time=0")
+            throw error("wrong time game: $time")
+        }
     }
 
     fun String.toTime(context: Context): Int {

@@ -13,6 +13,7 @@ const val MAGIC = -1
 const val MINUTE = 60
 const val HOUR = 3600
 const val DEFAULT_ID = 1
+const val MAX_STREAM = 1
 
 // point
 const val SMALL_WIDTH = 3F

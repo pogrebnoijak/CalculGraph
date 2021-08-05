@@ -28,6 +28,8 @@ import com.example.calculgraph.states.SaveState
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import kotlin.math.*
+import com.example.calculgraph.enums.Sounds.*
+import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 
 
 class GameActivity : AnyActivity() {
@@ -168,6 +170,7 @@ class GameActivity : AnyActivity() {
     @SuppressLint("SetTextI18n")
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
+            playSound(MENU)
             exitGame()
         }
         findViewById<Button>(R.id.back).setOnClickListener {
@@ -197,21 +200,28 @@ class GameActivity : AnyActivity() {
                         endGame()
                     }
                 } else if (gameStatus == END || gameStatus == WAIT_SHOW) {
-                    if (iter == MAGIC) { // show answer
-                        val path = generateAnswer()
-                        iterMax = (path.size) * ANSWER_K
-                        iter = 1
-                        runOnUiThread {
-                            findViewById<ConstraintLayout>(R.id.draw).removeView(background)
-                            background = DrawViewAnswer(this@GameActivity, path + path.last())
-                            findViewById<ConstraintLayout>(R.id.draw).addView(background)
+                    when {
+                        iter == MAGIC -> { // show answer
+                            val path = generateAnswer()
+                            iterMax = (path.size) * ANSWER_K
+                            iter = 1
+                            runOnUiThread {
+                                findViewById<ConstraintLayout>(R.id.draw).removeView(background)
+                                background = DrawViewAnswer(this@GameActivity, path + path.last())
+                                findViewById<ConstraintLayout>(R.id.draw).addView(background)
+                            }
                         }
-                    } else if (iter < iterMax - 1) {
-                        iter++
-                        background.invalidate()
-                    } else if (iter == iterMax - 1) {
-                        gameStatus = WAIT
-                        exitToWait(true)
+                        iter < iterMax - 1 -> {
+                            iter++
+                            background.invalidate()
+                        }
+                        iter == iterMax - 1 -> {
+                            if (gameStatus == WAIT_SHOW) {
+                                gameStatus = WAIT
+                                exitToWait(true)
+                            }
+                            gameStatus = WAIT
+                        }
                     }
                 }
             }
@@ -241,6 +251,7 @@ class GameActivity : AnyActivity() {
         val win = curField.move(to)
         findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         if (gameStatus == PLAY && win) {
+            playSound(WIN)
             winCount++
             gameStatus = WAIT
             if (preGen.actual) preGen.latch.countDown()
@@ -248,7 +259,10 @@ class GameActivity : AnyActivity() {
         }
     }
 
-    private fun endGame() = runOnUiThread { doDialogEnd() }
+    private fun endGame() = runOnUiThread {
+        playSound(LOSE)
+        doDialogEnd()
+    }
 
     @SuppressLint("SetTextI18n")
     private fun doDialogEnd() {
@@ -265,6 +279,7 @@ class GameActivity : AnyActivity() {
             setContentView(R.layout.dialog_yes_no)
             findViewById<TextView>(R.id.dial_text).text = getString(R.string.after_game, winCount)
             findViewById<Button>(R.id.yes).setOnClickListener {
+                playSound(TO)
                 dismiss()
                 if (!savingState) {
                     saveGameState()
@@ -276,6 +291,7 @@ class GameActivity : AnyActivity() {
                 preGen.latch.countDown()
             }
             findViewById<Button>(R.id.no).setOnClickListener {
+                playSound(TO)
                 dismiss()
                 exitGame()
             }

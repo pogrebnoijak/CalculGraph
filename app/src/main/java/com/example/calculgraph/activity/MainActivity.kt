@@ -7,6 +7,9 @@ import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.activity.SettingsActivity.Companion.initSettings
 import com.example.calculgraph.dataBase.DBHelper
+import com.example.calculgraph.enums.Sounds.*
+import com.example.calculgraph.helpers.SoundPoolHelper.playSound
+import com.example.calculgraph.helpers.SoundPoolHelper.setSounds
 import com.example.calculgraph.playField.Field
 import com.example.calculgraph.states.PreGenerationState
 import com.example.calculgraph.states.SettingsState
@@ -56,18 +59,24 @@ class MainActivity : AnyActivity() {
             }
         }
 
-        findViewById<Button>(R.id.continue_).setOnClickListener { continueGame() }
+        findViewById<Button>(R.id.continue_).setOnClickListener {
+            playSound(TO)
+            continueGame()
+        }
         findViewById<Button>(R.id.levels).setOnClickListener {
+            playSound(TO)
             val intent = Intent(this, LevelsActivity :: class.java )
             startActivity(intent)
             finish()
         }
         findViewById<Button>(R.id.statistic).setOnClickListener {
+            playSound(TO)
             val intent = Intent(this, StatisticActivity :: class.java )
             startActivity(intent)
             finish()
         }
         findViewById<Button>(R.id.settings).setOnClickListener {
+            playSound(TO)
             val intent = Intent(this, SettingsActivity :: class.java )
             startActivity(intent)
             finish()
@@ -79,6 +88,7 @@ class MainActivity : AnyActivity() {
     }
 
     private fun startGame(str: String) {
+        playSound(TO)
         val intent = Intent(this, WaitActivity :: class.java )
         intent.putExtra("mode", str)
         intent.putExtra("isNewGame", true)
@@ -98,5 +108,6 @@ class MainActivity : AnyActivity() {
         settings = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
         initSettings(baseContext)
         preGen = PreGenerationState(Field().apply { preparationField("any", this@MainActivity) })
+        setSounds(this)
     }
 }
