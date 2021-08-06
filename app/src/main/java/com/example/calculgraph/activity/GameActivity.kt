@@ -29,6 +29,7 @@ import java.util.*
 import java.util.concurrent.CountDownLatch
 import kotlin.math.*
 import com.example.calculgraph.enums.Sounds.*
+import com.example.calculgraph.helpers.Size
 import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 
 
@@ -60,8 +61,7 @@ class GameActivity : AnyActivity() {
         }
     }
 
-    inner class Size(val width: Float, val height: Float)
-    val size: Size
+    private val size: Size
         get() {
             val metrics = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(metrics)
