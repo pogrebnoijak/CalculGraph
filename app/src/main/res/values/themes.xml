@@ -37,6 +37,13 @@
         <item name="android:textSize">25sp</item>
     </style>
 
+    <style name="TextViewGame">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
     <style name="TextViewSettingsMargin" parent="TextViewSettings">
         <item name="android:layout_weight">2</item>
         <item name="android:layout_marginStart">25dp</item>

@@ -38,28 +38,22 @@
 
             <TextView
                 android:id="@+id/score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewGame"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
-                android:textSize="30sp"
                 android:text="@string/placeholder" />
 
             <TextView
                 android:id="@+id/kolMoves"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewGame"
                 android:layout_centerInParent="true"
-                android:textSize="30sp"
                 android:text="@string/placeholder" />
 
             <TextView
                 android:id="@+id/totalNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/TextViewGame"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:textSize="30sp"
                 android:text="@string/placeholder" />
 
         </RelativeLayout>
