@@ -72,6 +72,7 @@ class GameActivity : AnyActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         setTransitionActivity(R.id.gameAll)
+        window.enterTransition = null
         saveStatAndStartGame(dbWorker.init(this))
     }
 
@@ -182,7 +183,7 @@ class GameActivity : AnyActivity() {
 
     private fun addDraws() {
         findViewById<ConstraintLayout>(R.id.draw).removeAllViews()
-        findViewById<ConstraintLayout>(R.id.draw).addView(DrawViewConstant(this))
+        findViewById<ConstraintLayout>(R.id.draw).addView(DrawViewConstant(this@GameActivity))
         background = DrawView(this@GameActivity)
         findViewById<ConstraintLayout>(R.id.draw).addView(background)
     }
@@ -393,7 +394,10 @@ class GameActivity : AnyActivity() {
                     }
                 }
 
-                p.color = Color.GREEN
+                p.apply {
+                    color = Color.GREEN
+                    strokeWidth = SMALL_WIDTH
+                }
                 for (i in 0 until curField.graph.kolNodes) {
                     for (j in 0 until curField.graph.kolNodes) {
                         if (curField.graph.data[i][j].oper != NONE && i > j) {

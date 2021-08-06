@@ -71,7 +71,6 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
             totalNumbers = currentNumbers
             currentNumbers = tempCurrentNumber
         }
-//        println("answer - ${answer.toList()}")                                                    //
     }
 
     fun set(

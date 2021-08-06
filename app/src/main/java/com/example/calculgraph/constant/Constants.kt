@@ -1,6 +1,5 @@
 package com.example.calculgraph.constant
 
-import com.example.calculgraph.R
 import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.enums.Computability.*
 import com.example.calculgraph.enums.Operation.*

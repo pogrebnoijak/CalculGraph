@@ -30,7 +30,6 @@ data class SaveState(var gameStatus: GameState,
                 (answer.size - 1 - MIN_MOVES) * sizeMode * sizeComputability +
                 MODES.indexOf(mode) * sizeComputability +
                 Computability.values().indexOf(computability) + 1
-        println(a)
         return a
     }
 }
