@@ -8,6 +8,7 @@ import kotlin.math.PI
 // const
 const val DRAWING = 10L         // ms
 const val LAYOUT_CONST = 0.7F
+const val LAYOUT_CONST_LEVELS = 0.9F
 const val MAGIC = -1
 const val MINUTE = 60
 const val HOUR = 3600
