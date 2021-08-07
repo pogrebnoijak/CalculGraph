@@ -107,18 +107,7 @@ class GameLevelActivity : AnyGameActivity() {
         }
     }
 
-    private fun setNextLevel(): Boolean {
-        val comps = Computability.values()
-        when {
-            num != KOL_LEVELS               -> num++
-            computability != comps.last()   -> {
-                computability = comps[comps.indexOf(computability) + 1]
-                num = 1
-            }
-            else                            -> return false
-        }
-        return true
-    }
+    private fun setNextLevel() = num++ != KOL_LEVELS
 
     override fun exitGame() {
         val intent = Intent(this, LevelsActivity :: class.java )

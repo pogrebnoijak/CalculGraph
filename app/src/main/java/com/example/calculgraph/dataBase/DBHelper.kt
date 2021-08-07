@@ -6,9 +6,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.calculgraph.constant.DEFAULT_ID
+import com.example.calculgraph.constant.LEVELS_ALL_KOL
 import com.example.calculgraph.constant.MAX_ID
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.helpers.Serializer
+import com.example.calculgraph.levels.AllLevels.addLevels
+import com.example.calculgraph.levels.Levels.levels
+import com.example.calculgraph.levels.Levels.notExistLevels
 import com.example.calculgraph.states.*
 import com.google.gson.reflect.TypeToken
 
@@ -105,17 +109,18 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvSave.put("data", emptyList)
         db.insert("saveState", null, cvSave)
 
-        val cvLevels = ContentValues()
-        cvLevels.put("kolMoves", 2)
-        cvLevels.put("currentNode", 1)
-        cvLevels.put("numbers", Serializer.listToBytes(listOf(1)))
-        cvLevels.put("totalNumbers", Serializer.listToBytes(listOf(3)))
-        cvLevels.put("data", Serializer.listToBytes(MutableList(4) {
-            MutableList(4) {
-                Inscription(Operation.PLUS, 1)
-            }
-        }))
-        repeat(200) { db.insert("levels", null, cvLevels) }
+        addLevels()
+        Log.d(logTag, "--- add levels ---")
+        if (notExistLevels() != 0) throw error("not all levels")
+        (0 until LEVELS_ALL_KOL).forEach {
+            val cvLevels = ContentValues()
+            cvLevels.put("kolMoves", levels[it]!!.kolMoves)
+            cvLevels.put("currentNode", levels[it]!!.currentNode)
+            cvLevels.put("numbers", Serializer.listToBytes(levels[it]!!.numbers))
+            cvLevels.put("totalNumbers", Serializer.listToBytes(levels[it]!!.totalNumbers))
+            cvLevels.put("data", Serializer.listToBytes(levels[it]!!.data))
+            db.insert("levels", null, cvLevels)
+        }
     }
 
     fun update(state: State, id: Int = DEFAULT_ID) {

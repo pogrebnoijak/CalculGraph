@@ -48,9 +48,12 @@ class DBWorker {
     }
 
     fun getLevel(mode: String, computability: Computability, num: Int): LevelState {
-        val id = MODES.indexOf(mode) * Computability.values().size * KOL_LEVELS +
-                Computability.values().indexOf(computability) * KOL_LEVELS +
-                num
+        val id = getLevelId(mode, computability, num)
         return db.read("levels", id) as? LevelState ?: throw error("No levels in the db")
     }
 }
+
+internal fun getLevelId(mode: String, computability: Computability, num: Int): Int =
+    MODES.indexOf(mode) * Computability.values().size * KOL_LEVELS +
+            Computability.values().indexOf(computability) * KOL_LEVELS +
+            num
