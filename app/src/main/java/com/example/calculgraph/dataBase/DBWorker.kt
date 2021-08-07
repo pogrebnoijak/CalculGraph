@@ -2,6 +2,10 @@ package com.example.calculgraph.dataBase
 
 import android.content.Context
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
+import com.example.calculgraph.constant.KOL_LEVELS
+import com.example.calculgraph.constant.MODES
+import com.example.calculgraph.enums.Computability
+import com.example.calculgraph.states.LevelState
 import com.example.calculgraph.states.SaveState
 import com.example.calculgraph.states.StatisticState
 import java.lang.Integer.max
@@ -13,13 +17,15 @@ class DBWorker {
 
     fun init(context: Context, downloadStat: Boolean = true): SaveState {
         db = DBHelper(context)
-        saveState = (db.read("saveState") ?: throw error("No saveState in the db")) as SaveState
+        saveState = db.read("saveState") as? SaveState ?: throw error("No saveState in the db")
         if (downloadStat) downloadStatistic()
         return saveState
     }
 
+    fun initLevels(context: Context) { db = DBHelper(context) }
+
     private fun downloadStatistic() {
-        statistic = (db.read("statistic", saveState.generateId()) ?: throw error("No statistic in the db")) as StatisticState
+        statistic = db.read("statistic", saveState.generateId()) as? StatisticState ?: throw error("No statistic in the db")
     }
 
     fun updateStatistic(score: Int) {
@@ -39,5 +45,12 @@ class DBWorker {
     fun updateSaveState(_saveState: SaveState) {
         saveState = _saveState
         db.update(saveState)
+    }
+
+    fun getLevel(mode: String, computability: Computability, num: Int): LevelState {
+        val id = MODES.indexOf(mode) * Computability.values().size * KOL_LEVELS +
+                Computability.values().indexOf(computability) * KOL_LEVELS +
+                num
+        return db.read("levels", id) as? LevelState ?: throw error("No levels in the db")
     }
 }

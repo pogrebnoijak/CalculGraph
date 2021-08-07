@@ -42,4 +42,6 @@
     <string name="medium">Medium</string>
     <string name="hard">Hard</string>
     <string name="insane">Insane</string>
+    <string name="level">level: %1$d</string>
+    <string name="after_level">Next level?</string>
 </resources>

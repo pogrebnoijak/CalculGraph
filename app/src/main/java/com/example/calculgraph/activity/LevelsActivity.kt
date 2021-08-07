@@ -76,7 +76,10 @@ class LevelsActivity : AnyActivity() {
                     leftMargin = p.first.toInt()
                     topMargin = p.second.toInt()
                 }
-                setOnClickListener { println("click $computability-$num") }
+                setOnClickListener {
+                    println("click $computability-$num")
+                    startGame(computability, num)
+                }
             }
         )
     }
@@ -93,5 +96,15 @@ class LevelsActivity : AnyActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
         }
+    }
+
+    private fun startGame(computability: Computability, num: Int) {
+        playSound(TO)
+        val intent = Intent(this, GameLevelActivity :: class.java )
+        intent.putExtra("mode", mode)
+        intent.putExtra("computability", computability.toString())
+        intent.putExtra("num", num)
+        startActivity(intent, transitionActivity.toBundle())
+        finish()
     }
 }

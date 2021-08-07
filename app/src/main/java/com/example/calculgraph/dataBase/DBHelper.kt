@@ -7,10 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.calculgraph.constant.DEFAULT_ID
 import com.example.calculgraph.constant.MAX_ID
-import com.example.calculgraph.enums.toComputability
-import com.example.calculgraph.enums.toGameState
-import com.example.calculgraph.enums.toTheme
-import com.example.calculgraph.enums.thToString
+import com.example.calculgraph.enums.*
 import com.example.calculgraph.helpers.Serializer
 import com.example.calculgraph.states.*
 import com.google.gson.reflect.TypeToken
@@ -59,6 +56,17 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "answer blob,"
                     + "data blob" + ");")
         )
+
+        Log.d(logTag, "--- onCreate levels ---")
+        db.execSQL(
+            ("create table IF NOT EXISTS levels ("
+                    + "id integer primary key autoincrement,"
+                    + "kolMoves integer,"
+                    + "currentNode integer,"
+                    + "numbers blob,"
+                    + "totalNumbers blob,"
+                    + "data blob" + ");")
+        )
         addDefaults(db)
     }
 
@@ -96,6 +104,18 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         cvSave.put("answer", Serializer.listToBytes(listOf(0,0,0,0))) // for default count Moves
         cvSave.put("data", emptyList)
         db.insert("saveState", null, cvSave)
+
+        val cvLevels = ContentValues()
+        cvLevels.put("kolMoves", 2)
+        cvLevels.put("currentNode", 1)
+        cvLevels.put("numbers", Serializer.listToBytes(listOf(1)))
+        cvLevels.put("totalNumbers", Serializer.listToBytes(listOf(3)))
+        cvLevels.put("data", Serializer.listToBytes(MutableList(4) {
+            MutableList(4) {
+                Inscription(Operation.PLUS, 1)
+            }
+        }))
+        repeat(200) { db.insert("levels", null, cvLevels) }
     }
 
     fun update(state: State, id: Int = DEFAULT_ID) {
@@ -143,6 +163,16 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                 cv.put("answer", Serializer.listToBytes(state.answer))
                 cv.put("data", Serializer.listToBytes(state.data))
             }
+
+            is LevelState -> {
+                tableName = "levels"
+                Log.d(logTag, "--- Update in $tableName: ---")
+                cv.put("kolMoves", state.kolMoves)
+                cv.put("currentNode", state.currentNode)
+                cv.put("numbers", Serializer.listToBytes(state.numbers))
+                cv.put("totalNumbers", Serializer.listToBytes(state.totalNumbers))
+                cv.put("data", Serializer.listToBytes(state.data))
+            }
         }
         rowID = db.update(tableName, cv, "id = ?", arrayOf("$id"))
         Log.d(logTag, "$tableName updated, rowID = $rowID")
@@ -153,8 +183,9 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         val list: Array<String> = when(table) {
             "statistic" -> arrayOf("id", "kolGame", "sredScore", "maxScore")
             "settings"  -> arrayOf("id", "sound", "language", "theme", "computability", "moves", "time")
-            "saveState"  -> arrayOf("id", "gameStatus", "time", "allTime","score", "kolMoves", "computability",
+            "saveState" -> arrayOf("id", "gameStatus", "time", "allTime","score", "kolMoves", "computability",
                 "currentNode", "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
+            "levels"    -> arrayOf("id", "kolMoves", "currentNode", "numbers", "totalNumbers", "data")
             else        -> throw error("wrong table name")
         }
 
@@ -195,8 +226,17 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("answer")),
                         object : TypeToken<List<Int>>() {}.type) as List<Int>,
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("data")),
-                        object : TypeToken<List<List<Inscription>>>() {}.type) as List<List<Inscription>>
-                )
+                        object : TypeToken<List<List<Inscription>>>() {}.type) as List<List<Inscription>>)
+            }
+            "levels"    -> {
+                LevelState(cv.getInt(cv.getColumnIndex("kolMoves")),
+                    cv.getInt(cv.getColumnIndex("currentNode")),
+                    Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("numbers")),
+                        object : TypeToken<List<Int>>() {}.type) as List<Int>,
+                    Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("totalNumbers")),
+                        object : TypeToken<List<Int>>() {}.type) as List<Int>,
+                    Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("data")),
+                        object : TypeToken<List<List<Inscription>>>() {}.type) as List<List<Inscription>>)
             }
             else        -> throw error("wrong table name")
         }

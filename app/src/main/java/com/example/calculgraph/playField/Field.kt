@@ -15,8 +15,8 @@ import java.lang.Integer.MIN_VALUE
 
 
 class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settings.computability] ?: throw error("wrong computability"),
-            var currentNode: Int = Random.nextInt(0, kolNodes)) {
-    val graph = Graph(kolNodes)
+            var currentNode: Int = Random.nextInt(0, kolNodes), kolBranch: Int = MAGIC) {
+    val graph = if (kolBranch != MAGIC) Graph(kolNodes, kolBranch) else Graph(kolNodes)
     lateinit var currentNumbers: List<Int>
     lateinit var totalNumbers: List<Int>
     val history = Stack<Int>()
@@ -26,7 +26,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         graph.preparationGraph(kolMoves, currentNode, mode, context)
     }
 
-    fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>) {
+    fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>, isLevel: Boolean = false) {
         currentNumbers = graph.init(mode, data, possibleNumbers)
 
         val list = listTo(graph.data)
@@ -87,7 +87,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         _history.forEach { history.add(it) }
         _answer.forEach { answer.add(it) }
         graph.data = _data
-        graph.kolBranch = graph.data.sumOf { it.count { inscription -> inscription.oper != NONE } }
+        graph.kolBranch = _data.sumOf { it.count { inscription -> inscription.oper != NONE } }
     }
 
     fun move(to: Int): Boolean {

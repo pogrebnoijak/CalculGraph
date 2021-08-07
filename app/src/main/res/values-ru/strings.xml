@@ -42,4 +42,6 @@
     <string name="medium">Средне</string>
     <string name="hard">Сложно</string>
     <string name="insane">Безумно</string>
+    <string name="level">уровень: %1$d</string>
+    <string name="after_level">Следующий уровень?</string>
 </resources>

@@ -13,6 +13,9 @@
             android:name=".activity.GameActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
+            android:name=".activity.GameLevelActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".activity.WaitActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
