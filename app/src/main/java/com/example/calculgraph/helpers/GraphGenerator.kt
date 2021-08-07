@@ -50,7 +50,7 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
 //        TODO("rewrite this")
         fun correctGraph(): Boolean {
             val list = listTo(preGen.data)
-            preGen.possibleNumbers = List(CURRENT_NUMBER_MAX) { it }
+            preGen.possibleNumbers = List(CURRENT_NUMBER_MAX) { it + 1 }
 
             fun dfs(cur: Int, last: Int, length: Int): Boolean {
                 if (preGen.possibleNumbers.isEmpty() || shutdown) return false
