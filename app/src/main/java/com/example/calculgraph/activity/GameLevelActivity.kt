@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MotionEventCompat
 import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
+import com.example.calculgraph.dataBase.getGroupLevelId
 import com.example.calculgraph.enums.GameState.*
 import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.enums.*
@@ -22,6 +23,7 @@ import java.util.*
 import kotlin.math.*
 import com.example.calculgraph.enums.Sounds.*
 import com.example.calculgraph.helpers.SoundPoolHelper.playSound
+import com.example.calculgraph.states.LastLevelsState
 
 
 class GameLevelActivity : AnyGameActivity() {
@@ -101,6 +103,7 @@ class GameLevelActivity : AnyGameActivity() {
             findViewById<Button>(R.id.no).setOnClickListener {
                 playSound(TO)
                 dismiss()
+                num++
                 exitGame()
             }
             show()
@@ -110,7 +113,12 @@ class GameLevelActivity : AnyGameActivity() {
     private fun setNextLevel() = num++ != KOL_LEVELS
 
     override fun exitGame() {
+        dbWorker.updateGroupsLevels(LastLevelsState(dbWorker.getGroupsLevels().list.apply {
+            val id = getGroupLevelId(mode, computability)
+            this[id] = max(this[id], num)
+        }))
         val intent = Intent(this, LevelsActivity :: class.java )
+        intent.putExtra("mode", mode)
         motion.cancel()
         timer.cancel()
         startActivity(intent, transitionActivity.toBundle())

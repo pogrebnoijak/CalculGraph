@@ -5,9 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.calculgraph.constant.DEFAULT_ID
-import com.example.calculgraph.constant.LEVELS_ALL_KOL
-import com.example.calculgraph.constant.MAX_ID
+import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.helpers.Serializer
 import com.example.calculgraph.levels.AllLevels.addLevels
@@ -71,6 +69,13 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "totalNumbers blob,"
                     + "data blob" + ");")
         )
+
+        Log.d(logTag, "--- onCreate lastLevels ---")
+        db.execSQL(
+            ("create table IF NOT EXISTS lastLevels ("
+                    + "id integer primary key autoincrement,"
+                    + "list blob" + ");")
+        )
         addDefaults(db)
     }
 
@@ -121,6 +126,10 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             cvLevels.put("data", Serializer.listToBytes(levels[it]!!.data))
             db.insert("levels", null, cvLevels)
         }
+
+        val cvLastLevels = ContentValues()
+        cvLastLevels.put("list", Serializer.listToBytes(MutableList(LEVELS_GROUP_KOL) { NUMBER_FIRST_LEVEL }))
+        db.insert("lastLevels", null, cvLastLevels)
     }
 
     fun update(state: State, id: Int = DEFAULT_ID) {
@@ -178,6 +187,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                 cv.put("totalNumbers", Serializer.listToBytes(state.totalNumbers))
                 cv.put("data", Serializer.listToBytes(state.data))
             }
+
+            is LastLevelsState -> {
+                tableName = "lastLevels"
+                Log.d(logTag, "--- Update in $tableName: ---")
+                cv.put("list", Serializer.listToBytes(state.list))
+            }
         }
         rowID = db.update(tableName, cv, "id = ?", arrayOf("$id"))
         Log.d(logTag, "$tableName updated, rowID = $rowID")
@@ -191,6 +206,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             "saveState" -> arrayOf("id", "gameStatus", "time", "allTime","score", "kolMoves", "computability",
                 "currentNode", "mode", "currentNumbers", "totalNumbers", "history", "answer", "data")
             "levels"    -> arrayOf("id", "kolMoves", "currentNode", "numbers", "totalNumbers", "data")
+            "lastLevels"-> arrayOf("id", "list")
             else        -> throw error("wrong table name")
         }
 
@@ -242,6 +258,10 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                         object : TypeToken<List<Int>>() {}.type) as List<Int>,
                     Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("data")),
                         object : TypeToken<List<List<Inscription>>>() {}.type) as List<List<Inscription>>)
+            }
+            "lastLevels"-> {
+                LastLevelsState(Serializer.bytesToList(cv.getBlob(cv.getColumnIndex("list")),
+                    object : TypeToken<MutableList<Int>>() {}.type) as MutableList<Int>)
             }
             else        -> throw error("wrong table name")
         }

@@ -5,6 +5,7 @@ import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import com.example.calculgraph.constant.KOL_LEVELS
 import com.example.calculgraph.constant.MODES
 import com.example.calculgraph.enums.Computability
+import com.example.calculgraph.states.LastLevelsState
 import com.example.calculgraph.states.LevelState
 import com.example.calculgraph.states.SaveState
 import com.example.calculgraph.states.StatisticState
@@ -38,9 +39,7 @@ class DBWorker {
         db.update(statistic, saveState.generateId())
     }
 
-    fun updateSettings() {
-        db.update(settings)
-    }
+    fun updateSettings() = db.update(settings)
 
     fun updateSaveState(_saveState: SaveState) {
         saveState = _saveState
@@ -51,9 +50,15 @@ class DBWorker {
         val id = getLevelId(mode, computability, num)
         return db.read("levels", id) as? LevelState ?: throw error("No levels in the db")
     }
+
+    fun getGroupsLevels(): LastLevelsState =
+        db.read("lastLevels") as? LastLevelsState ?: throw error("No lastLevels in the db")
+
+    fun updateGroupsLevels(state: LastLevelsState) = db.update(state)
 }
 
+internal fun getGroupLevelId(mode: String, computability: Computability): Int =
+    MODES.indexOf(mode) * Computability.values().size + Computability.values().indexOf(computability)
+
 internal fun getLevelId(mode: String, computability: Computability, num: Int): Int =
-    MODES.indexOf(mode) * Computability.values().size * KOL_LEVELS +
-            Computability.values().indexOf(computability) * KOL_LEVELS +
-            num
+    getGroupLevelId(mode, computability) * KOL_LEVELS + num

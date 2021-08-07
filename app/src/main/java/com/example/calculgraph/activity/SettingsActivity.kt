@@ -20,6 +20,7 @@ import com.example.calculgraph.helpers.LanguageHelper.computabilityUnTranslation
 import com.example.calculgraph.helpers.LanguageHelper.topicTranslation
 import com.example.calculgraph.helpers.LanguageHelper.topicUnTranslation
 import com.example.calculgraph.helpers.SoundPoolHelper.playSound
+import com.example.calculgraph.helpers.SpinnerHelper.getIndexByName
 import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.helpers.TimeWorking.toTime
 import com.example.calculgraph.service.GraphGeneratorService.Companion.updatePreGen
@@ -118,13 +119,6 @@ class SettingsActivity : AnyActivity() {
 
     private fun setSettings() {
         val (sound, language, theme, computability, moves, time) = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
-
-        fun getIndexByName(spin: Spinner, name: Any): Int {
-            (0 until spin.count).forEach { i ->
-                if (spin.getItemAtPosition(i) == name) return i
-            }
-            throw error("spinner error")
-        }
 
         updateSound(false)
         findViewById<Spinner>(R.id.language).let {

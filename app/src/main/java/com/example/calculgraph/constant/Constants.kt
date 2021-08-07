@@ -16,6 +16,7 @@ const val DEFAULT_ID = 1
 const val MAX_STREAM = 1
 const val KOL_LEVELS = 25
 const val KOL_LEVELS_IN_LINE = 5
+const val NUMBER_FIRST_LEVEL = 1
 
 // point
 const val SMALL_WIDTH = 3F
@@ -62,4 +63,5 @@ val PROB_LIST_SET = listOf(PLUS, PLUS, MINUS, MINUS, MULTIPLICATION, DIVISION)
 val PROB_LIST_MAX = listOf(PLUS, MINUS, MULTIPLICATION, DIVISION, DEGREE, ROOT)
 val PROB_LIST_ANY = listOf(PLUS, PLUS, PLUS, MINUS, MINUS, MINUS, MULTIPLICATION, DIVISION)
 val MAX_ID = TIMES.size * (MAX_MOVES - MIN_MOVES + 1) * MODES.size * Computability.values().size
-val LEVELS_ALL_KOL = KOL_LEVELS * MODES.size * Computability.values().size
+val LEVELS_GROUP_KOL = MODES.size * Computability.values().size
+val LEVELS_ALL_KOL = KOL_LEVELS * LEVELS_GROUP_KOL
