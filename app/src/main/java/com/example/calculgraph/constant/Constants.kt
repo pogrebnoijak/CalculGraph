@@ -14,6 +14,8 @@ const val MINUTE = 60
 const val HOUR = 3600
 const val DEFAULT_ID = 1
 const val MAX_STREAM = 1
+const val KOL_LEVELS = 25
+const val KOL_LEVELS_IN_LINE = 5
 
 // point
 const val SMALL_WIDTH = 3F
@@ -38,6 +40,9 @@ const val TEXT_SIZE_BIG_K = 0.1F
 const val CASUAL_MOVE = 10F
 const val ANSWER_K = 50
 const val ANSWER_WAIT_K = 2
+const val LEVEL_BUTTON_SIZE_K = 0.15F
+const val LEVEL_BUTTON_DIF = (1F - LEVEL_BUTTON_SIZE_K * KOL_LEVELS_IN_LINE) / (KOL_LEVELS_IN_LINE + 1)
+const val LEVEL_BUTTON_SIZE_AND_DIF = LEVEL_BUTTON_SIZE_K + LEVEL_BUTTON_DIF
 
 // params
 const val SET_LENGTH = 3

@@ -38,4 +38,8 @@
     <string name="score">score: %1$d</string>
     <string name="need">need: %1$s</string>
     <string name="after_game">"You have scored %1$d points. Do you want to play again?"</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="insane">Insane</string>
 </resources>
