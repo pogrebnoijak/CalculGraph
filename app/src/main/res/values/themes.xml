@@ -13,7 +13,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">30sp</item>
-        <item name="android:background">@color/color2</item>
+        <item name="android:background">@color/buttonsMainColor</item>
     </style>
 
     <style name="ButtonStandard">
@@ -24,7 +24,7 @@
 <!--    TODO("rewrite style")-->
     <style name="AlertDialogCustom" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:background">@color/color3</item>
+        <item name="android:background">@color/dialogColor</item>
         <item name="android:textSize">24sp</item>
     </style>
 

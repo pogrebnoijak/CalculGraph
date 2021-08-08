@@ -5,8 +5,8 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.18958333333333333" />
         <entry key="app/src/main/res/layout/activity_game.xml" value="0.12368421052631579" />
-        <entry key="app/src/main/res/layout/activity_levels.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.14375" />
+        <entry key="app/src/main/res/layout/activity_levels.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.2048611111111111" />
         <entry key="app/src/main/res/layout/activity_statistic.xml" value="0.2048611111111111" />
         <entry key="app/src/main/res/layout/activity_wait.xml" value="0.12368421052631579" />

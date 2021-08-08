@@ -298,7 +298,7 @@ class GameActivity : AnyGameActivity() {
 
                 p.apply {
                     strokeWidth = LARGE_WIDTH
-                    color = R.color.color3
+                    color = R.color.dialogColor
                     style = Paint.Style.STROKE
                 }
                 canvas.drawArc(rect, -90F, time * 360F / allTime, false, p)

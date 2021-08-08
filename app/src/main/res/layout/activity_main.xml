@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/mainAll"
     android:orientation="vertical"
-    android:background="@color/color1">
+    android:background="@color/backgroundMain">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:text="@string/calculGraph"
             android:textAlignment="center"
-            android:textColor="@color/purple_700"
+            android:textColor="@color/GameNameColor"
             android:textStyle="italic"
             android:textSize="50sp" />
     </FrameLayout>

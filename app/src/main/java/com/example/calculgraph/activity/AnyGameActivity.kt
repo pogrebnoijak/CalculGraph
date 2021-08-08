@@ -201,7 +201,8 @@ abstract class AnyGameActivity : AnyActivity() {
                 drawCircle(centerW, centerH, radInner, p)
 
                 p.apply {
-                    color = Color.WHITE
+//                    TODO("update to theme.attr.colorPrimary")
+                    color = R.attr.colorPrimary
                     style = Paint.Style.STROKE
                 }
                 drawCircle(centerW, centerH, rad, p)
