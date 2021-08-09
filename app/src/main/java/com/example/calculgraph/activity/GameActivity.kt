@@ -200,10 +200,6 @@ class GameActivity : AnyGameActivity() {
         Dialog(this@GameActivity, R.style.AlertDialogCustom).apply {
             val params = window?.attributes ?: throw error("dialog error")
             params.y = -(size.height * DIALOG_K).toInt()
-            window?.let {
-                it.attributes = params
-                it.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            }
             setCanceledOnTouchOutside(false)
             setCancelable(false)
 
@@ -227,6 +223,11 @@ class GameActivity : AnyGameActivity() {
                 exitGame()
             }
             show()
+            window?.let {
+                it.attributes = params
+                it.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                it.setLayout((size.width * WIDTH_DIALOG_K).toInt(), (size.height * HEIGHT_DIALOG_YES_NO).toInt())
+            }
         }
     }
 

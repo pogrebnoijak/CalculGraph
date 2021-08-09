@@ -1,5 +1,4 @@
 <resources>
-<!--        TODO("animation activity transition")-->
     <style name="Theme.CalculGraph" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/white</item>
     </style>
@@ -21,7 +20,6 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-<!--    TODO("rewrite style")-->
     <style name="AlertDialogCustom" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:background">@color/dialogColor</item>

@@ -3,11 +3,15 @@ package com.example.calculgraph.activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.activity.SettingsActivity.Companion.initSettings
+import com.example.calculgraph.constant.HEIGHT_DIALOG_MODE
+import com.example.calculgraph.constant.WIDTH_DIALOG_K
 import com.example.calculgraph.dataBase.DBHelper
 import com.example.calculgraph.enums.Sounds.*
+import com.example.calculgraph.helpers.Size
 import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 import com.example.calculgraph.helpers.SoundPoolHelper.setSounds
 import com.example.calculgraph.playField.Field
@@ -21,6 +25,12 @@ class MainActivity : AnyActivity() {
         private var startKol = 0
     }
 //    var prefs: SharedPreferences? = null
+    private val size: Size
+        get() {
+            val metrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(metrics)
+            return Size(metrics.widthPixels * 1F, metrics.heightPixels * 1F)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (startKol == 0) firstStart()
@@ -57,6 +67,7 @@ class MainActivity : AnyActivity() {
                     startGame("set")
                 }
                 show()
+                window?.setLayout((size.width * WIDTH_DIALOG_K).toInt(), (size.height * HEIGHT_DIALOG_MODE).toInt())
             }
         }
 

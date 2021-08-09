@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils.SECOND_IN_MILLIS
+import android.util.DisplayMetrics
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -14,6 +15,7 @@ import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.enums.Sounds.*
 import com.example.calculgraph.helpers.LanguageHelper.computabilityTranslation
 import com.example.calculgraph.helpers.LanguageHelper.modeTranslation
+import com.example.calculgraph.helpers.Size
 import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 import com.example.calculgraph.helpers.TimeWorking.showTime
 import com.example.calculgraph.states.SaveState
@@ -22,6 +24,13 @@ import com.example.calculgraph.states.StatisticState
 
 class StatisticActivity : AnyActivity() {
     private lateinit var dbHelper: DBHelper
+
+    private val size: Size
+        get() {
+            val metrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(metrics)
+            return Size(metrics.widthPixels * 1F, metrics.heightPixels * 1F)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,17 +121,7 @@ class StatisticActivity : AnyActivity() {
                 updateStatistic(saveState)
             }
             show()
+            window?.setLayout((size.width * WIDTH_DIALOG_K).toInt(), (size.height * HEIGHT_DIALOG_STATISTIC).toInt())
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
