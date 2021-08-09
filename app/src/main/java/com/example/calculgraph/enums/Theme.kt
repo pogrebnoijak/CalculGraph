@@ -1,4 +1,6 @@
 package com.example.calculgraph.enums
+import android.content.Context
+import com.example.calculgraph.R
 import com.example.calculgraph.enums.Theme.*
 
 enum class Theme {
@@ -18,3 +20,13 @@ fun String.toTheme(): Theme = when(this) {
 }
 
 fun topicValues() = Theme.values().toList().map { it.thToString() }
+
+fun Theme.getColor(context: Context): Int = when(this) {
+    STANDARD    -> context.getColor(R.color.white)
+    OTHER       -> context.getColor(R.color.black)
+}
+
+fun Theme.getArcColor(context: Context): Int = when(this) {
+    STANDARD    -> context.getColor(R.color.arcColor1)
+    OTHER       -> context.getColor(R.color.arcColor2)
+}

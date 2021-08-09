@@ -8,4 +8,6 @@
     <color name="backgroundMain">#191414</color>
     <color name="buttonsMainColor">#333335</color>
     <color name="dialogColor">#5050B4</color>
+    <color name="arcColor1">#7070D6</color>
+    <color name="arcColor2">#2B2BDD</color>
 </resources>
