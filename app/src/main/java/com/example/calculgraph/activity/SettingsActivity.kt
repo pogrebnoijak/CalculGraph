@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.text.format.DateUtils.SECOND_IN_MILLIS
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.widget.doAfterTextChanged
@@ -66,6 +67,7 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateSettings(intent: Intent) {
+        Log.d(logTAG, "SettingsActivity: updateSettings")
         val dbWorker = DBWorker()
         dbWorker.init(this)
         dbWorker.updateSettings()
@@ -91,7 +93,7 @@ class SettingsActivity : AnyActivity() {
         }
 
         tuningSpinner(R.id.language, Array(LANGUAGES.size) { LANGUAGES[it] } ) { updateLanguage(it) }
-        tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].themeTranslation(this) } ) { updateTopic(it.themeUnTranslation(this)) }
+        tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].themeTranslation(this) } ) { updateTheme(it.themeUnTranslation(this)) }
         tuningSpinner(R.id.computability, Array(Computability.values().size) {
             Computability.values()[it].toString().computabilityTranslation(this) } ) { updateComputability(it.computabilityUnTranslation(this)) }
         findViewById<EditText>(R.id.moves).apply {
@@ -138,6 +140,7 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateLanguage(language: String) {
+        Log.d(logTAG, "SettingsActivity: updateLanguage: ${settings.language}->$language")
         val needUpdate = (settings.language != language)
         settings.language = language
         setLanguage(baseContext)
@@ -145,25 +148,30 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateSound(sound: Boolean) {
+        Log.d(logTAG, "SettingsActivity: updateSound: ${settings.sound}->$sound")
         settings.sound = sound
     }
 
-    private fun updateTopic(theme: String) {
+    private fun updateTheme(theme: String) {
+        Log.d(logTAG, "SettingsActivity: updateTopic: ${settings.theme}->$theme")
         val newTheme = theme.toTheme()
         val needUpdate = (settings.theme != newTheme)
         settings.theme = newTheme
         if (needUpdate) recreate()
     }
 
-    private fun updateComputability(compatibility: String) {
-        settings.computability = compatibility.toComputability()
+    private fun updateComputability(computability: String) {
+        Log.d(logTAG, "SettingsActivity: updateComputability: ${settings.computability}->$computability")
+        settings.computability = computability.toComputability()
     }
 
     private fun updateTime(time: String) {
+        Log.d(logTAG, "SettingsActivity: updateTime: ${settings.time}->$time")
         settings.time = time.toTime(this)
     }
 
     private fun updateMoves(moves: Int) {
+        Log.d(logTAG, "SettingsActivity: updateMoves: ${settings.moves}->$moves")
         settings.moves = moves
     }
 

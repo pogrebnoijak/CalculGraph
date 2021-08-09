@@ -6,6 +6,9 @@ import com.example.calculgraph.service.GraphGeneratorService
 import kotlin.random.Random
 import android.content.Intent
 import android.content.Context
+import android.util.Log
+import com.example.calculgraph.activity.AnyActivity
+import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.states.Inscription
 
 
@@ -13,10 +16,12 @@ class Graph(val kolNodes: Int, var kolBranch: Int = Random.nextInt(kolNodes, kol
     lateinit var data: List<List<Inscription>>
 
     fun preparationGraph(kolMoves: Int, currentNode: Int, mode: String, context: Context) {
+        Log.d(logTAG, "Graph: preparationGraph: kolMoves=$kolMoves, currentNode=$currentNode, mode=$mode")
         generateData(kolMoves, currentNode, mode, context)
     }
 
     fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>): List<Int> {
+        Log.d(logTAG, "Graph: init: mode=$mode, data=$data, possibleNumbers=$possibleNumbers")
         this.data = data
         val lenList = if (mode == "set") SET_LENGTH else 1
         return List(lenList) { possibleNumbers.random() }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.util.DisplayMetrics
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -66,6 +67,7 @@ class StatisticActivity : AnyActivity() {
     }
 
     private fun doDialogInfo(saveState: SaveState) {
+        Log.d(logTAG, "StatisticActivity: doDialogInfo")
         Dialog(this@StatisticActivity, R.style.AlertDialogCustom).apply {
             setContentView(R.layout.dialog_info)
             val modeMax = MODES.size
@@ -110,6 +112,7 @@ class StatisticActivity : AnyActivity() {
             setListener("time", R.id.prevTime, false)
 
             findViewById<Button>(R.id.ok).setOnClickListener {
+                Log.d(logTAG, "StatisticActivity: doDialogInfo->ok")
                 playSound(TO)
                 dismiss()
                 saveState.apply {

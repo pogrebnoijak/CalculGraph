@@ -17,6 +17,7 @@ abstract class AnyActivity : AppCompatActivity() {
     companion object {
         lateinit var settings: SettingsState
         lateinit var preGen: PreGenerationState
+        const val logTAG = "appLogs"
     }
 
     protected val handler = Handler()

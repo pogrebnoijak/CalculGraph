@@ -1,5 +1,7 @@
 package com.example.calculgraph.levels
 
+import android.util.Log
+import com.example.calculgraph.activity.AnyActivity
 import com.example.calculgraph.constant.KOL_LEVELS
 import com.example.calculgraph.constant.KOL_NODES
 import com.example.calculgraph.constant.MODES
@@ -36,5 +38,6 @@ object AllLevels {
                         List(KOL_NODES[comp] ?: throw error("wrong computability")) { Inscription(Operation.PLUS, 1) } }))
             }
         }
+        Log.d(AnyActivity.logTAG, "AllLevels: add all")
     }
 }

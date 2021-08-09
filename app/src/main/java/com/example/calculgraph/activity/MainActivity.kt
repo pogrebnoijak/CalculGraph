@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.activity.SettingsActivity.Companion.initSettings
@@ -108,9 +109,11 @@ class MainActivity : AnyActivity() {
     }
 
     private fun firstStart() {
+        Log.d(logTAG, "MainActivity: firstStart start")
         settings = (DBHelper(this).read("settings") ?: throw error("No settings in the db")) as SettingsState
         initSettings(baseContext)
         preGen = PreGenerationState(Field().apply { preparationField("any", this@MainActivity) })
         setSounds(this)
+        Log.d(logTAG, "MainActivity: firstStart end")
     }
 }

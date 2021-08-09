@@ -1,6 +1,7 @@
 package com.example.calculgraph.dataBase
 
 import android.content.Context
+import android.util.Log
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import com.example.calculgraph.constant.KOL_LEVELS
 import com.example.calculgraph.constant.MODES
@@ -15,15 +16,20 @@ class DBWorker {
     private lateinit var db: DBHelper
     private lateinit var statistic: StatisticState
     private lateinit var saveState: SaveState
+    private val logDB = "appLogs.DBLog.Worker"
 
     fun init(context: Context, downloadStat: Boolean = true): SaveState {
+        Log.d(logDB, "DBWorker: init")
         db = DBHelper(context)
         saveState = db.read("saveState") as? SaveState ?: throw error("No saveState in the db")
         if (downloadStat) downloadStatistic()
         return saveState
     }
 
-    fun initLevels(context: Context) { db = DBHelper(context) }
+    fun initLevels(context: Context) {
+        Log.d(logDB, "DBWorker: initLevels")
+        db = DBHelper(context)
+    }
 
     private fun downloadStatistic() {
         statistic = db.read("statistic", saveState.generateId()) as? StatisticState ?: throw error("No statistic in the db")

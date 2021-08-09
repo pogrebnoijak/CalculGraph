@@ -16,10 +16,10 @@ import com.google.gson.reflect.TypeToken
 
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1) {
-    private val logTag = "DBLog"
+    private val logDB = "appLogs.DBLog"
 
     override fun onCreate(db: SQLiteDatabase) {
-        Log.d(logTag, "--- onCreate statistic ---")
+        Log.d(logDB, "--- onCreate statistic ---")
         db.execSQL(
             ("create table IF NOT EXISTS statistic ("
                     + "id integer primary key autoincrement,"
@@ -28,7 +28,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "maxScore integer" + ");")
         )
 
-        Log.d(logTag, "--- onCreate settings ---")
+        Log.d(logDB, "--- onCreate settings ---")
         db.execSQL(
             ("create table IF NOT EXISTS settings ("
                     + "id integer primary key autoincrement,"
@@ -40,7 +40,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "time integer" + ");")
         )
 
-        Log.d(logTag, "--- onCreate saveState ---")
+        Log.d(logDB, "--- onCreate saveState ---")
         db.execSQL(
             ("create table IF NOT EXISTS saveState ("
                     + "id integer primary key autoincrement,"
@@ -59,7 +59,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "data blob" + ");")
         )
 
-        Log.d(logTag, "--- onCreate levels ---")
+        Log.d(logDB, "--- onCreate levels ---")
         db.execSQL(
             ("create table IF NOT EXISTS levels ("
                     + "id integer primary key autoincrement,"
@@ -70,7 +70,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
                     + "data blob" + ");")
         )
 
-        Log.d(logTag, "--- onCreate lastLevels ---")
+        Log.d(logDB, "--- onCreate lastLevels ---")
         db.execSQL(
             ("create table IF NOT EXISTS lastLevels ("
                     + "id integer primary key autoincrement,"
@@ -82,6 +82,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
     private fun addDefaults(db: SQLiteDatabase) {
+        Log.d(logDB, "--- addDefaults ---")
         val cvStat = ContentValues()
         cvStat.put("kolGame", 0)
         cvStat.put("sredScore", 0.0)
@@ -115,7 +116,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         db.insert("saveState", null, cvSave)
 
         addLevels()
-        Log.d(logTag, "--- add levels ---")
+        Log.d(logDB, "--- add levels ---")
         if (notExistLevels() != 0) throw error("not all levels")
         (0 until LEVELS_ALL_KOL).forEach {
             val cvLevels = ContentValues()
@@ -140,7 +141,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
         when (state) {
             is StatisticState -> {
                 tableName = "statistic"
-                Log.d(logTag, "--- Update in $tableName: ---")
+                Log.d(logDB, "--- Update in $tableName ---")
 
                 cv.put("kolGame", state.kolGame)
                 cv.put("sredScore", state.sredScore)
@@ -149,7 +150,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
             is SettingsState -> {
                 tableName = "settings"
-                Log.d(logTag, "--- Update in $tableName: ---")
+                Log.d(logDB, "--- Update in $tableName ---")
 
                 cv.put("sound", state.sound)
                 cv.put("language", state.language)
@@ -161,7 +162,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
             is SaveState -> {
                 tableName = "saveState"
-                Log.d(logTag, "--- Update in $tableName: ---")
+                Log.d(logDB, "--- Update in $tableName ---")
 
                 cv.put("gameStatus", state.gameStatus.toString())
                 cv.put("time", state.time)
@@ -180,7 +181,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
             is LevelState -> {
                 tableName = "levels"
-                Log.d(logTag, "--- Update in $tableName: ---")
+                Log.d(logDB, "--- Update in $tableName ---")
                 cv.put("kolMoves", state.kolMoves)
                 cv.put("currentNode", state.currentNode)
                 cv.put("numbers", Serializer.listToBytes(state.numbers))
@@ -190,12 +191,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
             is LastLevelsState -> {
                 tableName = "lastLevels"
-                Log.d(logTag, "--- Update in $tableName: ---")
+                Log.d(logDB, "--- Update in $tableName ---")
                 cv.put("list", Serializer.listToBytes(state.list))
             }
         }
         rowID = db.update(tableName, cv, "id = ?", arrayOf("$id"))
-        Log.d(logTag, "$tableName updated, rowID = $rowID")
+        Log.d(logDB, "$tableName updated, rowID = $rowID")
         close()
     }
 
@@ -212,7 +213,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
         val db = writableDatabase
         val state: State?
-        Log.d(logTag, "--- Read in $table: ---")
+        Log.d(logDB, "--- Read in $table with id = $id ---")
         val cv = db.query(table, list, "id = ?", arrayOf("$id"), null, null, null)
 
         state = if (!cv.moveToNext()) null else when(table) {

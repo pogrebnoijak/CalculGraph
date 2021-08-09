@@ -1,5 +1,8 @@
 package com.example.calculgraph.helpers
 
+import android.util.Log
+import com.example.calculgraph.activity.AnyActivity
+import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.activity.AnyActivity.Companion.preGen
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation
@@ -96,11 +99,11 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
             }
             kolIter++
         } while (!correctGraph() && !shutdown)
-        println("Iteration count: $kolIter")
+        Log.i(logTAG, "GraphGenerator: Iteration count: $kolIter")
         if (shutdown) {
-            println("Shutdown generateGraph")
+            Log.i(logTAG, "GraphGenerator: shutdown")
         } else {
-            println("possibleNumbers.size ${preGen.possibleNumbers.size}")
+            Log.i(logTAG, "GraphGenerator: possibleNumbers.size ${preGen.possibleNumbers.size}")
         }
     }
 }

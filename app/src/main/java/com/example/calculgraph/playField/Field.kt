@@ -1,6 +1,9 @@
 package com.example.calculgraph.playField
 
 import android.content.Context
+import android.util.Log
+import com.example.calculgraph.activity.AnyActivity
+import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import java.util.*
 import com.example.calculgraph.helpers.movingHelper
@@ -23,10 +26,12 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
     val answer = Stack<Int>()
 
     fun preparationField(mode: String, context: Context) {
+        Log.d(logTAG, "Field: preparationField with mode=$mode")
         graph.preparationGraph(kolMoves, currentNode, mode, context)
     }
 
     fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>) {
+        Log.d(logTAG, "Field: init: mode=$mode, data=$data, possibleNumbers=$possibleNumbers")
         currentNumbers = graph.init(mode, data, possibleNumbers)
         val list = listTo(graph.data)
 
@@ -87,9 +92,12 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         _answer.forEach { answer.add(it) }
         graph.data = _data
         graph.kolBranch = _data.sumOf { it.count { inscription -> inscription.oper != NONE } }
+        Log.d(logTAG, "Field: set (currentNode=$currentNode, currentNumbers=$currentNumbers, " +
+                "totalNumbers=$totalNumbers, history=$history, answer=$answer, data=${graph.data}, kolBranch=${graph.kolBranch})")
     }
 
     fun move(to: Int): Boolean {
+        Log.d(logTAG, "Field: move to $to")
         if (history.isNotEmpty() && history.peek() == to) back()
         else if (kolMoves != 0) {
             playSound(TAP)
@@ -104,6 +112,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
     private fun checkWin() = currentNumbers == totalNumbers
 
     fun back() {
+        Log.d(logTAG, "Field: back")
         if(history.isNotEmpty()) {
             playSound(TAP)
             kolMoves++

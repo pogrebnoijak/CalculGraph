@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
 import android.text.format.DateUtils.SECOND_IN_MILLIS
+import android.util.Log
 import android.view.MotionEvent
 import android.view.WindowManager
 import android.widget.Button
@@ -40,7 +41,7 @@ class GameActivity : AnyGameActivity() {
 
     init {
         GraphGeneratorService.resultLauncher = {
-            println("resultLauncher 2")
+            Log.d(logTAG, "GameActivity: resultLauncher")
             runOnUiThread {
                 preGen.latch = CountDownLatch(1)
                 newGame()
@@ -92,6 +93,7 @@ class GameActivity : AnyGameActivity() {
     }
 
     private fun newGame() {
+        Log.d(logTAG, "GameActivity: newGame")
         gameStatus = WAIT
         curField = preGen.filed
         newGamePreparation()
@@ -107,6 +109,7 @@ class GameActivity : AnyGameActivity() {
             newGameOrLatchUpdate()
         }
         else {
+            Log.d(logTAG, "GameActivity: continueGame")
             time = saveState.time
             allTime = saveState.allTime
             winCount = saveState.score
@@ -171,6 +174,7 @@ class GameActivity : AnyGameActivity() {
                                 exitToWait(true)
                             }
                             gameStatus = WAIT
+                            Log.d(logTAG, "GameActivity: show answer end")
                         }
                     }
                 }
@@ -180,9 +184,11 @@ class GameActivity : AnyGameActivity() {
     }
 
     override fun move(to: Int) {
+        Log.d(logTAG, "GameActivity: move")
         val win = curField.move(to)
         findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         if (gameStatus == PLAY && win) {
+            Log.d(logTAG, "GameActivity: win")
             playSound(WIN)
             winCount++
             gameStatus = WAIT
@@ -197,6 +203,7 @@ class GameActivity : AnyGameActivity() {
     }
 
     override fun doDialogEnd() {
+        Log.d(logTAG, "GameActivity: doDialogEnd")
         Dialog(this@GameActivity, R.style.AlertDialogCustom).apply {
             val params = window?.attributes ?: throw error("dialog error")
             params.y = -(size.height * DIALOG_K).toInt()
@@ -206,6 +213,7 @@ class GameActivity : AnyGameActivity() {
             setContentView(R.layout.dialog_yes_no)
             findViewById<TextView>(R.id.dial_text).text = getString(R.string.after_game, winCount)
             findViewById<Button>(R.id.yes).setOnClickListener {
+                Log.d(logTAG, "GameActivity: doDialogEnd -> yes")
                 playSound(TO)
                 dismiss()
                 if (!savingState) {
@@ -218,6 +226,7 @@ class GameActivity : AnyGameActivity() {
                 preGen.latch.countDown()
             }
             findViewById<Button>(R.id.no).setOnClickListener {
+                Log.d(logTAG, "GameActivity: doDialogEnd -> no")
                 playSound(TO)
                 dismiss()
                 exitGame()
@@ -245,6 +254,7 @@ class GameActivity : AnyGameActivity() {
     }
 
     private fun saveGameState() {
+        Log.d(logTAG, "GameActivity: saveGameState")
         dbWorker.updateSaveState(SaveState(
             gameStatus,
             time,
@@ -279,6 +289,7 @@ class GameActivity : AnyGameActivity() {
     }
 
     private fun exitToWait(updateStatistic: Boolean = false) {
+        Log.d(logTAG, "GameActivity: exitToWait")
         saveGameState()
         if (updateStatistic)
             dbWorker.updateStatistic(winCount)
@@ -290,7 +301,6 @@ class GameActivity : AnyGameActivity() {
         startActivity(intent, transitionActivity.toBundle())
         finish()
     }
-
 
     inner class DrawView(context: Context?) : DrawHelper(context)  {
         override fun onDraw(canvas: Canvas) {

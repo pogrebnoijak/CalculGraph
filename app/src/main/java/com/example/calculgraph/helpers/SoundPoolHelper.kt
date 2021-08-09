@@ -4,7 +4,10 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
+import android.util.Log
 import com.example.calculgraph.R
+import com.example.calculgraph.activity.AnyActivity
+import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import com.example.calculgraph.constant.MAGIC
 import com.example.calculgraph.constant.MAX_STREAM
@@ -49,17 +52,20 @@ object SoundPoolHelper {
     }
 
     fun playWaitingStart() {
+        Log.d(logTAG, "SoundPoolHelper: playWaitingStart")
         if (!settings.sound || playerWaiting.isPlaying) return
         playerWaiting.seekTo(0)
         playerWaiting.start()
     }
 
     fun playWaitingPause() {
+        Log.d(logTAG, "SoundPoolHelper: playWaitingPause")
         if (!settings.sound || !playerWaiting.isPlaying) return
         playerWaiting.pause()
     }
 
     fun playSound(sound: Sounds) {
+        Log.d(logTAG, "SoundPoolHelper: playSound $sound")
         val soundId = soundToId(sound)
         if (!settings.sound || soundId == MAGIC) return
         sp.play(soundId, 1F, 1F, 0, 0, 1F)

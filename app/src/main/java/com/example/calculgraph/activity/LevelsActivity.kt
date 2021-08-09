@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color.*
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.example.calculgraph.R
@@ -73,6 +74,7 @@ class LevelsActivity : AnyActivity() {
                 addLevelsButton(num, comp, id)
             }
         }
+        Log.d(logTAG, "LevelsActivity: addLevelsButtons end")
     }
 
     private fun addLevelsButton(num: Int, computability: Computability, layoutId: Int) {
@@ -101,6 +103,7 @@ class LevelsActivity : AnyActivity() {
         num + Computability.values().indexOf(computability) * KOL_LEVELS
 
     private fun setColorButtons() {
+        Log.d(logTAG, "LevelsActivity: setColorButtons")
         Computability.values().forEach { comp ->
             val id = getGroupLevelId(mode, comp)
             (1..KOL_LEVELS).forEach { num ->
@@ -135,6 +138,7 @@ class LevelsActivity : AnyActivity() {
     }
 
     private fun startGame(computability: Computability, num: Int) {
+        Log.d(logTAG, "LevelsActivity: startGame")
         if (num > lastLevels[getGroupLevelId(mode, computability)]) return
         playSound(TO)
         val intent = Intent(this, GameLevelActivity :: class.java )

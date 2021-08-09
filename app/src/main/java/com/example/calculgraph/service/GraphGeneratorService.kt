@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
 class GraphGeneratorService : Service() {
     override fun onBind(intent: Intent?): IBinder? { return null }
 
-    private val logTAG = "myLogs"
+    private val logSERV = "appLogs.Service"
     private lateinit var es: ExecutorService
 
     companion object {
@@ -38,18 +38,18 @@ class GraphGeneratorService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(logTAG, "GraphGeneratorService onCreate")
+        Log.d(logSERV, "GraphGeneratorService: onCreate")
         es = Executors.newFixedThreadPool(1)
     }
 
     override fun onDestroy() {
         es.shutdown()
         super.onDestroy()
-        Log.d(logTAG, "GraphGeneratorService onDestroy")
+        Log.d(logSERV, "GraphGeneratorService: onDestroy")
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.d(logTAG, "GraphGeneratorService onStartCommand")
+        Log.d(logSERV, "GraphGeneratorService onStartCommand")
         val kolMoves = intent.getIntExtra("kolMoves", MAGIC)
         val currentNode = intent.getIntExtra("currentNode", MAGIC)
         val mode = intent.getStringExtra("mode") ?: throw error("no mode GraphGeneratorService")
@@ -62,19 +62,15 @@ class GraphGeneratorService : Service() {
 
     private inner class GenHelper(private val kolMoves: Int, private val currentNode: Int, val mode: String,
                                   private val kolNodes: Int, private val kolBranch: Int, private val startId: Int) : Runnable {
-        init {
-            Log.d(logTAG, "GenHelper#$startId create")
-        }
-
         override fun run() {
-            Log.d(logTAG, "GenHelper#$startId start, kolMoves = $kolMoves, currentNode = $currentNode, mode = $mode")
+            Log.d(logSERV, "GenHelper-$startId start, kolMoves = $kolMoves, currentNode = $currentNode, mode = $mode")
             val generator = GraphGenerator(kolNodes, kolBranch)
             preGen.actual = false
             generator.generateGraph(kolMoves, currentNode, mode)
             preGen.actual = true
             preGen.latch.await()
             resultLauncher()
-            Log.d(logTAG, "GenHelper#" + startId + " end, stopSelfResult("+ startId + ") = " + stopSelfResult(startId))
+            Log.d(logSERV, "GenHelper-$startId end, stopSelfResult($startId) = ${stopSelfResult(startId)}")
         }
     }
 }

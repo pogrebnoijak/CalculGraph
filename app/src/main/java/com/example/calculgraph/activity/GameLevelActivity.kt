@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.WindowManager
 import android.widget.Button
@@ -54,6 +55,7 @@ class GameLevelActivity : AnyGameActivity() {
     }
 
     private fun startLevel() {
+        Log.d(logTAG, "GameLevelActivity: startLevel")
         val curLevel = dbWorker.getLevel(mode, computability, num)
         curField = Field(curLevel.kolMoves, KOL_NODES[computability] ?: throw error("wrong computability"))
         curField.set(curLevel.currentNode, curLevel.numbers, curLevel.totalNumbers, listOf(), listOf(), curLevel.data)
@@ -72,15 +74,18 @@ class GameLevelActivity : AnyGameActivity() {
     }
 
     override fun move(to: Int) {
+        Log.d(logTAG, "GameLevelActivity: move")
         val win = curField.move(to)
         findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         if (win) {
+            Log.d(logTAG, "GameLevelActivity: win")
             playSound(WIN)
             endGame()
         }
     }
 
     override fun doDialogEnd() {
+        Log.d(logTAG, "GameLevelActivity: doDialogEnd")
         Dialog(this@GameLevelActivity, R.style.AlertDialogCustom).apply {
             val params = window?.attributes ?: throw error("dialog error")
             params.y = -(size.height * DIALOG_K).toInt()
@@ -90,12 +95,14 @@ class GameLevelActivity : AnyGameActivity() {
             setContentView(R.layout.dialog_yes_no)
             findViewById<TextView>(R.id.dial_text).text = getString(R.string.after_level)
             findViewById<Button>(R.id.yes).setOnClickListener {
+                Log.d(logTAG, "GameLevelActivity: doDialogEnd -> yes")
                 playSound(TO)
                 dismiss()
                 if (setNextLevel()) startLevel()
                 else exitGame()
             }
             findViewById<Button>(R.id.no).setOnClickListener {
+                Log.d(logTAG, "GameLevelActivity: doDialogEnd -> no")
                 playSound(TO)
                 dismiss()
                 num++
@@ -113,6 +120,7 @@ class GameLevelActivity : AnyGameActivity() {
     private fun setNextLevel() = num++ != KOL_LEVELS
 
     override fun exitGame() {
+        Log.d(logTAG, "GameLevelActivity: exitGame")
         dbWorker.updateGroupsLevels(LastLevelsState(dbWorker.getGroupsLevels().list.apply {
             val id = getGroupLevelId(mode, computability)
             this[id] = max(this[id], num)

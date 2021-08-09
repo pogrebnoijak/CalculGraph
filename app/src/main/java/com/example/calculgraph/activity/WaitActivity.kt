@@ -2,6 +2,7 @@ package com.example.calculgraph.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import com.example.calculgraph.R
 import com.example.calculgraph.dataBase.DBWorker
@@ -22,7 +23,7 @@ class WaitActivity : AnyActivity() {
 
     init {
         GraphGeneratorService.resultLauncher = {
-            println("resultLauncher")
+            Log.d(logTAG, "WaitActivity: resultLauncher")
             runOnUiThread {
                 preGen.latch = CountDownLatch(1)
                 newGame(true)
@@ -31,6 +32,7 @@ class WaitActivity : AnyActivity() {
     }
 
     private fun newGame(needStart: Boolean = false) {
+        Log.d(logTAG, "WaitActivity: newGame")
         val intentGame = Intent(this, GameActivity :: class.java)
         intentGame.putExtra("mode", intent.getStringExtra("mode") ?: throw error("Wrong intent!"))
         intentGame.putExtra("isNewGame", isNewGame)
@@ -44,6 +46,7 @@ class WaitActivity : AnyActivity() {
         isNewGame = intent.getBooleanExtra("isNewGame", true)
         if (preGen.actual || (setSaveState() && !isNewGame)) newGame()
         else {
+            Log.d(logTAG, "WaitActivity: set activity_wait")
             setContentView(R.layout.activity_wait)
             setTransitionActivity(R.id.waitAll)
             preGen.latch.countDown()
