@@ -60,10 +60,10 @@ abstract class AnyGameActivity : AnyActivity() {
     protected open fun writeField() {
         findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         val str = when(mode) {
-            "standard" -> curField.totalNumbers[0].toString()
-            "set" -> curField.totalNumbers.toString()
-            "max" -> getString(R.string.max)
-            else -> throw error("wrong mode!")
+            "standard"  -> curField.totalNumbers[0].toString()
+            "set"       -> curField.totalNumbers.toString()
+            "max"       -> getString(R.string.max)
+            else        -> throw error("wrong mode!")
         }
         findViewById<TextView>(R.id.totalNumber).text = getString(R.string.need, str)
         vecCentres = (0 until curField.graph.kolNodes).map { 2.0 * it / curField.graph.kolNodes }

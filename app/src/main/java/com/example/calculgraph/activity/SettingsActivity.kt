@@ -17,8 +17,8 @@ import com.example.calculgraph.enums.Computability.*
 import com.example.calculgraph.enums.Sounds.*
 import com.example.calculgraph.helpers.LanguageHelper.computabilityTranslation
 import com.example.calculgraph.helpers.LanguageHelper.computabilityUnTranslation
-import com.example.calculgraph.helpers.LanguageHelper.topicTranslation
-import com.example.calculgraph.helpers.LanguageHelper.topicUnTranslation
+import com.example.calculgraph.helpers.LanguageHelper.themeTranslation
+import com.example.calculgraph.helpers.LanguageHelper.themeUnTranslation
 import com.example.calculgraph.helpers.SoundPoolHelper.playSound
 import com.example.calculgraph.helpers.SpinnerHelper.getIndexByName
 import com.example.calculgraph.helpers.TimeWorking.showTime
@@ -91,7 +91,7 @@ class SettingsActivity : AnyActivity() {
         }
 
         tuningSpinner(R.id.language, Array(LANGUAGES.size) { LANGUAGES[it] } ) { updateLanguage(it) }
-        tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].topicTranslation(this) } ) { updateTopic(it.topicUnTranslation(this)) }
+        tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].themeTranslation(this) } ) { updateTopic(it.themeUnTranslation(this)) }
         tuningSpinner(R.id.computability, Array(Computability.values().size) {
             Computability.values()[it].toString().computabilityTranslation(this) } ) { updateComputability(it.computabilityUnTranslation(this)) }
         findViewById<EditText>(R.id.moves).apply {
@@ -125,7 +125,7 @@ class SettingsActivity : AnyActivity() {
             it.setSelection(getIndexByName(it, language))
         }
         findViewById<Spinner>(R.id.theme).let {
-            it.setSelection(getIndexByName(it, theme.thToString().topicTranslation(this)))
+            it.setSelection(getIndexByName(it, theme.thToString().themeTranslation(this)))
         }
         findViewById<Spinner>(R.id.computability).let {
             it.setSelection(getIndexByName(it, computability.toString().computabilityTranslation(this)))

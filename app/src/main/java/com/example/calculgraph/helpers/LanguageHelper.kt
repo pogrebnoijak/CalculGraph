@@ -6,14 +6,14 @@ import com.example.calculgraph.activity.AnyActivity.Companion.settings
 
 
 object LanguageHelper {
-    fun String.topicTranslation(context: Context): String = if (settings.language == "English") this
+    fun String.themeTranslation(context: Context): String = if (settings.language == "English") this
     else when(this) {
         "Standard"  -> context.getString(R.string.theme_standard)
         "Other"     -> context.getString(R.string.theme_other)
         else        -> throw error("topicTranslation error")
     }
 
-    fun String.topicUnTranslation(context: Context): String = if (settings.language == "English") this
+    fun String.themeUnTranslation(context: Context): String = if (settings.language == "English") this
     else when(this) {
         context.getString(R.string.theme_standard)  -> "Standard"
         context.getString(R.string.theme_other)     -> "Other"
