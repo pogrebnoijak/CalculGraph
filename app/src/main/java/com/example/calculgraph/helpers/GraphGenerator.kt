@@ -47,7 +47,6 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
             kolInIndex[j]++
         }
 
-//        TODO("rewrite this")
         fun correctGraph(): Boolean {
             val list = listTo(preGen.data)
             preGen.possibleNumbers = List(CURRENT_NUMBER_MAX) { it + 1 }

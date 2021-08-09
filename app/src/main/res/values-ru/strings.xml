@@ -38,10 +38,12 @@
     <string name="score">счёт: %1$d</string>
     <string name="need">нужно: %1$s</string>
     <string name="after_game">"Вы набрали %1$d очков. Хотете сыграть снова?"</string>
-    <string name="easy">Просто</string>
-    <string name="medium">Средне</string>
-    <string name="hard">Сложно</string>
-    <string name="insane">Безумно</string>
+    <string name="easy">ПРОСТО</string>
+    <string name="medium">СРЕДНЕ</string>
+    <string name="hard">СЛОЖНО</string>
+    <string name="insane">БЕЗУМНО</string>
     <string name="level">уровень: %1$d</string>
     <string name="after_level">Следующий уровень?</string>
+    <string name="theme_standard">Стандарт</string>
+    <string name="theme_other">Другая</string>
 </resources>

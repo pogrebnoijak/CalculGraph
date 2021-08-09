@@ -10,7 +10,6 @@ import com.example.calculgraph.states.Inscription
 
 
 class Graph(val kolNodes: Int, var kolBranch: Int = Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1)) {
-    //    TODO(do val)
     lateinit var data: List<List<Inscription>>
 
     fun preparationGraph(kolMoves: Int, currentNode: Int, mode: String, context: Context) {

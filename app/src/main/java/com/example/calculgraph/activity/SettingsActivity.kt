@@ -91,9 +91,9 @@ class SettingsActivity : AnyActivity() {
         }
 
         tuningSpinner(R.id.language, Array(LANGUAGES.size) { LANGUAGES[it] } ) { updateLanguage(it) }
-        tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].topicTranslation() } ) { updateTopic(it.topicUnTranslation()) }
+        tuningSpinner(R.id.theme, Array(topicValues().size) { topicValues()[it].topicTranslation(this) } ) { updateTopic(it.topicUnTranslation(this)) }
         tuningSpinner(R.id.computability, Array(Computability.values().size) {
-            Computability.values()[it].toString().computabilityTranslation() } ) { updateComputability(it.computabilityUnTranslation()) }
+            Computability.values()[it].toString().computabilityTranslation(this) } ) { updateComputability(it.computabilityUnTranslation(this)) }
         findViewById<EditText>(R.id.moves).apply {
             doAfterTextChanged { text ->
                 text.toString().let {
@@ -125,10 +125,10 @@ class SettingsActivity : AnyActivity() {
             it.setSelection(getIndexByName(it, language))
         }
         findViewById<Spinner>(R.id.theme).let {
-            it.setSelection(getIndexByName(it, theme.thToString().topicTranslation()))
+            it.setSelection(getIndexByName(it, theme.thToString().topicTranslation(this)))
         }
         findViewById<Spinner>(R.id.computability).let {
-            it.setSelection(getIndexByName(it, computability.toString().computabilityTranslation()))
+            it.setSelection(getIndexByName(it, computability.toString().computabilityTranslation(this)))
         }
         findViewById<EditText>(R.id.moves).setText(moves.toString())
         findViewById<Spinner>(R.id.time).let {

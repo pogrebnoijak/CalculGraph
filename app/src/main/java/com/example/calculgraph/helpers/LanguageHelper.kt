@@ -6,39 +6,38 @@ import com.example.calculgraph.activity.AnyActivity.Companion.settings
 
 
 object LanguageHelper {
-    fun String.topicTranslation(): String = if (settings.language == "English") this
+    fun String.topicTranslation(context: Context): String = if (settings.language == "English") this
         else when(this) {
-            "Standard"  -> "Стандарт"
-            "Other"     -> "Другая"
+            "Standard"  -> context.getString(R.string.theme_standard)
+            "Other"     -> context.getString(R.string.theme_other)
             else        -> throw error("topicTranslation error")
         }
 
-    fun String.topicUnTranslation(): String = if (settings.language == "English") this
+    fun String.topicUnTranslation(context: Context): String = if (settings.language == "English") this
     else when(this) {
-        "Стандарт"   -> "Standard"
-        "Другая"        -> "Other"
-        else            -> throw error("topicUnTranslation error")
+        context.getString(R.string.theme_standard)  -> "Standard"
+        context.getString(R.string.theme_other)     -> "Other"
+        else                                        -> throw error("topicUnTranslation error")
     }
 
-    fun String.computabilityTranslation(): String = if (settings.language == "English") this
+    fun String.computabilityTranslation(context: Context): String = if (settings.language == "English") this
     else when(this) {
-        "EASY"      -> "ПРОСТО"
-        "MEDIUM"    -> "СРЕДНЕ"
-        "HARD"      -> "СЛОЖНО"
-        "INSANE"    -> "БУЗУМНО"
+        "EASY"      -> context.getString(R.string.easy)
+        "MEDIUM"    -> context.getString(R.string.medium)
+        "HARD"      -> context.getString(R.string.hard)
+        "INSANE"    -> context.getString(R.string.insane)
         else        -> throw error("computabilityTranslation error")
     }
 
-    fun String.computabilityUnTranslation(): String = if (settings.language == "English") this
+    fun String.computabilityUnTranslation(context: Context): String = if (settings.language == "English") this
     else when(this) {
-        "ПРОСТО"    -> "EASY"
-        "СРЕДНЕ"    -> "MEDIUM"
-        "СЛОЖНО"    -> "HARD"
-        "БУЗУМНО"   -> "INSANE"
-        else        -> throw error("computabilityUnTranslation error")
+        context.getString(R.string.easy)    -> "EASY"
+        context.getString(R.string.medium)  -> "MEDIUM"
+        context.getString(R.string.hard)    -> "HARD"
+        context.getString(R.string.insane)  -> "INSANE"
+        else                                -> throw error("computabilityUnTranslation error")
     }
 
-//    TODO("do other like this")
     fun String.modeTranslation(context: Context): String = if (settings.language == "English") this
     else when(this) {
         "standard"  -> context.getString(R.string.standard)

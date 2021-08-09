@@ -79,7 +79,7 @@ class StatisticActivity : AnyActivity() {
             var timeInd = TIMES.indexOf((saveState.allTime / SECOND_IN_MILLIS).toInt())
 
             fun updateMode() = run { findViewById<TextView>(R.id.mode).text = MODES[modeInd].modeTranslation(this@StatisticActivity) }
-            fun updateComp() = run { findViewById<TextView>(R.id.computability).text = Computability.values()[compInd].toString().computabilityTranslation() }
+            fun updateComp() = run { findViewById<TextView>(R.id.computability).text = Computability.values()[compInd].toString().computabilityTranslation(this@StatisticActivity) }
             fun updateMoves() = run { findViewById<TextView>(R.id.moves).text = getString(R.string.updateMoves, movesInd + MIN_MOVES) }
             fun updateTime() = run { findViewById<TextView>(R.id.time).text = showTime(TIMES[timeInd], this@StatisticActivity) }
             fun setListener(ind: String, id: Int, isNext: Boolean) {

@@ -17,7 +17,6 @@ object TimeWorking {
         }
         3600 -> "1" + context.getString(R.string.hours)
         else -> {
-//            TODO("find and remove error - time=0")
             throw error("wrong time game: $time")
         }
     }
