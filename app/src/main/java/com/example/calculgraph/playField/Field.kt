@@ -26,9 +26,8 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
         graph.preparationGraph(kolMoves, currentNode, mode, context)
     }
 
-    fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>, isLevel: Boolean = false) {
+    fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>) {
         currentNumbers = graph.init(mode, data, possibleNumbers)
-
         val list = listTo(graph.data)
 
         if (mode == "max") {

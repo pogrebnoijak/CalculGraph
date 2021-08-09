@@ -5,6 +5,7 @@ import com.example.calculgraph.dataBase.getLevelId
 import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.states.LevelState
 
+
 object Levels {
     val levels = MutableList<LevelState?>(LEVELS_ALL_KOL) { null }
 

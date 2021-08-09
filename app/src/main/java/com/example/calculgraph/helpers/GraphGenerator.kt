@@ -9,6 +9,7 @@ import com.example.calculgraph.states.Inscription
 import kotlin.math.pow
 import kotlin.random.Random
 
+
 class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
     companion object {
         var shutdown = false
@@ -28,10 +29,10 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
         lateinit var kolInIndex: MutableList<Int>
 
         fun doBounds(oper: Operation) = when(oper) {
-            PLUS, MINUS -> BOUNDS_PLUS_MINUS
-            MULTIPLICATION, DIVISION -> BOUNDS_MULTIPLICATION_DIVISION
-            DEGREE, ROOT -> BOUNDS_DEGREE_ROOT
-            NONE -> throw error("unreal")
+            PLUS, MINUS                 -> BOUNDS_PLUS_MINUS
+            MULTIPLICATION, DIVISION    -> BOUNDS_MULTIPLICATION_DIVISION
+            DEGREE, ROOT                -> BOUNDS_DEGREE_ROOT
+            NONE                        -> throw error("none doBounds")
         }
 
         fun generateOne(i: Int) {
@@ -65,7 +66,6 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
                 }
                 return answers.any { it } && preGen.possibleNumbers.isNotEmpty()
             }
-
             return dfs(currentNode, MAGIC, kolMoves)
         }
 
@@ -117,13 +117,13 @@ fun listTo(data: List<List<Inscription>>) = data.map { line ->
 }
 
 fun movingHelper(from: Int, to: Int, x: Int, data: List<List<Inscription>>) = when(data[from][to].oper) {
-    NONE -> throw error("wrong move!")
-    PLUS -> data[from][to].num?.let { x + it } ?: throw error("wrong data num!")
-    MINUS -> data[from][to].num?.let { x - it } ?: throw error("wrong data num!")
-    MULTIPLICATION -> data[from][to].num?.let { x * it } ?: throw error("wrong data num!")
-    DIVISION -> if (data[from][to].num == 0) throw error("0 division")
-    else data[from][to].num?.let { x / it } ?: throw error("wrong data num!")
-    DEGREE -> data[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!")
-    ROOT -> if (data[from][to].num == 0) throw error("0 division")
-    else data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!")
+    NONE            -> throw error("wrong move!")
+    PLUS            -> data[from][to].num?.let { x + it } ?: throw error("wrong data num!")
+    MINUS           -> data[from][to].num?.let { x - it } ?: throw error("wrong data num!")
+    MULTIPLICATION  -> data[from][to].num?.let { x * it } ?: throw error("wrong data num!")
+    DIVISION        -> if (data[from][to].num == 0) throw error("0 division")
+        else data[from][to].num?.let { x / it } ?: throw error("wrong data num!")
+    DEGREE          -> data[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!")
+    ROOT            -> if (data[from][to].num == 0) throw error("0 division")
+        else data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!")
 }

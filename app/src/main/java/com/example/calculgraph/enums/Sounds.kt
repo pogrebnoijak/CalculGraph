@@ -1,7 +1,7 @@
 package com.example.calculgraph.enums
 
 enum class Sounds {
-    FUCK,
+    O_NO,
     LOSE,
     MENU,
     SHIFT,

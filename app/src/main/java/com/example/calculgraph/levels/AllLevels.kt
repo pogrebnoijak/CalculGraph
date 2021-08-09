@@ -9,6 +9,7 @@ import com.example.calculgraph.levels.Levels.addLevel
 import com.example.calculgraph.states.Inscription
 import com.example.calculgraph.states.LevelState
 
+
 object AllLevels {
     fun addLevels() {
         // standard

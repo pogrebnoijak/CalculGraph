@@ -153,7 +153,7 @@ abstract class AnyGameActivity : AnyActivity() {
                 }
 
                 p.apply {
-                    color = Color.GREEN
+                    color = context.getColor(R.color.green)
                     strokeWidth = SMALL_WIDTH
                 }
                 for (i in 0 until curField.graph.kolNodes) {
@@ -209,7 +209,7 @@ abstract class AnyGameActivity : AnyActivity() {
         fun drawText(canvas: Canvas) {
             p.apply {
                 strokeWidth = SMALL_WIDTH
-                color = Color.GREEN
+                color = context.getColor(R.color.green)
                 textSize = centerW * TEXT_SIZE_BIG_K
                 textAlign = Paint.Align.CENTER
             }

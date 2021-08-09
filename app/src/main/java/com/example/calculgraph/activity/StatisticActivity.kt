@@ -24,7 +24,6 @@ import com.example.calculgraph.states.StatisticState
 
 class StatisticActivity : AnyActivity() {
     private lateinit var dbHelper: DBHelper
-
     private val size: Size
         get() {
             val metrics = DisplayMetrics()
@@ -78,19 +77,20 @@ class StatisticActivity : AnyActivity() {
             var movesInd = saveState.answer.size - 1 - MIN_MOVES
             var timeInd = TIMES.indexOf((saveState.allTime / SECOND_IN_MILLIS).toInt())
 
-            fun updateMode() = run { findViewById<TextView>(R.id.mode).text = MODES[modeInd].modeTranslation(this@StatisticActivity) }
-            fun updateComp() = run { findViewById<TextView>(R.id.computability).text = Computability.values()[compInd].toString().computabilityTranslation(this@StatisticActivity) }
+            fun updateMode()  = run { findViewById<TextView>(R.id.mode).text = MODES[modeInd].modeTranslation(this@StatisticActivity) }
+            fun updateComp()  = run { findViewById<TextView>(R.id.computability).text = Computability.values()[compInd].toString()
+                .computabilityTranslation(this@StatisticActivity) }
             fun updateMoves() = run { findViewById<TextView>(R.id.moves).text = getString(R.string.updateMoves, movesInd + MIN_MOVES) }
-            fun updateTime() = run { findViewById<TextView>(R.id.time).text = showTime(TIMES[timeInd], this@StatisticActivity) }
+            fun updateTime()  = run { findViewById<TextView>(R.id.time).text = showTime(TIMES[timeInd], this@StatisticActivity) }
             fun setListener(ind: String, id: Int, isNext: Boolean) {
                 findViewById<ImageButton>(id).setOnClickListener {
                     playSound(SHIFT)
                     val plus = if (isNext) 1 else -1
                     when(ind) {
-                        "mode" -> { modeInd = (modeInd + plus + modeMax) % modeMax; updateMode() }
+                        "mode"          -> { modeInd = (modeInd + plus + modeMax) % modeMax; updateMode() }
                         "computability" -> { compInd = (compInd + plus + compatibilityMax) % compatibilityMax; updateComp() }
-                        "moves" -> { movesInd = (movesInd + plus + movesMax) % movesMax; updateMoves() }
-                        "time" -> { timeInd = (timeInd + plus + timeMax) % timeMax; updateTime() }
+                        "moves"         -> { movesInd = (movesInd + plus + movesMax) % movesMax; updateMoves() }
+                        "time"          -> { timeInd = (timeInd + plus + timeMax) % timeMax; updateTime() }
                     }
                 }
             }

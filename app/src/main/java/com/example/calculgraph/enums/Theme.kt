@@ -9,8 +9,8 @@ enum class Theme {
 }
 
 fun Theme.thToString() = when(this) {
-    STANDARD -> "Standard"
-    OTHER -> "Other"
+    STANDARD    -> "Standard"
+    OTHER       -> "Other"
 }
 
 fun String.toTheme(): Theme = when(this) {

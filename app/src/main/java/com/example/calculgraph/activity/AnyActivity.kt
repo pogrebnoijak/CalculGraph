@@ -16,12 +16,11 @@ import com.example.calculgraph.states.SettingsState
 abstract class AnyActivity : AppCompatActivity() {
     companion object {
         lateinit var settings: SettingsState
-//            set(value) = if (field == null) field = value else throw error("no change settings")
-
         lateinit var preGen: PreGenerationState
     }
-    val handler = Handler()
-    lateinit var transitionActivity: ActivityOptions
+
+    protected val handler = Handler()
+    protected lateinit var transitionActivity: ActivityOptions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme()
@@ -31,9 +30,9 @@ abstract class AnyActivity : AppCompatActivity() {
 
     override fun finish() { handler.postDelayed({ super.finish() }, DateUtils.SECOND_IN_MILLIS / 2) }
 
-    open fun setButtons() {}
+    protected open fun setButtons() {}
 
-    open fun prepare() {
+    private fun prepare() {
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -53,7 +52,7 @@ abstract class AnyActivity : AppCompatActivity() {
         }
     }
 
-    fun setTransitionActivity(id: Int) {
+    protected fun setTransitionActivity(id: Int) {
         transitionActivity = ActivityOptions.makeSceneTransitionAnimation(this, findViewById(id), "")
     }
 }

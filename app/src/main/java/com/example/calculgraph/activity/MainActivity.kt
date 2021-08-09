@@ -24,7 +24,7 @@ class MainActivity : AnyActivity() {
     companion object {
         private var startKol = 0
     }
-//    var prefs: SharedPreferences? = null
+
     private val size: Size
         get() {
             val metrics = DisplayMetrics()
@@ -39,16 +39,7 @@ class MainActivity : AnyActivity() {
         setContentView(R.layout.activity_main)
         setTransitionActivity(R.id.mainAll)
         setButtons()
-//        prefs = getSharedPreferences("com.example.calculgraph", MODE_PRIVATE);
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        if (prefs?.getBoolean("firstRun", true) == true) {  // executed once after update
-//            prefs?.edit()?.putBoolean("firstRun", false)?.apply()
-//
-//        }
-//    }
 
     override fun setButtons() {
         findViewById<Button>(R.id.new_game).setOnClickListener {

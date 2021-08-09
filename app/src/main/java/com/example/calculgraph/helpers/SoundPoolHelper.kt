@@ -13,7 +13,7 @@ import com.example.calculgraph.enums.Sounds.*
 
 
 object SoundPoolHelper {
-    private var soundIdFuck = MAGIC
+    private var soundIdONo = MAGIC
     private var soundIdLose = MAGIC
     private var soundIdMenu = MAGIC
     private var soundIdShift = MAGIC
@@ -35,7 +35,7 @@ object SoundPoolHelper {
     fun setSounds(context: Context, list: List<Sounds> = Sounds.values().toList()) {
         list.forEach {
             when(it) {
-                FUCK    -> soundIdFuck = sp.load(context, R.raw.fuck, 1)
+                O_NO    -> soundIdONo = sp.load(context, R.raw.o_no, 1)
                 LOSE    -> soundIdLose = sp.load(context, R.raw.lose, 1)
                 MENU    -> soundIdMenu = sp.load(context, R.raw.menu, 1)
                 SHIFT   -> soundIdShift = sp.load(context, R.raw.shift, 1)
@@ -66,7 +66,7 @@ object SoundPoolHelper {
     }
 
     private fun soundToId(sound: Sounds) = when(sound) {
-        FUCK    -> soundIdFuck
+        O_NO    -> soundIdONo
         LOSE    -> soundIdLose
         MENU    -> soundIdMenu
         SHIFT   -> soundIdShift
