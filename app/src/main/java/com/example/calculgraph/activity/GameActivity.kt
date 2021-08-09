@@ -293,7 +293,6 @@ class GameActivity : AnyGameActivity() {
 
 
     inner class DrawView(context: Context?) : DrawHelper(context)  {
-        @SuppressLint("ResourceAsColor")
         override fun onDraw(canvas: Canvas) {
                 drawText(canvas)
 

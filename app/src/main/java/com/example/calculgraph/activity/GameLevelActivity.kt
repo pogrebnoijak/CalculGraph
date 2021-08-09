@@ -1,6 +1,5 @@
 package com.example.calculgraph.activity
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -127,7 +126,6 @@ class GameLevelActivity : AnyGameActivity() {
     }
 
     private inner class DrawView(context: Context?) : DrawHelper(context)  {
-        @SuppressLint("ResourceAsColor")
         override fun onDraw(canvas: Canvas) {
             drawText(canvas)
 

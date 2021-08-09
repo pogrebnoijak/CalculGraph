@@ -26,7 +26,6 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 
-// TODO("rewrite")
 abstract class AnyGameActivity : AnyActivity() {
     protected val size: Size
         get() {
@@ -51,7 +50,6 @@ abstract class AnyGameActivity : AnyActivity() {
         window.enterTransition = null
     }
 
-
     protected fun sets() {
         writeField()
         setButtons()
@@ -59,7 +57,6 @@ abstract class AnyGameActivity : AnyActivity() {
         setRendering()
     }
 
-    @SuppressLint("SetTextI18n")
     protected open fun writeField() {
         findViewById<TextView>(R.id.kolMoves).text = getString(R.string.updateMoves, curField.kolMoves)
         val str = when(mode) {
@@ -73,7 +70,6 @@ abstract class AnyGameActivity : AnyActivity() {
             .map { Pair(cos(PI * it).toFloat(), sin(PI * it).toFloat()) }
     }
 
-    @SuppressLint("SetTextI18n")
     override fun setButtons() {
         findViewById<Button>(R.id.menu).setOnClickListener {
             playSound(Sounds.MENU)

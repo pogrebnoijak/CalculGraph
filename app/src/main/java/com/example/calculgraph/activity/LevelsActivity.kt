@@ -1,6 +1,5 @@
 package com.example.calculgraph.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color.*
 import android.os.Bundle
@@ -15,7 +14,6 @@ import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.dataBase.getGroupLevelId
 import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.enums.Computability.*
-import com.example.calculgraph.helpers.LanguageHelper.computabilityTranslation
 import com.example.calculgraph.helpers.Size
 import com.example.calculgraph.helpers.SpinnerHelper.getIndexByName
 
@@ -77,7 +75,6 @@ class LevelsActivity : AnyActivity() {
         }
     }
 
-    @SuppressLint("ResourceType")
     private fun addLevelsButton(num: Int, computability: Computability, layoutId: Int) {
         val p: Pair<Float, Float> = Pair(
             (LEVEL_BUTTON_DIF + ((num - 1) % KOL_LEVELS_IN_LINE) * LEVEL_BUTTON_SIZE_AND_DIF) * size.width,
