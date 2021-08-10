@@ -12,14 +12,16 @@ import kotlin.math.pow
 import kotlin.random.Random
 
 
-class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
+class GraphGenerator(private val kolNodes: Int, private var kolBranch: Int) {
     companion object {
         var shutdown = false
     }
 
     fun generateGraph(kolMoves: Int, currentNode: Int, mode: String) {
         fun factorial(n: Int) = (2..n).fold(1L, Long::times)
-        if (factorial(kolNodes) < kolBranch) throw error("Too match branches!")
+
+        val needGenKolBr = kolBranch == MAGIC
+        if (!needGenKolBr && factorial(kolNodes) < kolBranch) throw error("Too match branches!")
 
         val probList: List<Operation> = when(mode) {
             "standard"  -> PROB_LIST_STANDARD
@@ -74,6 +76,8 @@ class GraphGenerator(private val kolNodes: Int, private val kolBranch: Int) {
 
         var kolIter = 0
         do {
+            kolBranch = if (needGenKolBr) Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1) else kolBranch
+
             preGen.data = MutableList(kolNodes) {
                 MutableList(kolNodes) {
                     Inscription(NONE, null)

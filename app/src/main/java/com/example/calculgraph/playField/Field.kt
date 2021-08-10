@@ -17,8 +17,8 @@ import java.lang.Integer.MIN_VALUE
 
 
 class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settings.computability] ?: throw error("wrong computability"),
-            var currentNode: Int = Random.nextInt(0, kolNodes), kolBranch: Int = MAGIC) {
-    val graph = if (kolBranch != MAGIC) Graph(kolNodes, kolBranch) else Graph(kolNodes)
+            var currentNode: Int = Random.nextInt(0, kolNodes), kolBranch: Int = MAGIC) {      // default not fixed kolBranch
+    val graph = Graph(kolNodes, kolBranch)
     lateinit var currentNumbers: List<Int>
     lateinit var totalNumbers: List<Int>
     val history = Stack<Int>()
@@ -30,7 +30,7 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
     }
 
     fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>) {
-        Log.d(logTAG, "Field: init: mode=$mode, data=$data, possibleNumbers=$possibleNumbers")
+        Log.d(logTAG, "Field: init")
         currentNumbers = graph.init(mode, data, possibleNumbers)
         val list = listTo(graph.data)
 

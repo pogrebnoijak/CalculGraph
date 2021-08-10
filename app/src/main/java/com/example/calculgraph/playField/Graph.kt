@@ -11,7 +11,7 @@ import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.states.Inscription
 
 
-class Graph(val kolNodes: Int, var kolBranch: Int = Random.nextInt(kolNodes, kolNodes * (kolNodes - 1) / 2 + 1)) {
+class Graph(val kolNodes: Int, var kolBranch: Int) {
     lateinit var data: List<List<Inscription>>
 
     fun preparationGraph(kolMoves: Int, currentNode: Int, mode: String, context: Context) {
@@ -20,7 +20,7 @@ class Graph(val kolNodes: Int, var kolBranch: Int = Random.nextInt(kolNodes, kol
     }
 
     fun init(mode: String, data: List<List<Inscription>>, possibleNumbers: List<Int>): List<Int> {
-        Log.d(logTAG, "Graph: init: mode=$mode, data=$data, possibleNumbers=$possibleNumbers")
+        Log.d(logTAG, "Graph: init: mode=$mode, data=$data, possibleNumbers=${possibleNumbers.take(5)}...")
         this.data = data
         val lenList = if (mode == "set") SET_LENGTH else 1
         return List(lenList) { possibleNumbers.random() }
