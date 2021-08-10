@@ -196,7 +196,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
             }
         }
         rowID = db.update(tableName, cv, "id = ?", arrayOf("$id"))
-        Log.d(logDB, "$tableName updated, rowID = $rowID")
+        Log.d(logDB, "$tableName updated, rowID=$rowID")
         close()
     }
 
@@ -213,7 +213,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, "DBHelper", null, 1
 
         val db = writableDatabase
         val state: State?
-        Log.d(logDB, "--- Read in $table with id = $id ---")
+        Log.d(logDB, "--- Read in $table with id=$id ---")
         val cv = db.query(table, list, "id = ?", arrayOf("$id"), null, null, null)
 
         state = if (!cv.moveToNext()) null else when(table) {

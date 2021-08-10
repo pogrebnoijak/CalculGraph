@@ -92,7 +92,7 @@ class LevelsActivity : AnyActivity() {
                     topMargin = p.second.toInt()
                 }
                 setOnClickListener {
-                    println("click $computability-$num")
+                    Log.d(logTAG, "LevelsActivity: click $computability-$num")
                     startGame(computability, num)
                 }
             }

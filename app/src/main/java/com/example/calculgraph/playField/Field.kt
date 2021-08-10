@@ -2,7 +2,6 @@ package com.example.calculgraph.playField
 
 import android.content.Context
 import android.util.Log
-import com.example.calculgraph.activity.AnyActivity
 import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import java.util.*
@@ -68,12 +67,14 @@ class Field(var kolMoves: Int = settings.moves, kolNodes: Int = KOL_NODES[settin
 
             doPath(currentNode, MAGIC, kolMoves)
             val tempCurrentNumber = currentNumbers
+            val listOp = mutableListOf<Inscription>()
             answer.windowed(2).reversed().forEach {
                 moving(it[1], it[0])
-                println(graph.data[it[1]][it[0]])                                                   //
+                listOp.add(graph.data[it[1]][it[0]])
             }
             totalNumbers = currentNumbers
             currentNumbers = tempCurrentNumber
+            Log.i(logTAG, "Field: answer=$listOp")
         }
     }
 

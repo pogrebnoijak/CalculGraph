@@ -112,7 +112,7 @@ class StatisticActivity : AnyActivity() {
             setListener("time", R.id.prevTime, false)
 
             findViewById<Button>(R.id.ok).setOnClickListener {
-                Log.d(logTAG, "StatisticActivity: doDialogInfo->ok")
+                Log.d(logTAG, "StatisticActivity: doDialogInfo -> ok")
                 playSound(TO)
                 dismiss()
                 saveState.apply {

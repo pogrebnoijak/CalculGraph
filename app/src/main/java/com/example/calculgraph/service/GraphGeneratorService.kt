@@ -63,14 +63,14 @@ class GraphGeneratorService : Service() {
     private inner class GenHelper(private val kolMoves: Int, private val currentNode: Int, val mode: String,
                                   private val kolNodes: Int, private val kolBranch: Int, private val startId: Int) : Runnable {
         override fun run() {
-            Log.d(logSERV, "GenHelper-$startId start, kolMoves = $kolMoves, currentNode = $currentNode, mode = $mode")
+            Log.d(logSERV, "GenHelper-$startId start, kolMoves=$kolMoves, currentNode=$currentNode, mode=$mode")
             val generator = GraphGenerator(kolNodes, kolBranch)
             preGen.actual = false
             generator.generateGraph(kolMoves, currentNode, mode)
             preGen.actual = true
             preGen.latch.await()
             resultLauncher()
-            Log.d(logSERV, "GenHelper-$startId end, stopSelfResult($startId) = ${stopSelfResult(startId)}")
+            Log.d(logSERV, "GenHelper-$startId end, stopSelfResult($startId)=${stopSelfResult(startId)}")
         }
     }
 }

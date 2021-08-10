@@ -7,7 +7,6 @@ import kotlin.random.Random
 import android.content.Intent
 import android.content.Context
 import android.util.Log
-import com.example.calculgraph.activity.AnyActivity
 import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.states.Inscription
 
@@ -35,7 +34,7 @@ class Graph(val kolNodes: Int, var kolBranch: Int = Random.nextInt(kolNodes, kol
             putExtra("mode", mode)
             putExtra("kolNodes", kolNodes)
             putExtra("kolBranch", kolBranch)
-            println("startService")
+            Log.d(logTAG, "Graph: startService")
             context.startService(this)
         }
     }

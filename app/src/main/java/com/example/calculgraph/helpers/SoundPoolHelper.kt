@@ -6,7 +6,6 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.util.Log
 import com.example.calculgraph.R
-import com.example.calculgraph.activity.AnyActivity
 import com.example.calculgraph.activity.AnyActivity.Companion.logTAG
 import com.example.calculgraph.activity.AnyActivity.Companion.settings
 import com.example.calculgraph.constant.MAGIC
