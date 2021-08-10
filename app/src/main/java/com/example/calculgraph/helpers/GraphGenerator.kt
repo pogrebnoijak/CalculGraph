@@ -7,6 +7,7 @@ import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation
 import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.enums.reverse
+import com.example.calculgraph.states.Branch
 import com.example.calculgraph.states.Inscription
 import kotlin.math.pow
 import kotlin.random.Random
@@ -47,7 +48,7 @@ class GraphGenerator(private val kolNodes: Int, private var kolBranch: Int) {
             val oper = probList.random()
             val num = doBounds(oper).let { Random.nextInt(it.first, it.second) }
             preGen.data[i][j] = Inscription(oper, num)
-            preGen.data[j][i] = Inscription(oper.reverse(), num)
+            preGen.data[j][i] = preGen.data[i][j].reverse()
             kolInIndex[i]++
             kolInIndex[j]++
         }
@@ -132,4 +133,17 @@ fun movingHelper(from: Int, to: Int, x: Int, data: List<List<Inscription>>) = wh
     DEGREE          -> data[from][to].num?.let { x.toDouble().pow(it) }?.toInt() ?: throw error("wrong data num!")
     ROOT            -> if (data[from][to].num == 0) throw error("0 division")
         else data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!")
+}
+
+fun doDataByLines(kolNodes: Int, list: List<Branch>) {
+    val data = MutableList(kolNodes) {
+        MutableList(kolNodes) {
+            Inscription(NONE, null)
+        }
+    }
+    list.forEach {
+        if (data[it.from][it.to].oper != NONE) throw error("wrong list in doDataByLines")
+        data[it.from][it.to] = it.insc
+        data[it.to][it.from] = it.insc.reverse()
+    }
 }
