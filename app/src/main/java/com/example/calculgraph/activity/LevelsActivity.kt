@@ -15,6 +15,7 @@ import com.example.calculgraph.dataBase.DBWorker
 import com.example.calculgraph.dataBase.getGroupLevelId
 import com.example.calculgraph.enums.Computability
 import com.example.calculgraph.enums.Computability.*
+import com.example.calculgraph.helpers.LanguageHelper.modeTranslation
 import com.example.calculgraph.helpers.Size
 import com.example.calculgraph.helpers.SpinnerHelper.getIndexByName
 
@@ -120,7 +121,7 @@ class LevelsActivity : AnyActivity() {
 
     private fun setOther() {
         findViewById<Spinner>(R.id.modeLevels).apply {
-            adapter = ArrayAdapter(this@LevelsActivity, R.layout.spinner, R.id.sp, MODES)
+            adapter = ArrayAdapter(this@LevelsActivity, R.layout.spinner, R.id.sp, MODES.map { it.modeTranslation(this@LevelsActivity) })
             onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     playSound(SHIFT)
@@ -130,10 +131,7 @@ class LevelsActivity : AnyActivity() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
-        }
-
-        findViewById<Spinner>(R.id.modeLevels).let {
-            it.setSelection(getIndexByName(it, mode))
+            setSelection(getIndexByName(this, mode.modeTranslation(this@LevelsActivity)))
         }
     }
 

@@ -67,7 +67,8 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateSettings(intent: Intent) {
-        Log.d(logTAG, "SettingsActivity: updateSettings")
+        Log.d(logTAG, "SettingsActivity: updateSettings (sound=${settings.sound}, language=${settings.language}," +
+                " theme=${settings.theme}, computability=${settings.computability}, moves=${settings.moves}, time=${settings.time})")
         val dbWorker = DBWorker()
         dbWorker.init(this)
         dbWorker.updateSettings()
@@ -140,7 +141,6 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateLanguage(language: String) {
-        Log.d(logTAG, "SettingsActivity: updateLanguage: ${settings.language}->$language")
         val needUpdate = (settings.language != language)
         settings.language = language
         setLanguage(baseContext)
@@ -148,12 +148,10 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateSound(sound: Boolean) {
-        Log.d(logTAG, "SettingsActivity: updateSound: ${settings.sound}->$sound")
         settings.sound = sound
     }
 
     private fun updateTheme(theme: String) {
-        Log.d(logTAG, "SettingsActivity: updateTopic: ${settings.theme}->$theme")
         val newTheme = theme.toTheme()
         val needUpdate = (settings.theme != newTheme)
         settings.theme = newTheme
@@ -161,17 +159,14 @@ class SettingsActivity : AnyActivity() {
     }
 
     private fun updateComputability(computability: String) {
-        Log.d(logTAG, "SettingsActivity: updateComputability: ${settings.computability}->$computability")
         settings.computability = computability.toComputability()
     }
 
     private fun updateTime(time: String) {
-        Log.d(logTAG, "SettingsActivity: updateTime: ${settings.time}->$time")
         settings.time = time.toTime(this)
     }
 
     private fun updateMoves(moves: Int) {
-        Log.d(logTAG, "SettingsActivity: updateMoves: ${settings.moves}->$moves")
         settings.moves = moves
     }
 
