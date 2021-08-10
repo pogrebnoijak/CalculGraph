@@ -8,7 +8,7 @@ import android.util.Log
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.*
 import com.example.calculgraph.helpers.Serializer
-import com.example.calculgraph.levels.AllLevels.addLevels
+import com.example.calculgraph.levels.Levels.addLevels
 import com.example.calculgraph.levels.Levels.levels
 import com.example.calculgraph.levels.Levels.notExistLevels
 import com.example.calculgraph.states.*
