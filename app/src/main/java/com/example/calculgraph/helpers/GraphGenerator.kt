@@ -6,7 +6,6 @@ import com.example.calculgraph.activity.AnyActivity.Companion.preGen
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.Operation
 import com.example.calculgraph.enums.Operation.*
-import com.example.calculgraph.enums.reverse
 import com.example.calculgraph.states.Branch
 import com.example.calculgraph.states.Inscription
 import kotlin.math.pow
@@ -135,7 +134,7 @@ fun movingHelper(from: Int, to: Int, x: Int, data: List<List<Inscription>>) = wh
         else data[from][to].num?.let { x.toDouble().pow(1.0 / it) }?.toInt() ?: throw error("wrong data num!")
 }
 
-fun doDataByLines(kolNodes: Int, list: List<Branch>) {
+fun doDataByLines(kolNodes: Int, list: List<Branch>): List<List<Inscription>> {
     val data = MutableList(kolNodes) {
         MutableList(kolNodes) {
             Inscription(NONE, null)
@@ -146,4 +145,5 @@ fun doDataByLines(kolNodes: Int, list: List<Branch>) {
         data[it.from][it.to] = it.insc
         data[it.to][it.from] = it.insc.reverse()
     }
+    return data
 }

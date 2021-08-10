@@ -31,4 +31,5 @@ internal fun getLevel(mode: String, comp: Computability, num: Int): LevelState =
     }
 
 // remove later
-internal val levelDefault = LevelState(2, 1, listOf(1), listOf(3), List(KOL_NODES[EASY]!!) { List(KOL_NODES[EASY]!!) { Inscription(Operation.PLUS, 1) } })
+internal val levelDefault =  LevelState(2, 1, listOf(1), listOf(3),
+    List(KOL_NODES[EASY]!!) { List(KOL_NODES[EASY]!!) { Inscription(Operation.PLUS, 1) } })
