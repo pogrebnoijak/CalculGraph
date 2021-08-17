@@ -3,7 +3,6 @@ package com.example.calculgraph.playField
 import com.example.calculgraph.enums.Operation.*
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.service.GraphGeneratorService
-import kotlin.random.Random
 import android.content.Intent
 import android.content.Context
 import android.util.Log

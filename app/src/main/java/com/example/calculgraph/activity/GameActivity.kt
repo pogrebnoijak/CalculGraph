@@ -13,7 +13,6 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.MotionEventCompat
 import com.example.calculgraph.R
 import com.example.calculgraph.constant.*
 import com.example.calculgraph.enums.GameState.*
@@ -54,7 +53,7 @@ class GameActivity : AnyGameActivity() {
         saveStatAndStartGame(dbWorker.init(this))
     }
 
-    override fun onTouchEvent(event: MotionEvent) = when (MotionEventCompat.getActionMasked(event)) {
+    override fun onTouchEvent(event: MotionEvent) = when (event.action) {
         MotionEvent.ACTION_DOWN -> {
             touchDown = Pair(event.rawX, event.rawY)
             true

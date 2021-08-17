@@ -36,7 +36,7 @@ class GameLevelActivity : AnyGameActivity() {
         startLevel()
     }
 
-    override fun onTouchEvent(event: MotionEvent) = when (MotionEventCompat.getActionMasked(event)) {
+    override fun onTouchEvent(event: MotionEvent) = when (event.action) {
         MotionEvent.ACTION_DOWN -> {
             touchDown = Pair(event.rawX, event.rawY)
             true
