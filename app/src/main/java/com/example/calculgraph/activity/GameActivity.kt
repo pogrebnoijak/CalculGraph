@@ -67,7 +67,7 @@ class GameActivity : AnyGameActivity() {
 
     private fun saveStatAndStartGame(saveState: SaveState) {
         if (getIntentsAndReturnGameStatus()) {
-            if (saveState.gameStatus == END) {
+            if (saveState.gameStatus == PLAY) {
                 dbWorker.apply {
                     updateStatistic(saveState.score)
                 }
@@ -172,8 +172,8 @@ class GameActivity : AnyGameActivity() {
                                 gameStatus = WAIT
                                 exitToWait(true)
                             }
-                            gameStatus = WAIT
-                            Log.d(logTAG, "GameActivity: show answer end")
+//                            gameStatus = WAIT
+//                            Log.d(logTAG, "GameActivity: show answer end")
                         }
                     }
                 }
