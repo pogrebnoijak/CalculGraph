@@ -1,16 +1,12 @@
 package com.example.calculgraph.activity
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.example.calculgraph.R
-import com.example.calculgraph.matchers.getText
-import com.example.calculgraph.swipe.swipeLeftDown
-import com.example.calculgraph.swipe.swipeLeftUp
-import com.example.calculgraph.swipe.swipeRightDown
-import com.example.calculgraph.swipe.swipeRightUp
+import com.example.calculgraph.page.common.Page
+import com.example.calculgraph.page.game.layout.DrawLayoutPage
+import com.example.calculgraph.page.game.textView.KolMovesTextViewPage
+import com.example.calculgraph.page.main.button.MenuButtonPage
+import com.example.calculgraph.secondary.start_game_standard
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,33 +21,39 @@ class GameActivityTest {
 
     @Test
     fun test_swipe_any() {  // check not fall
-        onView(withId(R.id.new_game)).perform(click())
-        onView(withId(R.id.standard)).perform(click())
-
+        start_game_standard()
         repeat(3) {
-            onView(withId(R.id.draw)).perform(swipeRightDown())
-            onView(withId(R.id.draw)).perform(swipeLeftDown())
-            onView(withId(R.id.draw)).perform(swipeLeftUp())
-            onView(withId(R.id.draw)).perform(swipeRightUp())
+            Page.on<DrawLayoutPage>()
+                .swipeRightDown()
+                .on<DrawLayoutPage>()
+                .swipeLeftDown()
+                .on<DrawLayoutPage>()
+                .swipeLeftUp()
+                .on<DrawLayoutPage>()
+                .swipeRightUp()
         }
     }
 
     @Test
     fun test_swipe() {  // smth going on
         repeat(5) {
-            onView(withId(R.id.new_game)).perform(click())
-            onView(withId(R.id.standard)).perform(click())
+            start_game_standard()
             val historyMoves = mutableListOf<String>()
             sleep(500L)
-            listOf({ swipeRightDown() }, { swipeLeftDown() }, { swipeLeftUp() }, { swipeRightUp() }).forEach { swipe ->
-                onView(withId(R.id.draw)).perform(swipe())
-                val kolMoves = getText(onView(withId(R.id.kolMoves)))
+            listOf({ Page.on<DrawLayoutPage>().swipeRightDown() },
+                { Page.on<DrawLayoutPage>().swipeLeftDown() },
+                { Page.on<DrawLayoutPage>().swipeLeftUp() },
+                { Page.on<DrawLayoutPage>().swipeRightUp() }).forEach { swipe ->
+                swipe()
+                val kolMoves = Page.on<KolMovesTextViewPage>()
+                    .getText()
                 historyMoves.add(kolMoves)
             }
             println(historyMoves)
             assert(historyMoves.toSet().size > 1)
-            onView(withId(R.id.menu)).perform(click())
-            sleep(500L)
+            Page.on<MenuButtonPage>()
+                .click()
+                .sleep(500L)
         }
     }
 }

@@ -1,12 +1,14 @@
 package com.example.calculgraph.activity
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import com.example.calculgraph.R
+import com.example.calculgraph.page.common.AnyTextPage
+import com.example.calculgraph.page.common.Page
+import com.example.calculgraph.page.levels.spinner.ModeLevelsSpinnerPage
+import com.example.calculgraph.page.main.MainActivityPage
+import com.example.calculgraph.page.main.button.LevelsButtonPage
+import com.example.calculgraph.page.main.button.MenuButtonPage
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -21,34 +23,40 @@ class LevelsTest {
 
     @Before
     fun to_levels() {
-        onView(withId(R.id.levels)).perform(click())
+        Page.on<MainActivityPage>()
+            .on<LevelsButtonPage>()
+            .click()
     }
 
     @Test
     fun test_scroll_easy() {
-        onView(withText(R.string.easy)).perform(scrollTo())
-        onView(withId(R.id.modeLevels)).check(matches(isDisplayed()))
-        onView(withId(R.id.menu)).check(matches(isDisplayed()))
+        Page.on<AnyTextPage>()
+            .scroll(R.string.easy)
+            .on<ModeLevelsSpinnerPage>()
+            .on<MenuButtonPage>()
     }
 
     @Test
     fun test_scroll_medium() {
-        onView(withText(R.string.medium)).perform(scrollTo())
-        onView(withId(R.id.modeLevels)).check(matches(isDisplayed()))
-        onView(withId(R.id.menu)).check(matches(isDisplayed()))
+        Page.on<AnyTextPage>()
+            .scroll(R.string.medium)
+            .on<ModeLevelsSpinnerPage>()
+            .on<MenuButtonPage>()
     }
 
     @Test
     fun test_scroll_hard() {
-        onView(withText(R.string.hard)).perform(scrollTo())
-        onView(withId(R.id.modeLevels)).check(matches(isDisplayed()))
-        onView(withId(R.id.menu)).check(matches(isDisplayed()))
+        Page.on<AnyTextPage>()
+            .scroll(R.string.hard)
+            .on<ModeLevelsSpinnerPage>()
+            .on<MenuButtonPage>()
     }
 
     @Test
     fun test_scroll_insane() {
-        onView(withText(R.string.insane)).perform(scrollTo())
-        onView(withId(R.id.modeLevels)).check(matches(isDisplayed()))
-        onView(withId(R.id.menu)).check(matches(isDisplayed()))
+        Page.on<AnyTextPage>()
+            .scroll(R.string.insane)
+            .on<ModeLevelsSpinnerPage>()
+            .on<MenuButtonPage>()
     }
 }

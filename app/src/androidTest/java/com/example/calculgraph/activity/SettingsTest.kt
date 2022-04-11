@@ -1,21 +1,19 @@
 package com.example.calculgraph.activity
 
 import android.graphics.Color
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.example.calculgraph.R
-import com.example.calculgraph.matchers.withColorText
+import com.example.calculgraph.page.common.AnyTextPage
+import com.example.calculgraph.page.common.Page
+import com.example.calculgraph.page.main.MainActivityPage
+import com.example.calculgraph.page.main.button.SettingsButtonPage
+import com.example.calculgraph.page.settings.spinner.LanguageSpinnerPage
+import com.example.calculgraph.page.settings.spinner.ThemeSpinnerPage
+import com.example.calculgraph.page.settings.textView.MovesTextViewPage
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
 
 
 @RunWith(AndroidJUnit4::class)
@@ -25,49 +23,62 @@ class SettingsTest {
         ActivityTestRule(MainActivity::class.java)
 
     @Before
-    fun to_settings() {
-        onView(withId(R.id.settings)).perform(click())
-        sleep(250L)
+    fun set_page() {
+        Page.on<MainActivityPage>()
+            .on<SettingsButtonPage>()
+            .click()
+            .sleep(250L)
     }
 
     @Test
     fun test_settings() {
-        onView(withId(R.id.moves)).perform(replaceText("3"))
-        onView(withId(R.id.moves)).check(matches(withText("3")))
-
-        onView(withId(R.id.moves)).perform(replaceText("0"))
-        onView(withId(R.id.moves)).check(matches(withText("2")))
-
-        onView(withId(R.id.moves)).perform(replaceText("9"))
-        onView(withId(R.id.moves)).check(matches(withText("8")))
-
-        onView(withId(R.id.moves)).perform(replaceText("5643143215"))
-        onView(withId(R.id.moves)).check(matches(withText("5")))
+        Page.on<MovesTextViewPage>()
+            .writeText("3")
+            .text("3")
+            .writeText("0")
+            .text("2")
+            .writeText("9")
+            .text("8")
+            .writeText("5643143215")
+            .text("5")
     }
 
     @Test
     fun test_update_settings() {
-        onView(withId(R.id.language)).perform(click())
-        onView(withText("English")).perform(click())
-        onView(withText("Language:")).check(matches(withText("Language:")))
-        sleep(250L)
-        onView(withId(R.id.language)).perform(click())
-        onView(withText("Русский")).perform(click())
-        onView(withText("Язык:")).check(matches(withText("Язык:")))
+        Page.on<LanguageSpinnerPage>()
+            .click()
+            .on<AnyTextPage>()
+            .click("English")
+            .on<AnyTextPage>()
+            .text("Language:")
+            .sleep(250L)
+            .on<LanguageSpinnerPage>()
+            .click()
+            .on<AnyTextPage>()
+            .click("Русский")
+            .on<AnyTextPage>()
+            .text("Язык:")
     }
 
     @Test
     fun test_update_theme() {
-        onView(withId(R.id.language)).perform(click())
-        onView(withText("English")).perform(click())
-        sleep(250L)
-
-        onView(withId(R.id.theme)).perform(click())
-        onView(withText("Standard")).perform(click())
-        onView(withText("Theme:")).check(matches(withColorText(Color.WHITE)))
-        sleep(250L)
-        onView(withId(R.id.theme)).perform(click())
-        onView(withText("Other")).perform(click())
-        onView(withText("Theme:")).check(matches(withColorText(Color.BLACK)))
+        Page.on<LanguageSpinnerPage>()
+            .click()
+            .on<AnyTextPage>()
+            .click("English")
+            .sleep(250L)
+            .on<ThemeSpinnerPage>()
+            .click()
+            .on<AnyTextPage>()
+            .click("Standard")
+            .on<AnyTextPage>()
+            .textColor("Theme:", Color.WHITE)
+            .sleep(250L)
+            .on<ThemeSpinnerPage>()
+            .click()
+            .on<AnyTextPage>()
+            .click("Other")
+            .on<AnyTextPage>()
+            .textColor("Theme:", Color.BLACK)
     }
 }
